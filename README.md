@@ -4,9 +4,9 @@
 - Have node installed onto your computer. Verify by reunning `npm -version`.
 
 ### Beginning development
-Before beginning, change directories into `co-app-frontend` and run `npm i` or `npm install`. 
+Before beginning, run `npm i` or `npm install` to install dependencies. 
 
-Then, to start the development server, ensure you're in the `co-app-frontend` directory and run `npm run dev`.
+Then, to start the development server, run `npm run dev`.
 
 ### Bootstrap/React Bootstrap
 We will be using React Bootstrap as a component library. Documentation can be found [here](https://react-bootstrap.netlify.app/docs/components/buttons)
