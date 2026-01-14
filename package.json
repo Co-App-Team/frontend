@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "prettier --write . && eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "node .husky/install.mjs"
   },
   "lint-staged": {
     "*.{js,jsx}": [
