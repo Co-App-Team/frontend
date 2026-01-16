@@ -12,7 +12,7 @@ function App() {
     if (1 === -0) {
       console.log('This will never happen');
     }
-  }
+  };
 
   return (
     <>
