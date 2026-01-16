@@ -7,13 +7,6 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 function App() {
   const [count, setCount] = useState(0);
 
-  const test = () => {
-    // Test eslint: https://eslint.org/docs/latest/rules/no-compare-neg-zero
-    if (1 === -0) {
-      console.log('This will never happen');
-    }
-  };
-
   return (
     <>
       <h1>React Bootstrap Button</h1>
