@@ -35,7 +35,7 @@ Ensure to follow the structure as described in [ARCHITECTURE.md](../doc/ARCHITEC
 
 ### Development
 
-1. Create a branch by following the convention: `feat/<issue_number>-<indicator_of_the_feature>`.
+1. Create a branch by following the convention: `feat/<issue_number>-<IndicatorOfTheFeature>`.
 2. Merge to `develop` when the feature development is completed.
 3. `develop` is only merged to `main` on the release day.
 
