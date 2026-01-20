@@ -35,12 +35,12 @@ Ensure to follow the structure as described in [ARCHITECTURE.md](../doc/ARCHITEC
 
 ### Development
 
-1. Create a branch by following the convention: `feat/<issue_number>-<IndicatorOfTheFeature>`.
-2. Merge to `develop` when the feature development is completed.
+1. Create a branch by following the convention: `task/<issue_number>-<IndicatorOfTheFeature>`.
+2. Merge to `develop` when the task development is completed.
 3. `develop` is only merged to `main` on the release day.
 
 > \[!IMPORTANT\]
-> All feature branches need to be merged to `develop`. Please avoid merging feature branches directly to `main`.
+> All task branches need to be merged to `develop`. Please avoid merging task branches directly to `main`.
 
  
  
