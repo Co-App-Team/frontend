@@ -33,9 +33,19 @@ Thank you for contributing! This guide will help you set up the project environm
 
 Ensure to follow the structure as described in [ARCHITECTURE.md](../doc/ARCHITECTURE.md).
 
-### Development
+### Commit messages
 
-1. Create a branch by following the convention: `task/<issue_number>-<IndicatorOfTheFeature>`.
+Each commit should follow the structure below:
+
+```bash
+Header  # A concise summary, no more than 50 characters
+
+Body    # Optional. Wrap lines at 72 characters
+```
+
+### Development Process
+
+1. Create a branch by following the convention: `task/<issue_number>-<IndicatorOfTheTask>`.
 2. Merge to `develop` when the task development is completed.
 3. `develop` is only merged to `main` on the release day.
 
