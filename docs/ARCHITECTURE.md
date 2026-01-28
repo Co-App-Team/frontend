@@ -1,6 +1,6 @@
 # Project Package Structure
 
-This document describes the initial backend package structure for the **Co-App** React project. 
+This document describes the initial frontend package structure for the **Co-App** React project. 
 Co-App frontend follows a basic component/api architecture.
 
 ---
