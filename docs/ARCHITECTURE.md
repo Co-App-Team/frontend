@@ -26,7 +26,7 @@ src
 
 ### 1. `api`
 
-**Purpose**: JavaScript files for managing Axios API requests
+**Purpose**: JavaScript files for managing Axios API requests.
 
 This folder contains a core `api.js` file that is used to send api requests, along with supporting `.js` files for different API endpoints.
 
