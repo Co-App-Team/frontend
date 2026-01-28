@@ -17,7 +17,9 @@ src
 ├── api
 ├── assets
 ├── components
-└── contexts
+├── contexts
+├── hooks
+└── pages
 ```
 
 ---
@@ -50,3 +52,16 @@ Contains images and other assets used by the site.
 
 **Purpose**: Contains contexts for global state management.
 
+---
+
+### 5. `hooks`
+
+**Purpose**: Contains [React hooks](https://www.w3schools.com/react/react_hooks.asp) for logic re-use.
+
+---
+
+### 6. `pages`
+
+**Purpose**: Contains page components 
+
+These components will represent pages in the app, from which all of displayed content will be rendered.
