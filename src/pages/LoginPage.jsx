@@ -5,8 +5,8 @@ import { AuthContext } from '../contexts/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
-// TODO: Add forgot my password button
-// TODO: Add register button
+// TODO: Figure out routing, so sign up/forgot password can work
+// TODO: Email feedback not showing
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -69,7 +69,7 @@ const LoginPage = () => {
           <Form.Label>Email address</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder="Type your email"
             onChange={onEmailChange}
             isInvalid={showError && !isEmailValid}
             isValid={showError && isEmailValid}
@@ -89,7 +89,7 @@ const LoginPage = () => {
           <InputGroup>
             <Form.Control
               type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
+              placeholder="Type your password"
               onChange={onPasswordChange}
               isInvalid={showError && !isPasswordValid}
               isValid={showError && isPasswordValid}
@@ -108,13 +108,22 @@ const LoginPage = () => {
             Password must be at least 6 characters long.
           </Form.Control.Feedback>
         </Form.Group>
-        <Button
-          variant="primary"
-          type="button"
-          onClick={submit}>
-          Log in
-        </Button>
+        <div className="d-grid gap-2">
+          <Button
+            variant="primary"
+            type="button"
+            onClick={submit}
+            size="lg">
+            Log in
+          </Button>
+        </div>
       </Form>
+      <p className="mt-3">
+        Or sign up <a href="/test">here</a>
+      </p>
+      <p className="mt-3">
+        <a href="/test">Forgot your password?</a>
+      </p>
     </div>
   );
 };
