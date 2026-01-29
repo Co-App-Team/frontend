@@ -1,7 +1,9 @@
 import { useContext, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import { login } from '../api/authApi';
 import { AuthContext } from '../contexts/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 // TODO: Add forgot my password button
 // TODO: Add register button
@@ -17,6 +19,11 @@ const LoginPage = () => {
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const submit = async () => {
     if (isEmailValid && isPasswordValid) {
@@ -80,13 +87,24 @@ const LoginPage = () => {
           className="mb-3"
           controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            onChange={onPasswordChange}
-            isInvalid={showError && !isPasswordValid}
-            isValid={showError && isPasswordValid}
-          />
+          <InputGroup>
+            <Form.Control
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              onChange={onPasswordChange}
+              isInvalid={showError && !isPasswordValid}
+              isValid={showError && isPasswordValid}
+            />
+            <Button
+              variant="outline-secondary"
+              onClick={togglePasswordVisibility}>
+              {showPassword ? (
+                <FontAwesomeIcon icon={faEyeSlash} />
+              ) : (
+                <FontAwesomeIcon icon={faEye} />
+              )}
+            </Button>
+          </InputGroup>
           <Form.Control.Feedback type="invalid">
             Password must be at least 6 characters long.
           </Form.Control.Feedback>

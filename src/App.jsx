@@ -1,6 +1,6 @@
 import './App.css';
-import LoginPage from './components/LoginPage.jsx';
 import { useAuthContext } from './contexts/AuthContext.js';
+import LoginPage from './pages/LoginPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
