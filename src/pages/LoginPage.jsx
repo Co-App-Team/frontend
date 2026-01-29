@@ -7,7 +7,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 // TODO: Add forgot my password button
 // TODO: Add register button
-// TODO: Show password option
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
