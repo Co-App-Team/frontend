@@ -1,4 +1,14 @@
-# co-app-frontend
+# Co-App Frontend
+
+## About us
+
+CoApp is a co-op application management platform, a comprehensive web application designed to streamline the student experience of the co-op job search. This platform uses React, Spring Boot, and MongoDB to address the most common challenges faced by students throughout their co-op job searches and provides an all-in-one space to manage job applications, interview preparations, and researching potential employers.
+
+This application takes all the essential co-op organizational tools and puts them in one user-friendly interface. Students can track their job applications from the start to their outcome, maintain interview schedules for these applications with a calendar view, and access a communal “rate my co-op” review board to see what others think about their work terms. This app gets rid of the need for multiple scattered spreadsheets, tracking apps, or unorganized notes.
+
+For further information, please check out our [Project Proposal](https://github.com/Co-App-Team/.github/blob/main/docs/ProjectProjectProposal.md).
+
+## Project set up
 
 ## Setup Instructions 
 
