@@ -65,3 +65,13 @@ Contains images and other assets used by the site.
 **Purpose**: Contains page components 
 
 These components will represent pages in the app, from which all of displayed content will be rendered.
+
+## Page Routing
+
+Page routing is managed by [React Router](https://reactrouter.com/). 
+
+To define new routes:
+
+1. Decide if the route needs protection (requires the user to be authenticated)
+2. If the route needs protection, add it in the sub-group of routes, below the comment `{/* Protected (requires auth) routes */}` in [App.jsx](../src/App.jsx)
+3. If the route is unprotected, add it in the main group of routes below `{/* Unprotected routes */}` that includes the `NotFoundPage` route
