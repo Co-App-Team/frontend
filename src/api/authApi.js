@@ -2,7 +2,7 @@ import { post } from './api';
 
 export const login = async (username, password) => {
   try {
-    const response = await post('/api/auth/login', {
+    const response = await post('/auth/login', {
       email: username,
       password: password,
     });

@@ -70,10 +70,13 @@ const LoginPage = () => {
         <Form.Group
           className="mb-3"
           controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <div className="text-start mt-4 mb-1">
+            <Form.Label>Email</Form.Label>
+          </div>
+
           <Form.Control
             type="email"
-            placeholder="Type your email"
+            placeholder="Enter your email"
             onChange={onEmailChange}
             isInvalid={showError && !isEmailValid}
             isValid={showError && isEmailValid}
@@ -81,19 +84,18 @@ const LoginPage = () => {
           <Form.Control.Feedback type="invalid">
             Please provide a valid email.
           </Form.Control.Feedback>
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group
           className="mb-3"
           controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
+          <div className="text-start mt-4 mb-1">
+            <Form.Label>Password</Form.Label>
+          </div>
           <InputGroup>
             <Form.Control
               type={showPassword ? 'text' : 'password'}
-              placeholder="Type your password"
+              placeholder="Enter your password"
               onChange={onPasswordChange}
               isInvalid={showError && !isPasswordValid}
               isValid={showError && isPasswordValid}

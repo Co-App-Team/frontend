@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://localhost:5000/api', // TODO: Dummy URL, replace with actual backend URL
+  baseURL: 'http://localhost:8080/api', // TODO: Dummy URL, replace with actual backend URL
 });
 
 let authFailedCallback = null;
