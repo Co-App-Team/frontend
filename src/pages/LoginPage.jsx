@@ -4,13 +4,13 @@ import { login } from '../api/authApi';
 import { AuthContext } from '../contexts/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { Link } from 'react-router-dom';
 
 // TODO: Email feedback not showing
 // TODO: Setup backend env url
 // TODO: Remove password/email confirmation, that's for the create account page
 // TODO: Make the show/hide password option look cleaner
 // TODO: Improve general page design, it's all white rn
-// TODO: Update sign up/forgot password links once React Router stuff is merged
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -123,10 +123,10 @@ const LoginPage = () => {
         </div>
       </Form>
       <p className="mt-3">
-        Or sign up <a href="/test">here</a>
+        Or sign up <Link to="/signup">here</Link>
       </p>
       <p className="mt-3">
-        <a href="/test">Forgot your password?</a>
+        <Link to="/forgot-password">Forgot your password?</Link>
       </p>
     </div>
   );
