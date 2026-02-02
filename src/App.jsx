@@ -1,18 +1,33 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useAuthContext } from './contexts/AuthContext.js';
+import HomePage from './pages/HomePage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
 
   return (
     <>
-      {isLoggedIn ? (
-        // TODO: Replace with actual logged-in content
-        <h2>Logged In</h2>
-      ) : (
-        // TODO: Replace with actual logged-out content
-        <h2>Not Logged In</h2>
-      )}
+      <Routes>
+        {/* Unprotected routes */}
+
+        {/* Not found page for non mapped routings */}
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
+
+        {/* Protected (requires auth) routes */}
+        <Route element={<ProtectedRoute isAuthenticated={isLoggedIn} />}>
+          <Route
+            path="/"
+            element={<HomePage />}
+          />
+          {/* Add real protected routes here */}
+        </Route>
+      </Routes>
     </>
   );
 }
