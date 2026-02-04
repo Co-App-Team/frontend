@@ -56,9 +56,10 @@ const LoginPage = () => {
     setFormData({ ...formData, password: e.target.value });
   };
 
-  // TODO: Enforce size constraints on login page container to stop error text from messing things up
   return (
-    <div className="p-4 border rounded">
+    <div
+      className="p-4 border rounded d-flex flex-column align-items-center"
+      style={{ maxWidth: '19rem' }}>
       <img
         src={LogoImage}
         width={200}
@@ -121,12 +122,12 @@ const LoginPage = () => {
             )}
           </Button>
         </div>
-        {error && <p className="text-danger mt-3">{error}</p>}
       </Form>
+      {error && <p className="text-danger mt-3">{error}</p>}
       <p className="mt-3">
         Or sign up <Link to="/signup">here</Link>
       </p>
-      <p className="mt-3">
+      <p>
         <Link to="/forgot-password">Forgot your password?</Link>
       </p>
     </div>
