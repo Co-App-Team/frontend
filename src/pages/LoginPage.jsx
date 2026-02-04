@@ -17,7 +17,7 @@ const LoginPage = () => {
     email: '',
     password: '',
   });
-  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,11 +27,20 @@ const LoginPage = () => {
 
   const submit = async () => {
     setIsLoading(true);
-    setShowError(false);
+    setError('');
     const response = await login(formData.email, formData.password);
     if (response.error) {
       console.error('Login failed:', JSON.stringify(response.error));
-      setShowError(true);
+      if (response?.error?.response?.status === 401) {
+        setError('Incorrect email or password');
+      } else if (response?.error?.response?.status === 400) {
+        // TODO: Redirect to email confirmation page
+        setError('Please confirm your email before logging in');
+      } else if (response?.error?.code === 'ERR_NETWORK') {
+        setError('Unable to connect to server. Please check your internet connection.');
+      } else {
+        setError('Unexpected error occurred during login');
+      }
     } else {
       console.log('Login successful:', response.data);
       setIsLoggedIn(true);
@@ -47,6 +56,7 @@ const LoginPage = () => {
     setFormData({ ...formData, password: e.target.value });
   };
 
+  // TODO: Enforce size constraints on login page container to stop error text from messing things up
   return (
     <div className="p-4 border rounded">
       <img
@@ -109,12 +119,7 @@ const LoginPage = () => {
             )}
           </Button>
         </div>
-        {showError && (
-          <p className="text-danger mt-3">
-            Incorrect email or password. <br />
-            Please try again.
-          </p>
-        )}
+        {error && <p className="text-danger mt-3">{error}</p>}
       </Form>
       <p className="mt-3">
         Or sign up <Link to="/signup">here</Link>
