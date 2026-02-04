@@ -4,6 +4,7 @@ import { useAuthContext } from './contexts/AuthContext.js';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
 
   return (
     <>
+      <GlobalNavbar />
       <Routes>
         {/* Unprotected routes */}
 
