@@ -1,0 +1,45 @@
+import { Container, Row, Col } from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import styles from '../styling/common/GlobalNavbar.module.css';
+
+import coappLogo from '../../assets/coapp_logo.png';
+
+function GlobalNavBar() {
+  return (
+    <Navbar
+      expand="lg"
+      className="bg-body-tertiary fixed-top">
+      <Container fluid>
+        <Row className="d-flex align-items-center me-2">
+          <Col className="pe-0">
+            <Navbar.Brand
+              href="https://letsgohobbyshop.ca/"
+              className={styles.logo}
+              target="_blank"
+              rel="noopener noreferrer">
+              <img
+                src={coappLogo}
+                width="100"
+                height="50"
+                className="d-inline-block align-top"
+                alt="Co-App"
+              />
+            </Navbar.Brand>
+          </Col>
+        </Row>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/example1">Example 1</Nav.Link>
+            <Nav.Link href="/example2">Example 2</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+}
+
+export default GlobalNavBar;
