@@ -4,12 +4,14 @@ import { useAuthContext } from './contexts/AuthContext.js';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
 
   return (
     <>
+      <GlobalNavbar />
       <Routes>
         {/* Unprotected routes */}
 
