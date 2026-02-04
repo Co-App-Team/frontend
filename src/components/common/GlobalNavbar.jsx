@@ -1,7 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
@@ -12,7 +11,7 @@ function GlobalNavBar() {
       expand="lg"
       className="bg-body-tertiary fixed-top">
       <Container fluid>
-        <Row className="d-flex align-items-center me-2">
+        <Row className="d-flex align-items-center me-2 border-end">
           <Col className="pe-0">
             <Navbar.Brand
               href="https://letsgohobbyshop.ca/"
