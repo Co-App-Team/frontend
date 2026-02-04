@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
+import RateMyCoop from './pages/RateMyCoop.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -19,6 +20,12 @@ function App() {
         <Route
           path="*"
           element={<NotFoundPage />}
+        />
+
+        {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
+        <Route
+          path="rate-my-co-op"
+          element={<RateMyCoop />}
         />
 
         {/* Protected (requires auth) routes */}
