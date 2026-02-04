@@ -6,14 +6,13 @@ import './index.css';
 import App from './App.jsx';
 import { AuthProvider } from './contexts/AuthProvider.jsx';
 import { BrowserRouter } from 'react-router-dom';
-import { Container, Row } from 'react-bootstrap';
-import GlobalNavBar from './components/common/GlobalNavBar.jsx';
+import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
-        <GlobalNavBar></GlobalNavBar>
+        <GlobalNavbar></GlobalNavbar>
         <App />
       </BrowserRouter>
     </AuthProvider>

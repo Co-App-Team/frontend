@@ -5,7 +5,7 @@ import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
 
-function GlobalNavBar() {
+function GlobalNavbar() {
   return (
     <Navbar
       expand="lg"
@@ -41,4 +41,4 @@ function GlobalNavBar() {
   );
 }
 
-export default GlobalNavBar;
+export default GlobalNavbar;
