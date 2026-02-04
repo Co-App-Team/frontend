@@ -14,10 +14,8 @@ function GlobalNavbar() {
         <Row className="d-flex align-items-center me-2 border-end">
           <Col className="pe-0">
             <Navbar.Brand
-              href="https://letsgohobbyshop.ca/"
-              className={styles.logo}
-              target="_blank"
-              rel="noopener noreferrer">
+              href="/"
+              className={styles.logo}>
               <img
                 src={coappLogo}
                 width="100"
