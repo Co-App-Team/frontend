@@ -75,6 +75,7 @@ const LoginPage = () => {
             type="email"
             placeholder="Enter your email"
             onChange={onEmailChange}
+            disabled={isLoading}
           />
         </Form.Group>
 
@@ -89,6 +90,7 @@ const LoginPage = () => {
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter your password"
               onChange={onPasswordChange}
+              disabled={isLoading}
             />
             <Button
               variant="outline-secondary"
