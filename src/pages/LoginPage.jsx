@@ -4,7 +4,7 @@ import { login } from '../api/authApi';
 import { AuthContext } from '../contexts/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 
 // TODO: Make the show/hide password option look cleaner
@@ -12,6 +12,7 @@ import LogoImage from '../assets/coapp_logo.png';
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -44,6 +45,7 @@ const LoginPage = () => {
     } else {
       console.log('Login successful:', response.data);
       setIsLoggedIn(true);
+      navigate('/');
     }
     setIsLoading(false);
   };
