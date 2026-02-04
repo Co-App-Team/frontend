@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://localhost:8080/api', // TODO: Dummy URL, replace with actual backend URL
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 let authFailedCallback = null;
