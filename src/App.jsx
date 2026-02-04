@@ -22,7 +22,7 @@ function App() {
 
         {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
         <Route
-          path="rateMyCoop"
+          path="rate-my-co-op"
           element={<RateMyCoop />}
         />
 
