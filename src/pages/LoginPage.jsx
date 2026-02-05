@@ -2,10 +2,9 @@ import { useContext, useState } from 'react';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { login } from '../api/authApi';
 import { AuthContext } from '../contexts/AuthContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
+import ShowPasswordButton from '../components/ShowPasswordButton';
 
 // TODO: Make the show/hide password option look cleaner
 // TODO: Improve general page design, it's all white rn
@@ -96,17 +95,11 @@ const LoginPage = () => {
               disabled={isLoading}
               style={{ borderRight: 'none' }}
             />
-            <Button
-              variant="outline-secondary"
+            <ShowPasswordButton
+              isShowingPassword={showPassword}
+              isLoading={isLoading}
               onClick={togglePasswordVisibility}
-              disabled={isLoading}
-              style={{ borderLeft: 'none', borderColor: '#dee2e6' }}>
-              {showPassword ? (
-                <FontAwesomeIcon icon={faEyeSlash} />
-              ) : (
-                <FontAwesomeIcon icon={faEye} />
-              )}
-            </Button>
+            />
           </InputGroup>
         </Form.Group>
         <div className="d-grid">
@@ -129,7 +122,7 @@ const LoginPage = () => {
         </div>
       </Form>
       {error && <p className="text-danger mt-3">{error}</p>}
-      <p className="mt-3">
+      <p className={error ? '' : 'mt-3'}>
         Or sign up <Link to="/signup">here</Link>
       </p>
       <p>
