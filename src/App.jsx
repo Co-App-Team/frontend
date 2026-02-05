@@ -13,9 +13,11 @@ import RateMyCoop from './pages/RateMyCoop.jsx';
 function App() {
   const { isLoggedIn } = useAuthContext();
 
+  // TODO: Hide navbar on login/signup pages
+
   return (
     <>
-      <GlobalNavbar />
+      {/* <GlobalNavbar /> */}
       <Routes>
         {/* Unprotected routes */}
         <Route

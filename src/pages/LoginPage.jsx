@@ -94,10 +94,13 @@ const LoginPage = () => {
               placeholder="Enter your password"
               onChange={onPasswordChange}
               disabled={isLoading}
+              style={{ borderRight: 'none' }}
             />
             <Button
               variant="outline-secondary"
-              onClick={togglePasswordVisibility}>
+              onClick={togglePasswordVisibility}
+              disabled={isLoading}
+              style={{ borderLeft: 'none', borderColor: '#dee2e6' }}>
               {showPassword ? (
                 <FontAwesomeIcon icon={faEyeSlash} />
               ) : (
