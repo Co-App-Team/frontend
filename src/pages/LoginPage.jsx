@@ -31,7 +31,7 @@ const LoginPage = () => {
       if (response?.error?.response?.status === 401) {
         setError('Incorrect email or password');
       } else if (response?.error?.response?.status === 400) {
-        // TODO: Redirect to email confirmation page
+        // TODO: Redirect to email confirmation page once it exists
         setError('Please confirm your email before logging in');
       } else if (response?.error?.code === 'ERR_NETWORK') {
         setError('Unable to connect to server. Please check your internet connection.');
