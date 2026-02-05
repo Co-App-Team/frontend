@@ -4,10 +4,7 @@ import { login } from '../api/authApi';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
-import ShowPasswordButton from '../components/ShowPasswordButton';
-
-// TODO: Make the show/hide password option look cleaner
-// TODO: Improve general page design, it's all white rn
+import ShowPasswordButton from '../components/common/ShowPasswordButton';
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
