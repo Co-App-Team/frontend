@@ -5,7 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 
 // TODO: Show/hide password button
-// TODO: Email/password validation
 // TODO: Implement signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
 // TODO: Make transition from login page look good
@@ -19,11 +18,19 @@ const SignupPage = () => {
     email: '',
     password: '',
   });
-  const [error, setError] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const submit = async () => {
+    if (!isEmailValid || !isPasswordValid) {
+      setShowError(true);
+      return;
+    }
+
     setIsLoading(true);
     setError('');
     // const response = await login(formData.email, formData.password);
@@ -51,10 +58,23 @@ const SignupPage = () => {
 
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
+    setIsEmailValid(validateEmail(e.target.value));
+    console.log(formData.email);
   };
 
   const onPasswordChange = (e) => {
     setFormData({ ...formData, password: e.target.value });
+    setIsPasswordValid(validatePassword(e.target.value));
+    console.log(formData.password);
+  };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
   };
 
   return (
@@ -77,8 +97,13 @@ const SignupPage = () => {
             type="email"
             placeholder="Enter your email"
             onChange={onEmailChange}
+            isInvalid={showError && !isEmailValid}
+            isValid={showError && isEmailValid}
             disabled={isLoading}
           />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid email.
+          </Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group
@@ -94,8 +119,13 @@ const SignupPage = () => {
               onChange={onPasswordChange}
               disabled={isLoading}
               style={{ borderRight: 'none' }}
+              isInvalid={showError && !isPasswordValid}
+              isValid={showError && isPasswordValid}
             />
           </InputGroup>
+          <Form.Control.Feedback type="invalid">
+            Password must be at least 6 characters long.
+          </Form.Control.Feedback>
         </Form.Group>
         <div className="d-grid">
           <Button
@@ -116,11 +146,11 @@ const SignupPage = () => {
           </Button>
         </div>
       </Form>
-      {error && <p className="text-danger mt-3">{error}</p>}
-      <p className={error ? '' : 'mt-3'}>
+      {error && <span className="text-danger mt-3">{error}</span>}
+      <p className="mt-3">
         Or sign up <Link to="/signup">here</Link>
       </p>
-      <p>
+      <p className="mt-3">
         <Link to="/forgot-password">Forgot your password?</Link>
       </p>
     </div>
