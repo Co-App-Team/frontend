@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { AuthContext } from './AuthContext';
+import { setAuthFailedCallback } from '../api/api';
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+
+  setAuthFailedCallback(() => {
+    setIsLoggedIn(false);
+  });
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>{children}</AuthContext.Provider>
   );
 };
