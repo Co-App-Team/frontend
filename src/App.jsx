@@ -6,6 +6,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
+import SignupPage from './pages/SignupPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -15,6 +16,10 @@ function App() {
       <GlobalNavbar />
       <Routes>
         {/* Unprotected routes */}
+        <Route
+          path="/signup"
+          element={<SignupPage />}
+        />
 
         {/* Not found page for non mapped routings */}
         <Route
