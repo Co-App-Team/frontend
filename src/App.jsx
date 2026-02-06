@@ -13,11 +13,8 @@ import RateMyCoop from './pages/RateMyCoop.jsx';
 function App() {
   const { isLoggedIn } = useAuthContext();
 
-  // TODO: Hide navbar on login/signup pages
-
   return (
     <>
-      {/* <GlobalNavbar /> */}
       <Routes>
         {/* Unprotected routes */}
         <Route
@@ -33,25 +30,30 @@ function App() {
           element={<ForgotPasswordPage />}
         />
 
-        {/* Not found page for non mapped routings */}
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
+        {/* Unprotected routes with app header */}
+        <Route element={<GlobalNavbar />}>
+          {/* Not found page for non mapped routings, must not be grouped under */}
+          <Route
+            path="*"
+            element={<NotFoundPage />}
+          />
 
-        {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
-        <Route
-          path="rate-my-co-op"
-          element={<RateMyCoop />}
-        />
+          {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
+          <Route
+            path="rate-my-co-op"
+            element={<RateMyCoop />}
+          />
+        </Route>
 
         {/* Protected (requires auth) routes */}
         <Route element={<ProtectedRoute isAuthenticated={isLoggedIn} />}>
-          <Route
-            path="/"
-            element={<HomePage />}
-          />
-          {/* Add real protected routes here */}
+          {/* Protected routes with app header */}
+          <Route element={<GlobalNavbar />}>
+            <Route
+              path="/"
+              element={<HomePage />}
+            />
+          </Route>
         </Route>
       </Routes>
     </>
