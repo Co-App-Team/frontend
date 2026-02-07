@@ -6,6 +6,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
+import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -26,6 +27,10 @@ function App() {
         <Route
           path="rate-my-co-op"
           element={<RateMyCoop />}
+        />
+        <Route
+          path="confirm-email"
+          element={<ConfirmEmailPage />}
         />
 
         {/* Protected (requires auth) routes */}

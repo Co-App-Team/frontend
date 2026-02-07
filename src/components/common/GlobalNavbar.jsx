@@ -4,6 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
+import { Link } from 'react-router-dom';
+
+// TODO: Revert to using Nav.Link once we have real routes, using Link for now to test passing state through react router
 
 function GlobalNavbar() {
   return (
@@ -30,7 +33,11 @@ function GlobalNavbar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/example1">Example 1</Nav.Link>
+            <Link
+              state={{ email: 'me@t.t' }}
+              to="/confirm-email">
+              Confirm Email
+            </Link>
             <Nav.Link href="/example2">Example 2</Nav.Link>
           </Nav>
         </Navbar.Collapse>
