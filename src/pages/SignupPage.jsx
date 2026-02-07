@@ -1,14 +1,13 @@
 import { useContext, useState } from 'react';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import LogoImage from '../assets/coapp_logo.png';
+import LogoImage from '../assets/coapp_logo_favicon.png';
 
 // TODO: Show/hide password button
 // TODO: Implement signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
 // TODO: Make transition from login page look good
-// TODO: Current contents taken from login page, need to be changed
 
 const SignupPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -18,15 +17,18 @@ const SignupPage = () => {
     email: '',
     password: '',
   });
+
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isFirstNameValid, setIsFirstNameValid] = useState(false);
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const submit = async () => {
-    if (!isEmailValid || !isPasswordValid) {
+    if (!isEmailValid || !isPasswordValid || !isFirstNameValid || !isLastNameValid) {
       setShowError(true);
       return;
     }
@@ -56,6 +58,16 @@ const SignupPage = () => {
     setIsLoading(false);
   };
 
+  const onFirstNameChange = (e) => {
+    setFormData({ ...formData, firstName: e.target.value });
+    setIsFirstNameValid(validateFirstName(e.target.value));
+  };
+
+  const onLastNameChange = (e) => {
+    setFormData({ ...formData, lastName: e.target.value });
+    setIsLastNameValid(validateLastName(e.target.value));
+  };
+
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
     setIsEmailValid(validateEmail(e.target.value));
@@ -74,7 +86,15 @@ const SignupPage = () => {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 6;
+    return password.length >= 6 && password.trim() == password;
+  };
+
+  const validateFirstName = (firstName) => {
+    return firstName.trim() !== '';
+  };
+
+  const validateLastName = (lastName) => {
+    return lastName.trim() !== '';
   };
 
   return (
@@ -83,12 +103,51 @@ const SignupPage = () => {
       style={{ maxWidth: '19rem' }}>
       <img
         src={LogoImage}
-        width={200}
+        width={100}
       />
+      <h2>Get Started with coapp</h2>
+
       <Form>
         <Form.Group
-          className="mb-3"
-          controlId="formBasicEmail">
+          // className={showError && isFirstNameValid ? "mb-3" : "mb-0"}
+          // className="mb-3"
+          controlId="formBasicFirstName">
+          <div className="text-start mt-4 mb-1">
+            <Form.Label>First name</Form.Label>
+          </div>
+
+          <Form.Control
+            type="text"
+            placeholder="Enter your first name"
+            onChange={onFirstNameChange}
+            isInvalid={showError && !isFirstNameValid}
+            isValid={showError && isFirstNameValid}
+            disabled={isLoading}
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid first name.
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group controlId="formBasicLastName">
+          <div className="text-start mt-4 mb-1">
+            <Form.Label>Last name</Form.Label>
+          </div>
+
+          <Form.Control
+            type="text"
+            placeholder="Enter your last name"
+            onChange={onLastNameChange}
+            isInvalid={showError && !isLastNameValid}
+            isValid={showError && isLastNameValid}
+            disabled={isLoading}
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid last name.
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group controlId="formBasicEmail">
           <div className="text-start mt-4 mb-1">
             <Form.Label>Email</Form.Label>
           </div>
@@ -112,17 +171,14 @@ const SignupPage = () => {
           <div className="text-start mt-4 mb-1">
             <Form.Label>Password</Form.Label>
           </div>
-          <InputGroup>
-            <Form.Control
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
-              onChange={onPasswordChange}
-              disabled={isLoading}
-              style={{ borderRight: 'none' }}
-              isInvalid={showError && !isPasswordValid}
-              isValid={showError && isPasswordValid}
-            />
-          </InputGroup>
+          <Form.Control
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Enter a password"
+            onChange={onPasswordChange}
+            disabled={isLoading}
+            isInvalid={showError && !isPasswordValid}
+            isValid={showError && isPasswordValid}
+          />
           <Form.Control.Feedback type="invalid">
             Password must be at least 6 characters long.
           </Form.Control.Feedback>
@@ -141,17 +197,14 @@ const SignupPage = () => {
                 <span className="visually-hidden">Loading...</span>
               </Spinner>
             ) : (
-              'Log in'
+              'Create Account'
             )}
           </Button>
         </div>
       </Form>
       {error && <span className="text-danger mt-3">{error}</span>}
-      <p className="mt-3">
-        Or sign up <Link to="/signup">here</Link>
-      </p>
-      <p className="mt-3">
-        <Link to="/forgot-password">Forgot your password?</Link>
+      <p className="mt-3 mb-0">
+        <Link to="/login">Back to sign in</Link>
       </p>
     </div>
   );
