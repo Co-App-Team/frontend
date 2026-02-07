@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
-import { Button, Form, Spinner } from 'react-bootstrap';
+import { Button, Form, Row, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo_favicon.png';
+import Col from 'react-bootstrap/Col';
 
 // TODO: Show/hide password button
 // TODO: Implement signup API call
@@ -100,52 +101,55 @@ const SignupPage = () => {
   return (
     <div
       className="p-4 border rounded d-flex flex-column align-items-center"
-      style={{ maxWidth: '19rem' }}>
+      style={{ maxWidth: '30rem' }}>
       <img
         src={LogoImage}
-        width={100}
+        width={120}
       />
-      <h2>Get Started with coapp</h2>
+      <h2 className="mt-4 mb-0">Get Started with coapp</h2>
 
       <Form>
-        <Form.Group
-          // className={showError && isFirstNameValid ? "mb-3" : "mb-0"}
-          // className="mb-3"
-          controlId="formBasicFirstName">
-          <div className="text-start mt-4 mb-1">
-            <Form.Label>First name</Form.Label>
-          </div>
+        <Row>
+          <Form.Group
+            as={Col}
+            controlId="formBasicFirstName">
+            <div className="text-start mt-4 mb-1">
+              <Form.Label>First name</Form.Label>
+            </div>
 
-          <Form.Control
-            type="text"
-            placeholder="Enter your first name"
-            onChange={onFirstNameChange}
-            isInvalid={showError && !isFirstNameValid}
-            isValid={showError && isFirstNameValid}
-            disabled={isLoading}
-          />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid first name.
-          </Form.Control.Feedback>
-        </Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="Enter your first name"
+              onChange={onFirstNameChange}
+              isInvalid={showError && !isFirstNameValid}
+              isValid={showError && isFirstNameValid}
+              disabled={isLoading}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid first name.
+            </Form.Control.Feedback>
+          </Form.Group>
 
-        <Form.Group controlId="formBasicLastName">
-          <div className="text-start mt-4 mb-1">
-            <Form.Label>Last name</Form.Label>
-          </div>
+          <Form.Group
+            controlId="formBasicLastName"
+            as={Col}>
+            <div className="text-start mt-4 mb-1">
+              <Form.Label>Last name</Form.Label>
+            </div>
 
-          <Form.Control
-            type="text"
-            placeholder="Enter your last name"
-            onChange={onLastNameChange}
-            isInvalid={showError && !isLastNameValid}
-            isValid={showError && isLastNameValid}
-            disabled={isLoading}
-          />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid last name.
-          </Form.Control.Feedback>
-        </Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="Enter your last name"
+              onChange={onLastNameChange}
+              isInvalid={showError && !isLastNameValid}
+              isValid={showError && isLastNameValid}
+              disabled={isLoading}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please provide a valid last name.
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Row>
 
         <Form.Group controlId="formBasicEmail">
           <div className="text-start mt-4 mb-1">
@@ -166,7 +170,7 @@ const SignupPage = () => {
         </Form.Group>
 
         <Form.Group
-          className="mb-3"
+          className={showError && !isPasswordValid ? 'mb-3' : 'mb-4'}
           controlId="formBasicPassword">
           <div className="text-start mt-4 mb-1">
             <Form.Label>Password</Form.Label>
