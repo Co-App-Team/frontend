@@ -4,38 +4,42 @@ import Navbar from 'react-bootstrap/Navbar';
 import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
+import { Outlet } from 'react-router-dom';
 
 function GlobalNavbar() {
   return (
-    <Navbar
-      expand="lg"
-      className="bg-body-tertiary fixed-top">
-      <Container fluid>
-        <Row className="d-flex align-items-center me-2 border-end">
-          <Col className="pe-0">
-            <Navbar.Brand
-              href="/"
-              className={styles.logo}>
-              <img
-                src={coappLogo}
-                width="100"
-                height="50"
-                className="d-inline-block align-top"
-                alt="Co-App"
-              />
-            </Navbar.Brand>
-          </Col>
-        </Row>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/example1">Example 1</Nav.Link>
-            <Nav.Link href="/example2">Example 2</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <>
+      <Navbar
+        expand="lg"
+        className="bg-body-tertiary fixed-top">
+        <Container fluid>
+          <Row className="d-flex align-items-center me-2 border-end">
+            <Col className="pe-0">
+              <Navbar.Brand
+                href="/"
+                className={styles.logo}>
+                <img
+                  src={coappLogo}
+                  width="100"
+                  height="50"
+                  className="d-inline-block align-top"
+                  alt="Co-App"
+                />
+              </Navbar.Brand>
+            </Col>
+          </Row>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/example1">Example 1</Nav.Link>
+              <Nav.Link href="/example2">Example 2</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <Outlet />
+    </>
   );
 }
 
