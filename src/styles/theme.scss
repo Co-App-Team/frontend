@@ -13,12 +13,8 @@ $link-hover-color: $primary;
 @import "bootstrap/scss/bootstrap";
 
 // Button overrides
-.btn-primary {
-  --bs-btn-color: #ffffff;
-  --bs-btn-hover-color: #fff;
-}
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: $primary-hover;
-  border-color: $primary-hover;
+  background-color: shade-color($primary, 50%);
+  border-color: shade-color($primary, 50%);
 }
