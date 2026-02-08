@@ -4,6 +4,9 @@ import { useAuthContext } from './contexts/AuthContext.js';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import SignupPage from './pages/SignupPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
 import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
@@ -13,33 +16,49 @@ function App() {
 
   return (
     <>
-      <GlobalNavbar />
       <Routes>
         {/* Unprotected routes */}
-
-        {/* Not found page for non mapped routings */}
         <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
-
-        {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
-        <Route
-          path="rate-my-co-op"
-          element={<RateMyCoop />}
+          path="/login"
+          element={<LoginPage />}
         />
         <Route
-          path="confirm-email"
+          path="/signup"
+          element={<SignupPage />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<ForgotPasswordPage />}
+        />
+        <Route
+          path="/confirm-email"
           element={<ConfirmEmailPage />}
         />
 
+        {/* Unprotected routes with app header */}
+        <Route element={<GlobalNavbar />}>
+          {/* Not found page for non mapped routings, must not be grouped under */}
+          <Route
+            path="*"
+            element={<NotFoundPage />}
+          />
+
+          {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
+          <Route
+            path="rate-my-co-op"
+            element={<RateMyCoop />}
+          />
+        </Route>
+
         {/* Protected (requires auth) routes */}
         <Route element={<ProtectedRoute isAuthenticated={isLoggedIn} />}>
-          <Route
-            path="/"
-            element={<HomePage />}
-          />
-          {/* Add real protected routes here */}
+          {/* Protected routes with app header */}
+          <Route element={<GlobalNavbar />}>
+            <Route
+              path="/"
+              element={<HomePage />}
+            />
+          </Route>
         </Route>
       </Routes>
     </>
