@@ -1,0 +1,14 @@
+// Override Bootstrap variables BEFORE importing Bootstrap
+$primary: #163c5b;
+$secondary: #3490c7;
+$success: #76b854;
+$danger: #b85454;
+$warning: #b8a054;
+
+$link-color: $secondary;
+$link-hover-color: $primary;
+$link-decoration: $secondary;
+$link-hover-decoration: $primary;
+
+// Import Bootstrap
+@import "bootstrap/scss/bootstrap";
