@@ -10,7 +10,7 @@ $link-color: $secondary;
 $link-hover-color: $primary;
 
 // Import Bootstrap
-@import "bootstrap/scss/bootstrap";
+@import 'bootstrap/scss/bootstrap';
 
 // Button overrides
 .btn-primary:hover,
