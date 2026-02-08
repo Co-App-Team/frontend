@@ -9,6 +9,7 @@ import SignupPage from './pages/SignupPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
+import ThemeDemo from './pages/ThemeDemo.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -28,6 +29,10 @@ function App() {
         <Route
           path="/forgot-password"
           element={<ForgotPasswordPage />}
+        />
+        <Route
+          path="/theme-demo"
+          element={<ThemeDemo />}
         />
 
         {/* Unprotected routes with app header */}
