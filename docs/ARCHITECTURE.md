@@ -175,3 +175,5 @@ const LoginPage = () => {
     </>);
 }
 ```
+
+The `useApi` hook also returns `data, loading, error`, which are state variables that will be updated as the request happens, providing an alternate way to use the hook for different use cases.
