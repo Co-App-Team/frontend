@@ -1,4 +1,4 @@
-import Searchbar from '../components/rateMyCoop/SearchBar';
+import Searchbar from '../components/rateMyCoop/Searchbar';
 import { getCompanies } from '../api/rateMyCoopApi';
 import { useEffect, useState } from 'react';
 
