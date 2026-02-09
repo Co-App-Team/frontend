@@ -38,7 +38,6 @@ const LoginPage = () => {
 
     try {
       await loginCallback(formData.email, formData.password);
-      console.log('Login successful');
       setIsLoggedIn(true);
       navigate('/');
     } catch (error) {
