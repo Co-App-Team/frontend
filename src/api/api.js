@@ -30,8 +30,6 @@ axiosClient.interceptors.response.use(
     const status = error.response?.status || 0;
     const responseData = error.response?.data || {};
 
-    console.log('Got response data: ' + JSON.stringify(responseData));
-
     if (status === 401) {
       // Fire the auth failed callback
       if (authFailedCallback) {

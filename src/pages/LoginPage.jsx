@@ -9,9 +9,9 @@ import useApi from '../hooks/useApi.js';
 import { getErrorMessage } from '../utils/errorUtils.js';
 
 const errorMappings = {
-  // TODO: Pull in the other error mappings from the API docs
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Incorrect email or password',
   INVALID_EMAIL_OR_PASSWORD: 'Incorrect email or password',
+  ACCOUNT_NOT_ACTIVATED: 'Please activate your account',
 };
 
 const LoginPage = () => {
@@ -42,18 +42,12 @@ const LoginPage = () => {
       setIsLoggedIn(true);
       navigate('/');
     } catch (error) {
-      console.log('Got error: ' + JSON.stringify(error));
-      console.log('error.message: ' + error.message);
       const message = getErrorMessage(error, errorMappings);
 
       if (error.status === 400) {
         // TODO: Redirect to email confirmation page once it exists
-        setError(message);
-      } else if (error.status === 401) {
-        setError(message);
-      } else {
-        setError(message);
       }
+      setError(message);
     } finally {
       setIsLoading(false);
     }

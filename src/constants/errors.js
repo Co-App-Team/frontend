@@ -7,6 +7,7 @@ export const GLOBAL_ERRORS = {
 
   // HTTP response codes (0 for network failed)
   0: 'Unable to connect to server. Please check your internet connection.',
-  404: 'Not found :(',
+  401: 'Your session has expired. Please log in again.',
+  404: 'Unable to find resource',
   // TODO: Define other errors, including 400/401/etc.
 };
