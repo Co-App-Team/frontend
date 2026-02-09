@@ -89,3 +89,7 @@ To define new routes:
 1. Decide if the route needs protection (requires the user to be authenticated)
 2. If the route needs protection, add it in the sub-group of routes, below the comment `{/* Protected (requires auth) routes */}` in [App.jsx](../src/App.jsx)
 3. If the route is unprotected, add it in the main group of routes below `{/* Unprotected routes */}` that includes the `NotFoundPage` route
+
+## API Calls
+
+*TODO: Write description*
