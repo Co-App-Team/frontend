@@ -5,6 +5,14 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
+import useApi from '../hooks/useApi.js';
+import { getErrorMessage } from '../utils/errorUtils.js';
+
+const errorMappings = {
+  // TODO: Pull in the other error mappings from the API docs
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Incorrect email or password',
+  INVALID_EMAIL_OR_PASSWORD: 'Incorrect email or password',
+};
 
 const LoginPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -22,28 +30,33 @@ const LoginPage = () => {
     setShowPassword(!showPassword);
   };
 
+  const { request: loginCallback } = useApi(login);
+
   const submit = async () => {
     setIsLoading(true);
     setError('');
-    const response = await login(formData.email, formData.password);
-    if (response.error) {
-      console.error('Login failed:', JSON.stringify(response.error));
-      if (response?.error?.response?.status === 401) {
-        setError('Incorrect email or password');
-      } else if (response?.error?.response?.status === 400) {
-        // TODO: Redirect to email confirmation page once it exists
-        setError('Please confirm your email before logging in');
-      } else if (response?.error?.code === 'ERR_NETWORK') {
-        setError('Unable to connect to server. Please check your internet connection.');
-      } else {
-        setError('Unexpected error occurred during login');
-      }
-    } else {
-      console.log('Login successful:', response.data);
+
+    try {
+      await loginCallback(formData.email, formData.password);
+      console.log('Login successful');
       setIsLoggedIn(true);
       navigate('/');
+    } catch (error) {
+      console.log('Got error: ' + JSON.stringify(error));
+      console.log('error.message: ' + error.message);
+      const message = getErrorMessage(error, errorMappings);
+
+      if (error.status === 400) {
+        // TODO: Redirect to email confirmation page once it exists
+        setError(message);
+      } else if (error.status === 401) {
+        setError(message);
+      } else {
+        setError(message);
+      }
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const onEmailChange = (e) => {

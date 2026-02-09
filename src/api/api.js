@@ -1,10 +1,6 @@
-// Base api calls done here
+// Developed in part using Gemini, see https://gemini.google.com/share/10616c57b393 for details.
 
 import axios from 'axios';
-
-const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
 
 let authFailedCallback = null;
 
@@ -12,52 +8,60 @@ export const setAuthFailedCallback = (callback) => {
   authFailedCallback = callback;
 };
 
-// Intercept 401s to handle auth failures globally
-client.interceptors.response.use(
-  (response) => response,
+const axiosClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+axiosClient.defaults.withCredentials = true;
+
+// 1. Custom Error Class (Keeps things consistent)
+export class ApiError extends Error {
+  constructor(message, status, serverCode, data = null) {
+    super(message); // "Readable" response from server for fallback
+    this.name = 'ApiError';
+    this.status = status; // HTTP Status
+    this.serverCode = serverCode; // Server code, like: "ACCOUNT_NOT_ACTIVATED", etc.
+    this.data = data; // Full response data
+  }
+}
+
+axiosClient.interceptors.response.use(
+  (response) => response.data,
   (error) => {
-    if (error?.response?.status === 401) {
+    const status = error.response?.status || 0;
+    const responseData = error.response?.data || {};
+
+    console.log('Got response data: ' + JSON.stringify(responseData));
+
+    if (status === 401) {
       // Fire the auth failed callback
       if (authFailedCallback) {
         authFailedCallback();
       }
     }
-    return Promise.reject(error);
+
+    // Fallback message sent from server, if all goes well we get:
+    // {
+    // "error":"SERVER_CODE",
+    // "message":"Some detailed message"
+    //}
+    // If the server has no endpoint defined we'll get something like:
+    //{
+    // "timestamp":"xyz",
+    // "status":404,
+    // "error":"Not Found",
+    // "path":"/api/path/to/endpoint"
+    //}
+    // When we can't connect to the server, we get error.message = "Network error"
+    const fallbackMessage =
+      responseData.message || responseData.error || error.message || 'Unknown Error';
+
+    // The server error code ("ACCOUNT_NOT_ACTIVATED")
+    const serverCode = responseData.error || null;
+
+    // 3. Reject with all the info
+    return Promise.reject(new ApiError(fallbackMessage, status, serverCode, responseData));
   },
 );
 
-const request = async (options) => {
-  const onSuccess = (response) => {
-    const { data } = response;
-    return data;
-  };
-
-  const onError = (error) => {
-    return Promise.reject({
-      message: error.message,
-      code: error.code,
-      response: error.response,
-    });
-  };
-
-  return client(options).then(onSuccess).catch(onError);
-};
-
-export const get = async (url, config = {}) => {
-  const options = {
-    method: 'GET',
-    url,
-    ...config,
-  };
-  return request(options);
-};
-
-export const post = async (url, data = {}, config = {}) => {
-  const options = {
-    method: 'POST',
-    url,
-    data,
-    ...config,
-  };
-  return request(options);
-};
+export default axiosClient;

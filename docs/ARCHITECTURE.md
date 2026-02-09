@@ -46,6 +46,10 @@ Contains images and other assets used by the site.
 
 **Purpose**: Contains reusable components that make up the majority of the app.
 
+### 4. `constants`
+
+TODO: Make this
+
 ---
 
 ### 4. `contexts`
@@ -65,6 +69,10 @@ Contains images and other assets used by the site.
 **Purpose**: Contains page components 
 
 These components will represent pages in the app, from which all of displayed content will be rendered.
+
+### 8. `utils`
+
+TODO: Make this
 
 ## Page Routing
 
