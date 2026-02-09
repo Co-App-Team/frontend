@@ -17,9 +17,11 @@ src
 ├── api
 ├── assets
 ├── components
+├── constants
 ├── contexts
 ├── hooks
-└── pages
+├── pages
+└── utils
 ```
 
 ---
@@ -46,33 +48,37 @@ Contains images and other assets used by the site.
 
 **Purpose**: Contains reusable components that make up the majority of the app.
 
+---
+
 ### 4. `constants`
 
-TODO: Make this
+**Purpose**: Contains constant values to be used elsewhere. Includes error message mappings.
 
 ---
 
-### 4. `contexts`
+### 5. `contexts`
 
 **Purpose**: Contains contexts for global state management.
 
 ---
 
-### 5. `hooks`
+### 6. `hooks`
 
 **Purpose**: Contains [React hooks](https://www.w3schools.com/react/react_hooks.asp) for logic re-use.
 
 ---
 
-### 6. `pages`
+### 7. `pages`
 
 **Purpose**: Contains page components 
 
 These components will represent pages in the app, from which all of displayed content will be rendered.
 
+---
+
 ### 8. `utils`
 
-TODO: Make this
+**Purpose**: Files containing utility functions for logic reuse, that aren't React hooks.
 
 ## Page Routing
 

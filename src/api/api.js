@@ -14,7 +14,6 @@ const axiosClient = axios.create({
 
 axiosClient.defaults.withCredentials = true;
 
-// 1. Custom Error Class (Keeps things consistent)
 export class ApiError extends Error {
   constructor(message, status, serverCode, data = null) {
     super(message); // "Readable" response from server for fallback
@@ -59,7 +58,6 @@ axiosClient.interceptors.response.use(
     // The server error code ("ACCOUNT_NOT_ACTIVATED")
     const serverCode = responseData.error || null;
 
-    // 3. Reject with all the info
     return Promise.reject(new ApiError(fallbackMessage, status, serverCode, responseData));
   },
 );

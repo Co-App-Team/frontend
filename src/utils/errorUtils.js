@@ -6,7 +6,7 @@ import { GLOBAL_ERRORS } from '../constants/errors';
  * @param {Object} localOverrides - Optional dictionary of code -> message for this specific component
  */
 export const getErrorMessage = (error, localOverrides = {}) => {
-  // 1. Safety check: if it's not our ApiError type (e.g. a coding bug), return generic
+  // Safety check: if it's not ApiError return generic
   if (!error?.serverCode && !error?.message) {
     return GLOBAL_ERRORS.SERVER_ERROR;
   }
@@ -35,6 +35,5 @@ export const getErrorMessage = (error, localOverrides = {}) => {
     return error.message;
   }
 
-  // 5. Last Resort
   return GLOBAL_ERRORS.SERVER_ERROR;
 };
