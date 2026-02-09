@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { login } from '../api/authApi';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
@@ -15,7 +15,7 @@ const errorMappings = {
 };
 
 const LoginPage = () => {
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useAuthContext();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
