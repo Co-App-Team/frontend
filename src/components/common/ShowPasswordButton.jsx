@@ -6,7 +6,7 @@ import styles from '../styling/common/ShowPasswordButton.module.css';
 const ShowPasswordButton = ({ isShowingPassword, isLoading, onClick }) => {
   return (
     <Button
-      variant="outline-secondary"
+      variant="outline-primary"
       onClick={onClick}
       disabled={isLoading}
       className={styles.passwordToggleButton}>
