@@ -97,7 +97,7 @@ API calls in the app are made through an error handling axios wrapper formed by 
 This wrapper serves several important functions:
 1. Response Interception
 2. Error Translation
-3. A hook for using (TODO: Move error translation to hook?) API calls in components
+3. A hook for using API calls in components
 
 ### Response Interception
 
