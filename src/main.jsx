@@ -1,8 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Global stylings
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './styles/theme.scss';
 import './index.css';
+
 import App from './App.jsx';
 import { AuthProvider } from './contexts/AuthProvider.jsx';
 import { BrowserRouter } from 'react-router-dom';
