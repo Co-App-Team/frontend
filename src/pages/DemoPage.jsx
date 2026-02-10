@@ -1,34 +1,30 @@
-import Searchbar from '../components/rateMyCoop/Searchbar';
 import { getCompanies } from '../api/rateMyCoopApi';
 import { useEffect, useState } from 'react';
+import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
+import { Container, Row } from 'react-bootstrap';
 
 const DemoPage = () => {
-  const [companies, setCompanies] = useState([]);
+  // const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   useEffect(() => {
     async function loadCompanies() {
       const data = await getCompanies();
-      setCompanies(data.companies);
+      // setCompanies(data.companies);
       setFilteredCompanies(data.companies);
     }
     loadCompanies();
   }, []);
 
   return (
-    <>
-      <h1>Demo page</h1>
-      {companies ? (
-        <ul>
-          {filteredCompanies.map((company, index) => (
-            <li key={company.companyId}>
-              {index}: {company.companyName}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No companies to show</p>
-      )}
-    </>
+    <Container fluid>
+      <Row>
+        <h1>Demo page</h1>
+      </Row>
+
+      <Row>
+        <CompaniesDisplay companies={filteredCompanies} />
+      </Row>
+    </Container>
   );
 };
 

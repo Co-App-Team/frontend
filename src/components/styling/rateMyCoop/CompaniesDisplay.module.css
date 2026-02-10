@@ -1,0 +1,6 @@
+.companies-container {
+  max-height: 70vh; /* 70% of viewport height */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem; /* prevents scrollbar overlap */
+}
