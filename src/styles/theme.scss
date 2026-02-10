@@ -1,0 +1,20 @@
+// Bootstrap variables
+$primary: #163c5b;
+$primary-hover: #21679b;
+$secondary: #3490c7;
+$success: #76b854;
+$danger: #c84c37;
+$warning: #c8ad37;
+
+$link-color: $secondary;
+$link-hover-color: $primary;
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Button overrides
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: shade-color($primary, 50%);
+  border-color: shade-color($primary, 50%);
+}
