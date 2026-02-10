@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react';
-import { Button, Form, Row, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo_favicon.png';
 import Col from 'react-bootstrap/Col';
+import ShowPasswordButton from '../components/common/ShowPasswordButton';
 
-// TODO: Show/hide password button
+// TODO: Show/hide password button looks bad, with the InputGroup put back it looks as intended, but not for the error state
+//  need to find a way to fix it probably without using the InputGroup
 // TODO: Implement signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
 // TODO: Make transition from login page look good
@@ -27,6 +29,10 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const submit = async () => {
     if (!isEmailValid || !isPasswordValid || !isFirstNameValid || !isLastNameValid) {
@@ -54,7 +60,6 @@ const SignupPage = () => {
       console.log('Login successful:', response.data);
       setIsLoggedIn(true);
       navigate('/');
-      setShowPassword(false); // TODO: Remove me, done to make linter happy for now
     }
     setIsLoading(false);
   };
@@ -72,13 +77,11 @@ const SignupPage = () => {
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
     setIsEmailValid(validateEmail(e.target.value));
-    console.log(formData.email);
   };
 
   const onPasswordChange = (e) => {
     setFormData({ ...formData, password: e.target.value });
     setIsPasswordValid(validatePassword(e.target.value));
-    console.log(formData.password);
   };
 
   const validateEmail = (email) => {
@@ -97,6 +100,8 @@ const SignupPage = () => {
   const validateLastName = (lastName) => {
     return lastName.trim() !== '';
   };
+
+  console.log(isPasswordValid);
 
   return (
     <div
@@ -175,14 +180,23 @@ const SignupPage = () => {
           <div className="text-start mt-4 mb-1">
             <Form.Label>Password</Form.Label>
           </div>
+          {/* <InputGroup> */}
           <Form.Control
             type={showPassword ? 'text' : 'password'}
-            placeholder="Enter a password"
+            placeholder="Enter your password"
             onChange={onPasswordChange}
-            disabled={isLoading}
             isInvalid={showError && !isPasswordValid}
             isValid={showError && isPasswordValid}
+            disabled={isLoading}
+            style={{ borderRight: 'none' }}
           />
+          <ShowPasswordButton
+            isShowingPassword={showPassword}
+            isLoading={isLoading}
+            onClick={toggleShowPassword}
+          />
+          {/* </InputGroup> */}
+
           <Form.Control.Feedback type="invalid">
             Password must be at least 6 characters long.
           </Form.Control.Feedback>
