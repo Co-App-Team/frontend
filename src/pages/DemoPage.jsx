@@ -2,6 +2,7 @@ import { getCompanies } from '../api/rateMyCoopApi';
 import { useEffect, useState } from 'react';
 import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
 import { Container, Row } from 'react-bootstrap';
+import CompanyCard from '../components/rateMyCoop/CompanyCard';
 
 const DemoPage = () => {
   // const [companies, setCompanies] = useState([]);
@@ -23,6 +24,10 @@ const DemoPage = () => {
 
       <Row>
         <CompaniesDisplay companies={filteredCompanies} />
+      </Row>
+
+      <Row>
+        <CompanyCard></CompanyCard>
       </Row>
     </Container>
   );
