@@ -13,7 +13,9 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
 
             <Container className="d-flex flex-column p-0 m-0">
               {companies.map((company, index) => (
-                <Row className="py-2 px-0">
+                <Row
+                  className="py-2 px-0"
+                  key={index}>
                   <Col key={index}>
                     <CompanyCard company={company} />
                   </Col>
@@ -28,7 +30,9 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
         {topFilteredCompanies.length != 0 ? (
           <Container className="d-flex flex-column p-0 m-0">
             {topFilteredCompanies.map((company, index) => (
-              <Row className="py-2 px-0">
+              <Row
+                className="py-2 px-0"
+                key={index}>
                 <Col key={index}>
                   <CompanyCard company={company} />
                 </Col>
@@ -41,10 +45,12 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
 
         {otherFilteredCompanies.length != 0 ? (
           <>
-            <h3>Other search results</h3>
+            <h3>Other Search Results</h3>
             <Container className="d-flex flex-column p-0 m-0">
               {otherFilteredCompanies.map((company, index) => (
-                <Row className="py-2 px-0">
+                <Row
+                  className="py-2 px-0"
+                  key={index}>
                   <Col key={index}>
                     <CompanyCard company={company} />
                   </Col>
