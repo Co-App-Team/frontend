@@ -14,9 +14,13 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
               {companies.map((company, index) => (
                 <Row className="py-2 px-0">
                   <Col key={index}>
-                    <Card className={styles['company-card']}>
-                      <Card.Header>{company.companyName}</Card.Header>
+                    <Card
+                      className={styles['company-card']}
+                      onClick={() => {
+                        console.log('bruh');
+                      }}>
                       <Card.Body>
+                        <Card.Title>{company.companyName}</Card.Title>
                         <Card.Text>
                           "Insert more info dfssfsdjkfhjsdjklfdsssssssssssssssssssssssssssssssssss"
                         </Card.Text>
@@ -36,9 +40,13 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
             {topFilteredCompanies.map((company, index) => (
               <Row className="py-2 px-0">
                 <Col key={index}>
-                  <Card className={styles['company-card']}>
-                    <Card.Header>{company.companyName}</Card.Header>
+                  <Card
+                    className={styles['company-card']}
+                    onClick={() => {
+                      console.log('bruh');
+                    }}>
                     <Card.Body>
+                      <Card.Title>{company.companyName}</Card.Title>
                       <Card.Text>
                         "Insert more info dfssfsdjkfhjsdjklfdsssssssssssssssssssssssssssssssssss"
                       </Card.Text>
@@ -59,9 +67,13 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
               {otherFilteredCompanies.map((company, index) => (
                 <Row className="py-2 px-0">
                   <Col key={index}>
-                    <Card className={styles['company-card']}>
-                      <Card.Header>{company.companyName}</Card.Header>
+                    <Card
+                      className={styles['company-card']}
+                      onClick={() => {
+                        console.log('bruh');
+                      }}>
                       <Card.Body>
+                        <Card.Title>{company.companyName}</Card.Title>
                         <Card.Text>
                           "Insert more info dfssfsdjkfhjsdjklfdsssssssssssssssssssssssssssssssssss"
                         </Card.Text>

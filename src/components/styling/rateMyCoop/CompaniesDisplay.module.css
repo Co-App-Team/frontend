@@ -5,15 +5,24 @@
   overflow-x: hidden;
   padding: 0.5rem;
   margin-top: 1rem;
+  text-align: left;
+
   border: 0.2rem;
   border-style: solid;
   border-radius: 5px;
-  text-align: left;
+  border-color: lightgray;
 }
 
 .company-card {
+  border-left: 0.5rem;
+  border-style: solid;
+  border-left-color: var(--primary);
   width: 78vw;
   padding: 0;
+  transition: filter 0.2s ease;
+}
+.company-card:hover {
+  filter: brightness(0.9);
 }
 
 .company-card-row {

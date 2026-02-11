@@ -27,3 +27,10 @@ $link-hover-color: $primary;
   min-width: 100%;
   max-width: 100%;
 }
+
+:root {
+  --primary: #{$primary};
+  --primary-hover: #{$primary-hover};
+  --secondary: #{$secondary};
+  --success: #{$success};
+}
