@@ -24,23 +24,37 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
             </Container>
           </>
         ) : (
-          <h3>Top Results</h3>
+          <></>
         )}
 
-        {topFilteredCompanies.length != 0 ? (
-          <Container className="d-flex flex-column p-0 m-0">
-            {topFilteredCompanies.map((company, index) => (
-              <Row
-                className="py-2 px-0"
-                key={index}>
-                <Col key={index}>
-                  <CompanyCard company={company} />
-                </Col>
-              </Row>
-            ))}
-          </Container>
+        {topFilteredCompanies.length != 0 && topFilteredCompanies.length != companies.length ? (
+          <>
+            <h3>Top Results</h3>
+            <Container className="d-flex flex-column p-0 m-0">
+              {topFilteredCompanies.map((company, index) => (
+                <Row
+                  className="py-2 px-0"
+                  key={index}>
+                  <Col key={index}>
+                    <CompanyCard company={company} />
+                  </Col>
+                </Row>
+              ))}
+            </Container>
+          </>
         ) : (
-          <p>No companies match</p>
+          <></>
+        )}
+
+        {topFilteredCompanies.length == 0 &&
+        otherFilteredCompanies.length == 0 &&
+        topFilteredCompanies.length != companies.length ? (
+          <>
+            <h3>Top Results</h3>
+            <p className="fst-italic">No Matches</p>
+          </>
+        ) : (
+          <></>
         )}
 
         {otherFilteredCompanies.length != 0 ? (
@@ -57,6 +71,15 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
                 </Row>
               ))}
             </Container>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {otherFilteredCompanies.length == 0 && topFilteredCompanies.length != companies.length ? (
+          <>
+            <h3>Other Search Results</h3>
+            <p className="fst-italic">No Matches</p>
           </>
         ) : (
           <></>
