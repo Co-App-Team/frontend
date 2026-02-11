@@ -30,6 +30,10 @@ function App() {
           path="/forgot-password"
           element={<ForgotPasswordPage />}
         />
+        <Route
+          path="/demo"
+          element={<DemoPage />}
+        />
 
         <Route
           path="/demo"
