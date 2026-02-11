@@ -90,7 +90,6 @@ const LoginPage = () => {
               placeholder="Enter your password"
               onChange={onPasswordChange}
               disabled={isLoading}
-              style={{ borderRight: 'none' }}
             />
             <ShowPasswordButton
               isShowingPassword={showPassword}

@@ -1,3 +1,5 @@
+// Component developed in part using Gemini: https://gemini.google.com/share/6cf46cb9feaa
+
 import { useContext, useState } from 'react';
 import { Button, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../contexts/AuthContext';
@@ -6,11 +8,11 @@ import LogoImage from '../assets/coapp_logo_favicon.png';
 import Col from 'react-bootstrap/Col';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
 
-// TODO: Show/hide password button looks bad, with the InputGroup put back it looks as intended, but not for the error state
-//  need to find a way to fix it probably without using the InputGroup
 // TODO: Implement signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
 // TODO: Make transition from login page look good
+// TODO: Test password saving
+// TODO: Current UI looks a bit crowded
 
 const SignupPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -32,6 +34,11 @@ const SignupPage = () => {
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submit();
   };
 
   const submit = async () => {
@@ -111,7 +118,7 @@ const SignupPage = () => {
         src={LogoImage}
         width={120}
       />
-      <h2 className="mt-4 mb-0">Get Started with coapp</h2>
+      <h2 className="mt-4 mb-0">Get Started with CoApp</h2>
 
       <Form>
         <Row>
@@ -127,7 +134,6 @@ const SignupPage = () => {
               placeholder="Enter your first name"
               onChange={onFirstNameChange}
               isInvalid={showError && !isFirstNameValid}
-              isValid={showError && isFirstNameValid}
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">
@@ -147,7 +153,6 @@ const SignupPage = () => {
               placeholder="Enter your last name"
               onChange={onLastNameChange}
               isInvalid={showError && !isLastNameValid}
-              isValid={showError && isLastNameValid}
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">
@@ -162,11 +167,12 @@ const SignupPage = () => {
           </div>
 
           <Form.Control
+            name="email"
             type="email"
+            autoComplete="email"
             placeholder="Enter your email"
             onChange={onEmailChange}
             isInvalid={showError && !isEmailValid}
-            isValid={showError && isEmailValid}
             disabled={isLoading}
           />
           <Form.Control.Feedback type="invalid">
@@ -175,37 +181,38 @@ const SignupPage = () => {
         </Form.Group>
 
         <Form.Group
+          name="Password"
           className={showError && !isPasswordValid ? 'mb-3' : 'mb-4'}
           controlId="formBasicPassword">
           <div className="text-start mt-4 mb-1">
             <Form.Label>Password</Form.Label>
           </div>
-          {/* <InputGroup> */}
-          <Form.Control
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Enter your password"
-            onChange={onPasswordChange}
-            isInvalid={showError && !isPasswordValid}
-            isValid={showError && isPasswordValid}
-            disabled={isLoading}
-            style={{ borderRight: 'none' }}
-          />
-          <ShowPasswordButton
-            isShowingPassword={showPassword}
-            isLoading={isLoading}
-            onClick={toggleShowPassword}
-          />
-          {/* </InputGroup> */}
 
-          <Form.Control.Feedback type="invalid">
-            Password must be at least 6 characters long.
-          </Form.Control.Feedback>
+          <InputGroup hasValidation>
+            <Form.Control
+              autoComplete="new-password"
+              type={showPassword ? 'text' : 'password'}
+              isInvalid={showError && !isPasswordValid}
+              placeholder="Enter your password"
+              onChange={onPasswordChange}
+              disabled={isLoading}
+            />
+            <ShowPasswordButton
+              isShowingPassword={showPassword}
+              isLoading={isLoading}
+              onClick={toggleShowPassword}
+              isInvalid={showError && !isPasswordValid}
+            />
+            <Form.Control.Feedback type="invalid">
+              Password must be at least 6 characters long.
+            </Form.Control.Feedback>
+          </InputGroup>
         </Form.Group>
         <div className="d-grid">
           <Button
             variant="primary"
-            type="button"
-            onClick={submit}
+            type="submit"
+            onClick={handleSubmit}
             size="lg"
             disabled={isLoading}>
             {isLoading ? (
