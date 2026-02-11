@@ -51,7 +51,7 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
         topFilteredCompanies.length != companies.length ? (
           <>
             <h3>Top Results</h3>
-            <p className="fst-italic">No Matches</p>
+            <p className="fst-italic">No Results</p>
           </>
         ) : (
           <></>
@@ -79,7 +79,7 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
         {otherFilteredCompanies.length == 0 && topFilteredCompanies.length != companies.length ? (
           <>
             <h3>Other Search Results</h3>
-            <p className="fst-italic">No Matches</p>
+            <p className="fst-italic">No Results</p>
           </>
         ) : (
           <></>

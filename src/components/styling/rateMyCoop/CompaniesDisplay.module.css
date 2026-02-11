@@ -1,5 +1,5 @@
 .companies-container {
-  max-height: 70vh; /* 70% of viewport height */
+  max-height: 70vh;
   width: 80vw;
   overflow-y: auto;
   overflow-x: hidden;
