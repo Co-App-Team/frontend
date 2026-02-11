@@ -1,7 +1,21 @@
 .companies-container {
   max-height: 70vh; /* 70% of viewport height */
-  width: 90vw;
+  width: 80vw;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 0.5rem; /* prevents scrollbar overlap */
+  padding: 0.5rem;
+  margin-top: 1rem;
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.company-card {
+  width: 78vw;
+  padding: 0;
+}
+
+.company-card-row {
+  width: 80vw;
 }
