@@ -1,13 +1,21 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { login } from '../api/authApi';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
+import useApi from '../hooks/useApi.js';
+import { getErrorMessage } from '../utils/errorUtils.js';
+
+const errorMappings = {
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Incorrect email or password',
+  INVALID_EMAIL_OR_PASSWORD: 'Incorrect email or password',
+  ACCOUNT_NOT_ACTIVATED: 'Please activate your account',
+};
 
 const LoginPage = () => {
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useAuthContext();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -22,28 +30,26 @@ const LoginPage = () => {
     setShowPassword(!showPassword);
   };
 
+  const { request: loginCallback } = useApi(login);
+
   const submit = async () => {
     setIsLoading(true);
     setError('');
-    const response = await login(formData.email, formData.password);
-    if (response.error) {
-      console.error('Login failed:', JSON.stringify(response.error));
-      if (response?.error?.response?.status === 401) {
-        setError('Incorrect email or password');
-      } else if (response?.error?.response?.status === 400) {
-        // TODO: Redirect to email confirmation page once it exists
-        setError('Please confirm your email before logging in');
-      } else if (response?.error?.code === 'ERR_NETWORK') {
-        setError('Unable to connect to server. Please check your internet connection.');
-      } else {
-        setError('Unexpected error occurred during login');
-      }
-    } else {
-      console.log('Login successful:', response.data);
+
+    try {
+      await loginCallback(formData.email, formData.password);
       setIsLoggedIn(true);
       navigate('/');
+    } catch (error) {
+      const message = getErrorMessage(error, errorMappings);
+
+      if (error.status === 400) {
+        // TODO: Redirect to email confirmation page once it exists
+      }
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const onEmailChange = (e) => {
