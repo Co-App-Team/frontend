@@ -1,14 +1,5 @@
-import { post } from './api';
+import axiosClient from './api';
 
-export const login = async (username, password) => {
-  try {
-    const response = await post('/auth/login', {
-      email: username,
-      password: password,
-    });
-    const data = response.data;
-    return { data: data, error: null };
-  } catch (error) {
-    return { data: null, error: error };
-  }
+export const login = (email, password) => {
+  return axiosClient.post('/auth/login', { email, password });
 };
