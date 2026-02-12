@@ -25,6 +25,7 @@ const SignupPage = () => {
 
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
   const [isFirstNameValid, setIsFirstNameValid] = useState(false);
   const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -97,7 +98,18 @@ const SignupPage = () => {
   };
 
   const validatePassword = (password) => {
-    return password.length >= 6 && password.trim() == password;
+    if (password.trimStart() != password) {
+      setPasswordError('Password must not start with whitespace');
+      return false;
+    } else if (password.trim() != password) {
+      setPasswordError('Password must not end with whitespace');
+      return false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return false;
+    } else {
+      return true;
+    }
   };
 
   const validateFirstName = (firstName) => {
@@ -182,7 +194,7 @@ const SignupPage = () => {
 
         <Form.Group
           name="Password"
-          className={showError && !isPasswordValid ? 'mb-3' : 'mb-4'}
+          className={showError && !isPasswordValid ? 'mb-3' : 'mb-5'}
           controlId="formBasicPassword">
           <div className="text-start mt-4 mb-1">
             <Form.Label>Password</Form.Label>
@@ -203,9 +215,7 @@ const SignupPage = () => {
               onClick={toggleShowPassword}
               isInvalid={showError && !isPasswordValid}
             />
-            <Form.Control.Feedback type="invalid">
-              Password must be at least 6 characters long.
-            </Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
         <div className="d-grid">
