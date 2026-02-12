@@ -4,19 +4,17 @@ import { useContext, useState } from 'react';
 import { Button, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import LogoImage from '../assets/coapp_logo_favicon.png';
+import LogoImage from '../assets/coapp_logo.png';
 import Col from 'react-bootstrap/Col';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
 import { signup } from '../api/authApi';
 import useApi from '../hooks/useApi';
 import { getErrorMessage } from '../utils/errorUtils';
 
-// TODO: Handle signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
-// TODO: Make transition from login page look good
-// TODO: Test password saving
-// TODO: Current UI looks a bit crowded
-const errorMappings = {};
+const errorMappings = {
+  EXIST_ACCOUNT_WITH_EMAIL: 'An account with that email already exists. Try signing in.',
+};
 
 const SignupPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -66,17 +64,20 @@ const SignupPage = () => {
         formData.email,
         formData.password,
       );
+
+      // TODO: Navigate to email confirmation page once it exists
+
       setIsLoggedIn(true);
       navigate('/');
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
-
-      // if (error.status === 400) {
-      // }
-      setError(message);
+      console.log('Error message: ' + message);
+      if (error.status != 401) {
+        // Network errors or this account already exists
+        setError(message);
+      }
     } finally {
       setIsLoading(false);
-      console.log('bongus');
     }
   };
 
@@ -134,16 +135,17 @@ const SignupPage = () => {
       style={{ maxWidth: '30rem' }}>
       <img
         src={LogoImage}
-        width={120}
+        width={220}
       />
-      <h2 className="mt-4 mb-0">Get Started with CoApp</h2>
+      <h2 className="mt-0 mb-0 text-primary fw-bold">Get Started with CoApp</h2>
 
       <Form>
         <Row>
           <Form.Group
             as={Col}
-            controlId="formBasicFirstName">
-            <div className="text-start mt-4 mb-1">
+            controlId="formBasicFirstName"
+            className={'text-start mt-4 ' + (showError && isFirstNameValid ? 'mb-4' : 'mb-3')}>
+            <div className="text-start">
               <Form.Label>First name</Form.Label>
             </div>
 
@@ -161,8 +163,9 @@ const SignupPage = () => {
 
           <Form.Group
             controlId="formBasicLastName"
-            as={Col}>
-            <div className="text-start mt-4 mb-1">
+            as={Col}
+            className={'text-start mt-4 ' + (showError && isLastNameValid ? 'mb-4' : 'mb-3')}>
+            <div className="text-start">
               <Form.Label>Last name</Form.Label>
             </div>
 
@@ -179,8 +182,10 @@ const SignupPage = () => {
           </Form.Group>
         </Row>
 
-        <Form.Group controlId="formBasicEmail">
-          <div className="text-start mt-4 mb-1">
+        <Form.Group
+          controlId="formBasicEmail"
+          className={showError && !isEmailValid ? 'mb-1' : 'mb-3'}>
+          <div className="text-start">
             <Form.Label>Email</Form.Label>
           </div>
 
@@ -200,9 +205,9 @@ const SignupPage = () => {
 
         <Form.Group
           name="Password"
-          className={showError && !isPasswordValid ? 'mb-3' : 'mb-5'}
+          className={showError && !isPasswordValid ? 'mb-3' : 'mb-4'}
           controlId="formBasicPassword">
-          <div className="text-start mt-4 mb-1">
+          <div className="text-start">
             <Form.Label>Password</Form.Label>
           </div>
 

@@ -66,7 +66,7 @@ const LoginPage = () => {
       style={{ maxWidth: '19rem' }}>
       <img
         src={LogoImage}
-        width={200}
+        width={220}
       />
       <Form>
         <Form.Group
