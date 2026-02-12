@@ -59,7 +59,7 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
 
         {otherFilteredCompanies.length != 0 ? (
           <>
-            <h3>Other Search Results</h3>
+            <h3>Other Results</h3>
             <Container className="d-flex flex-column p-0 m-0">
               {otherFilteredCompanies.map((company, index) => (
                 <Row
@@ -78,7 +78,7 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
 
         {otherFilteredCompanies.length == 0 && topFilteredCompanies.length != companies.length ? (
           <>
-            <h3>Other Search Results</h3>
+            <h3>Other Results</h3>
             <p className="fst-italic">No Results</p>
           </>
         ) : (
