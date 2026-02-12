@@ -46,17 +46,6 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
           <></>
         )}
 
-        {topFilteredCompanies.length == 0 &&
-        otherFilteredCompanies.length == 0 &&
-        topFilteredCompanies.length != companies.length ? (
-          <>
-            <h3>Top Results</h3>
-            <p className="fst-italic">No Results</p>
-          </>
-        ) : (
-          <></>
-        )}
-
         {otherFilteredCompanies.length != 0 ? (
           <>
             <h3>Other Results</h3>
@@ -76,7 +65,30 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
           <></>
         )}
 
-        {otherFilteredCompanies.length == 0 && topFilteredCompanies.length != companies.length ? (
+        {topFilteredCompanies.length == 0 &&
+        otherFilteredCompanies.length == 0 &&
+        topFilteredCompanies.length != companies.length ? (
+          <>
+            <h3 className="m-3">No Results</h3>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {topFilteredCompanies.length == 0 &&
+        otherFilteredCompanies.length != 0 &&
+        topFilteredCompanies.length != companies.length ? (
+          <>
+            <h3>Top Results</h3>
+            <p className="fst-italic">No Results</p>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {otherFilteredCompanies.length == 0 &&
+        topFilteredCompanies.length != 0 &&
+        topFilteredCompanies.length != companies.length ? (
           <>
             <h3>Other Results</h3>
             <p className="fst-italic">No Results</p>
