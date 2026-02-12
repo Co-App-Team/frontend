@@ -7,31 +7,39 @@ import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo_favicon.png';
 import Col from 'react-bootstrap/Col';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
+import { signup } from '../api/authApi';
+import useApi from '../hooks/useApi';
+import { getErrorMessage } from '../utils/errorUtils';
 
-// TODO: Implement signup API call
+// TODO: Handle signup API call
 // TODO: Redirect to email confirmation page after successful signup (once it exists)
 // TODO: Make transition from login page look good
 // TODO: Test password saving
 // TODO: Current UI looks a bit crowded
+const errorMappings = {};
 
 const SignupPage = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
   });
 
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [passwordError, setPasswordError] = useState('');
+  const [passwordError, setPasswordError] = useState('Password must be at least 6 characters');
   const [isFirstNameValid, setIsFirstNameValid] = useState(false);
   const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const { request: signupCallback } = useApi(signup);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -50,26 +58,26 @@ const SignupPage = () => {
 
     setIsLoading(true);
     setError('');
-    // const response = await login(formData.email, formData.password);
-    const response = '';
-    if (response.error) {
-      console.error('Login failed:', JSON.stringify(response.error));
-      if (response?.error?.response?.status === 401) {
-        setError('Incorrect email or password');
-      } else if (response?.error?.response?.status === 400) {
-        // TODO: Redirect to email confirmation page once it exists
-        setError('Please confirm your email before logging in');
-      } else if (response?.error?.code === 'ERR_NETWORK') {
-        setError('Unable to connect to server. Please check your internet connection.');
-      } else {
-        setError('Unexpected error occurred during login');
-      }
-    } else {
-      console.log('Login successful:', response.data);
+
+    try {
+      await signupCallback(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password,
+      );
       setIsLoggedIn(true);
       navigate('/');
+    } catch (error) {
+      const message = getErrorMessage(error, errorMappings);
+
+      // if (error.status === 400) {
+      // }
+      setError(message);
+    } finally {
+      setIsLoading(false);
+      console.log('bongus');
     }
-    setIsLoading(false);
   };
 
   const onFirstNameChange = (e) => {
@@ -119,8 +127,6 @@ const SignupPage = () => {
   const validateLastName = (lastName) => {
     return lastName.trim() !== '';
   };
-
-  console.log(isPasswordValid);
 
   return (
     <div
