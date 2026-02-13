@@ -11,3 +11,7 @@ export const confirmEmail = (email, verifyCode) => {
 export const resendEmailCode = (email) => {
   return axiosClient.patch('/auth/reset-confirmation-code', { email });
 };
+
+export const signup = (firstName, lastName, email, password) => {
+  return axiosClient.post('/auth/register', { firstName, lastName, email, password });
+};
