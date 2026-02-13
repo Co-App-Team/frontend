@@ -7,3 +7,7 @@ export const login = (email, password) => {
 export const confirmEmail = (email, verifyCode) => {
   return axiosClient.patch('/auth/verify-email', { email, verifyCode });
 };
+
+export const resendEmailCode = (email) => {
+  return axiosClient.patch('/auth/reset-confirmation-code', { email });
+};

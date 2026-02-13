@@ -1,22 +1,26 @@
 import { useState } from 'react';
-import { Button, Form, Row } from 'react-bootstrap';
+import { Form, Row, Spinner } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
-import { confirmEmail } from '../api/authApi';
+import { confirmEmail, resendEmailCode } from '../api/authApi';
 import { getErrorMessage } from '../utils/errorUtils';
 
-const messageMappings = {
+const sendCodeMessageMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please enter the whole 6 digit code',
   INVALID_CONFIRMATION_CODE: 'Incorrect code. Please try again.',
   EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
   ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
 };
 
+const resendCodeMessageMappings = {
+  EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Uhhhhhhhhhhhhhhhhhhhhhhhhhhhh', // TODO
+  ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
+};
+
 // TODO: Resend code cooldown
-// TODO: Resend button styling
 // TODO: User should be logged in after confirming email
 // TODO: Handle case where redirection to this page has no email state
-// TODO: Resend code flow
 // TODO: Are codes always the same length? If so, automatically send the request once the user has entered the correct number of characters
 
 const ConfirmEmailPage = () => {
@@ -24,6 +28,7 @@ const ConfirmEmailPage = () => {
   const { email } = location.state || 'INVALID_EMAIL';
   const navigate = useNavigate();
   const { request: confirmCallback } = useApi(confirmEmail);
+  const { request: resendCodeCallback } = useApi(resendEmailCode);
 
   const [error, setError] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -35,20 +40,35 @@ const ConfirmEmailPage = () => {
     try {
       await confirmCallback(email, confirmationCode);
     } catch (error) {
-      const message = getErrorMessage(error, messageMappings);
+      const message = getErrorMessage(error, sendCodeMessageMappings);
       setError(message);
 
+      // 405: Account already verified
       if (error.status === 405) {
         // TODO: Is this the right thing to do? The user might not understand what's going
         // on... but also, they should never even get here in the first place
         navigate('/');
       }
+
+      setConfirmationCode('');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const resendCode = () => {};
+  const resendCode = async () => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await resendCodeCallback(email);
+      setError('Code resent, please check your email'); // TODO: Make this display not as an error
+    } catch (error) {
+      const message = getErrorMessage(error, resendCodeMessageMappings);
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const updateConfirmationCode = (e) => {
     // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
@@ -72,51 +92,23 @@ const ConfirmEmailPage = () => {
 
       <Form>
         <Row>
-          <Form.Group
-            className="mb-3"
-            // controlId="formBasicEmail"
-          >
+          <Form.Group className="mb-3">
             <Form.Control
               type="text"
               placeholder="Enter confirmation code"
               isInvalid={error}
               onChange={updateConfirmationCode}
               value={confirmationCode}
-              // onChange={onEmailChange}
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
           </Form.Group>
-          {/* <div className="d-grid">
-            <Button
-              variant="primary"
-              type="button"
-              onClick={onSubmit}
-              size="lg"
-              disabled={isLoading}
-            >
-              {isLoading ?
-                <Spinner
-                  animation="border"
-                  role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-                :
-                <>Confirm Email</>
-              }
-            </Button>
-          </div> */}
         </Row>
       </Form>
+      {isLoading && <Spinner />}
       <p className="mt-2">
         Don't see an email? Check your spam folder or{' '}
-        <Button
-          className="p-0 align-baseline"
-          variant="link"
-          onClick={resendCode}>
-          resend the code
-        </Button>
-        .
+        <Link onClick={resendCode}>resend the code</Link>.
       </p>
       {/* {error && <p className="text-danger mt-3">{error}</p>} */}
       <p className="mt-0">
