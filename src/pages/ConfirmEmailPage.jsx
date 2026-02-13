@@ -1,64 +1,114 @@
 import { useState } from 'react';
-import { Button, Form, Spinner } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { Button, Form, Row } from 'react-bootstrap';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useApi from '../hooks/useApi';
+import { confirmEmail } from '../api/authApi';
+import { getErrorMessage } from '../utils/errorUtils';
+
+const messageMappings = {
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please enter the whole 6 digit code',
+  INVALID_CONFIRMATION_CODE: 'Incorrect code. Please try again.',
+  EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
+  ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
+};
+
+// TODO: Resend code cooldown
+// TODO: Resend button styling
+// TODO: User should be logged in after confirming email
+// TODO: Handle case where redirection to this page has no email state
+// TODO: Resend code flow
+// TODO: Are codes always the same length? If so, automatically send the request once the user has entered the correct number of characters
 
 const ConfirmEmailPage = () => {
   const location = useLocation();
-  const { email } = location.state || {};
+  const { email } = location.state || 'INVALID_EMAIL';
+  const navigate = useNavigate();
+  const { request: confirmCallback } = useApi(confirmEmail);
 
-  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState('');
+  const [confirmationCode, setConfirmationCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = () => {
-    setShowError(true);
+  const onSubmit = async () => {
+    setError('');
+    setIsLoading(true);
+    try {
+      await confirmCallback(email, confirmationCode);
+    } catch (error) {
+      const message = getErrorMessage(error, messageMappings);
+      setError(message);
+
+      if (error.status === 405) {
+        // TODO: Is this the right thing to do? The user might not understand what's going
+        // on... but also, they should never even get here in the first place
+        navigate('/');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const resendCode = () => {};
 
-  // TODO: Are codes always the same length? If so, automatically send the request once the user has entered the correct number of characters
-  // TODO: Resend code flow
+  const updateConfirmationCode = (e) => {
+    // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
+    if (Number.isInteger(+e.target.value)) {
+      setConfirmationCode(e.target.value.trim());
+
+      if (e.target.value.trim().length == 6) {
+        onSubmit();
+      }
+    }
+  };
 
   return (
     <div
       className="p-4 border rounded d-flex flex-column align-items-center"
-      style={{ maxWidth: '22rem' }}>
+      style={{ maxWidth: '21rem' }}>
       <h2 className="mt-4 mb-0">Confirm your email</h2>
       <p className="text-center mt-4">
-        Please check <strong>{email}</strong> enter the code we sent you below.
+        Please check <strong>{email}</strong> and enter the code we sent you below.
       </p>
 
       <Form>
-        <Form.Group
-          className="mb-3"
-          controlId="formBasicEmail">
-          <Form.Control
-            type="text"
-            placeholder="Enter confirmation code"
-            isInvalid={showError}
-            // onChange={onEmailChange}
-            // disabled={isLoading}
-          />
-          <Form.Control.Feedback type="invalid">
-            Invalid confirmation code. Please try again.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <div className="d-grid">
-          <Button
-            variant="primary"
-            type="button"
-            onClick={onSubmit}
-            // size="lg"
-            // disabled={isLoading}
+        <Row>
+          <Form.Group
+            className="mb-3"
+            // controlId="formBasicEmail"
           >
-            {/* <Spinner
-              animation="border"
-              role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner> */}
-            Confirm Email
-          </Button>
-        </div>
+            <Form.Control
+              type="text"
+              placeholder="Enter confirmation code"
+              isInvalid={error}
+              onChange={updateConfirmationCode}
+              value={confirmationCode}
+              // onChange={onEmailChange}
+              disabled={isLoading}
+            />
+            <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+          </Form.Group>
+          {/* <div className="d-grid">
+            <Button
+              variant="primary"
+              type="button"
+              onClick={onSubmit}
+              size="lg"
+              disabled={isLoading}
+            >
+              {isLoading ?
+                <Spinner
+                  animation="border"
+                  role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+                :
+                <>Confirm Email</>
+              }
+            </Button>
+          </div> */}
+        </Row>
       </Form>
-      <p className="mt-4">
+      <p className="mt-2">
         Don't see an email? Check your spam folder or{' '}
         <Button
           className="p-0 align-baseline"

@@ -39,12 +39,12 @@ const LoginPage = () => {
     try {
       await loginCallback(formData.email, formData.password);
       setIsLoggedIn(true);
-      navigate('/');
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
 
-      if (error.status === 400) {
-        // TODO: Redirect to email confirmation page once it exists
+      if (error.status === 401) {
+        // TODO: Need to handle the other 401 still, API docs got changed...
+        navigate('/confirm-email', { state: { email: formData.email } });
       }
       setError(message);
     } finally {
