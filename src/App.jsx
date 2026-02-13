@@ -10,6 +10,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
 import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
+import DemoPage from './pages/DemoPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -33,6 +34,10 @@ function App() {
         <Route
           path="/confirm-email"
           element={<ConfirmEmailPage />}
+        />
+        <Route
+          path="/demo"
+          element={<DemoPage />}
         />
 
         {/* Unprotected routes with app header */}
