@@ -157,7 +157,7 @@ const SignupPage = () => {
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a valid first name.
+              Please provide a first name.
             </Form.Control.Feedback>
           </Form.Group>
 
@@ -177,7 +177,7 @@ const SignupPage = () => {
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a valid last name.
+              Please provide a last name.
             </Form.Control.Feedback>
           </Form.Group>
         </Row>
