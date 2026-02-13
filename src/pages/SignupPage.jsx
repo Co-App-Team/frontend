@@ -97,7 +97,7 @@ const SignupPage = () => {
   };
 
   const onPasswordChange = (e) => {
-    setFormData({ ...formData, password: e.target.value });
+    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
     setIsPasswordValid(validatePassword(e.target.value));
   };
 
@@ -107,13 +107,7 @@ const SignupPage = () => {
   };
 
   const validatePassword = (password) => {
-    if (password.trimStart() != password) {
-      setPasswordError('Password must not start with whitespace');
-      return false;
-    } else if (password.trim() != password) {
-      setPasswordError('Password must not end with whitespace');
-      return false;
-    } else if (password.length < 6) {
+    if (password.length < 6) {
       setPasswordError('Password must be at least 6 characters');
       return false;
     } else {
@@ -184,8 +178,8 @@ const SignupPage = () => {
 
         <Form.Group
           controlId="formBasicEmail"
-          className={showError && !isEmailValid ? 'mb-1' : 'mb-3'}>
-          <div className="text-start">
+          className={'text-start ' + (showError && !isEmailValid ? 'mb-1' : 'mb-3')}>
+          <div>
             <Form.Label>Email</Form.Label>
           </div>
 
@@ -205,7 +199,7 @@ const SignupPage = () => {
 
         <Form.Group
           name="Password"
-          className={showError && !isPasswordValid ? 'mb-3' : 'mb-4'}
+          className={'text-start ' + (showError && !isPasswordValid ? 'mb-3' : 'mb-4')}
           controlId="formBasicPassword">
           <div className="text-start">
             <Form.Label>Password</Form.Label>
@@ -219,6 +213,7 @@ const SignupPage = () => {
               placeholder="Enter your password"
               onChange={onPasswordChange}
               disabled={isLoading}
+              value={formData.password}
             />
             <ShowPasswordButton
               isShowingPassword={showPassword}
