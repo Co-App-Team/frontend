@@ -42,8 +42,7 @@ const LoginPage = () => {
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
 
-      if (error.status === 401) {
-        // TODO: Need to handle the other 401 still, API docs got changed...
+      if (error.status === 401 && error.serverCode === 'ACCOUNT_NOT_ACTIVATED') {
         navigate('/confirm-email', { state: { email: formData.email } });
       }
       setError(message);
