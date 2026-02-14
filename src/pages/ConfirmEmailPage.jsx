@@ -34,12 +34,25 @@ const ConfirmEmailPage = () => {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResentMessage, setShowResentMessage] = useState(false);
+  const [resendCodeCooldown, setResendCodeCooldown] = useState(30);
 
   useEffect(() => {
     // If this page was navigated to without state, redirect the user to homepage
     if (!email) {
       navigate('/');
     }
+
+    // TODO: Make this start when the button is used and stop when it hits 0
+    // Run the interval when the component mounts
+    const id = setInterval(() => {
+      // Use a functional state update to always get the latest count value
+      setResendCodeCooldown((prevCount) => prevCount - 1);
+    }, 1000); // 1000 milliseconds = 1 second
+
+    // The return function clears the interval when the component unmounts or the effect re-runs
+    return () => {
+      clearInterval(id);
+    };
   }, [email]);
 
   const onSubmit = async () => {
@@ -122,7 +135,11 @@ const ConfirmEmailPage = () => {
       {isLoading && <Spinner />}
       <p className="mt-2">
         Don't see an email? Check your spam folder or{' '}
-        <Link onClick={resendCode}>resend the code</Link>.
+        <Link onClick={resendCode}>
+          {resendCodeCooldown != 0 && <>wait {resendCodeCooldown}s to </>}
+          resend the code
+        </Link>
+        .
       </p>
       {/* {error && <p className="text-danger mt-3">{error}</p>} */}
       <p className="mt-0">
