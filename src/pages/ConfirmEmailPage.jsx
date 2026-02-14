@@ -33,10 +33,12 @@ const ConfirmEmailPage = () => {
   const [error, setError] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showResentMessage, setShowResentMessage] = useState(false);
 
   const onSubmit = async () => {
     setError('');
     setIsLoading(true);
+    setShowResentMessage(false);
     try {
       await confirmCallback(email, confirmationCode);
     } catch (error) {
@@ -59,9 +61,11 @@ const ConfirmEmailPage = () => {
   const resendCode = async () => {
     setError('');
     setIsLoading(true);
+    setShowResentMessage(false);
+
     try {
       await resendCodeCallback(email);
-      setError('Code resent, please check your email'); // TODO: Make this display not as an error
+      setShowResentMessage(true);
     } catch (error) {
       const message = getErrorMessage(error, resendCodeMessageMappings);
       setError(message);
@@ -76,6 +80,7 @@ const ConfirmEmailPage = () => {
       setConfirmationCode(e.target.value.trim());
 
       if (e.target.value.trim().length == 6) {
+        // TODO: Set form valid state?
         onSubmit();
       }
     }
@@ -105,6 +110,7 @@ const ConfirmEmailPage = () => {
           </Form.Group>
         </Row>
       </Form>
+      {showResentMessage && <p className="mb-1 text-success">Confirmation code resent ✓</p>}
       {isLoading && <Spinner />}
       <p className="mt-2">
         Don't see an email? Check your spam folder or{' '}
