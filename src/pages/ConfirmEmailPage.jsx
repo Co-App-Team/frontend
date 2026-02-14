@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Row, Spinner } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
@@ -20,13 +20,13 @@ const resendCodeMessageMappings = {
 
 // TODO: Resend code cooldown
 // TODO: User should be logged in after confirming email
-// TODO: Handle case where redirection to this page has no email state
 // TODO: Are codes always the same length? If so, automatically send the request once the user has entered the correct number of characters
 
 const ConfirmEmailPage = () => {
   const location = useLocation();
-  const { email } = location.state || 'INVALID_EMAIL';
   const navigate = useNavigate();
+  const { email } = location.state || '';
+
   const { request: confirmCallback } = useApi(confirmEmail);
   const { request: resendCodeCallback } = useApi(resendEmailCode);
 
@@ -35,12 +35,20 @@ const ConfirmEmailPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showResentMessage, setShowResentMessage] = useState(false);
 
+  useEffect(() => {
+    // If this page was navigated to without state, redirect the user to homepage
+    if (!email) {
+      navigate('/');
+    }
+  }, [email]);
+
   const onSubmit = async () => {
     setError('');
     setIsLoading(true);
     setShowResentMessage(false);
     try {
       await confirmCallback(email, confirmationCode);
+      navigate('/');
     } catch (error) {
       const message = getErrorMessage(error, sendCodeMessageMappings);
       setError(message);
