@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { Form, Row, Spinner } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
-import { confirmEmail, resendEmailCode } from '../api/authApi';
+import { confirmEmail, login, resendEmailCode } from '../api/authApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageTransition from '../components/auth/PageTransition';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const sendCodeMessageMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please enter the whole 6 digit code',
@@ -26,10 +27,13 @@ const resendCodeMessageMappings = {
 const ConfirmEmailPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email } = location.state || '';
+  const { email, password } = location.state || '';
+
+  const { setIsLoggedIn } = useAuthContext();
 
   const { request: confirmCallback } = useApi(confirmEmail);
   const { request: resendCodeCallback } = useApi(resendEmailCode);
+  const { request: loginCallback } = useApi(login);
 
   const [error, setError] = useState('');
   const [confirmationCode, setConfirmationCode] = useState('');
@@ -64,9 +68,11 @@ const ConfirmEmailPage = () => {
     setError('');
     setIsLoading(true);
     setShowResentMessage(false);
+
+    let success = false;
     try {
       await confirmCallback(email, code);
-      navigate('/');
+      success = true;
     } catch (error) {
       const message = getErrorMessage(error, sendCodeMessageMappings);
       setError(message);
@@ -77,9 +83,21 @@ const ConfirmEmailPage = () => {
       }
 
       setConfirmationCode('');
-    } finally {
-      setIsLoading(false);
     }
+
+    // TODO: This interaction
+    if (password && success) {
+      try {
+        await loginCallback(email, password);
+        setIsLoggedIn(true);
+      } catch (error) {
+        // Silently fail, and redirect to login
+        console.log(error); // TODO: Statement to make linter happy for now
+      }
+    }
+    setIsLoading(false);
+
+    navigate('/');
   };
 
   const resendCode = async (e) => {
