@@ -41,6 +41,11 @@ function App() {
           element={<DemoPage />}
         />
 
+        <Route
+          path="/demo"
+          element={<DemoPage />}
+        />
+
         {/* Unprotected routes with app header */}
         <Route element={<GlobalNavbar />}>
           {/* Not found page for non mapped routings, must not be grouped under */}

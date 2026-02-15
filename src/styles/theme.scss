@@ -18,3 +18,19 @@ $link-hover-color: $primary;
   background-color: shade-color($primary, 50%);
   border-color: shade-color($primary, 50%);
 }
+
+// Card accent colours
+.companyAccentCardColour {
+  background-color: $primary;
+  min-height: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+:root {
+  --primary: #{$primary};
+  --primary-hover: #{$primary-hover};
+  --secondary: #{$secondary};
+  --success: #{$success};
+}

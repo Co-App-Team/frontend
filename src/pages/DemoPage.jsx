@@ -1,6 +1,9 @@
 import Searchbar from '../components/rateMyCoop/Searchbar';
+import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
+import GlobalNavbar from '../components/common/GlobalNavbar';
 import { getCompanies } from '../api/rateMyCoopApi';
 import { useEffect, useState } from 'react';
+import { Container, Row } from 'react-bootstrap';
 
 const DemoPage = () => {
   const [companies, setCompanies] = useState([]);
@@ -19,8 +22,8 @@ const DemoPage = () => {
     const topFilter = companies.filter((c) =>
       c.companyName.toLowerCase().startsWith(value.toLowerCase()),
     );
-    const otherFilters = companies.filter((c) =>
-      c.companyName.toLowerCase().includes(value.toLowerCase()),
+    const otherFilters = companies.filter(
+      (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
     setOtherFilteredCompanies(otherFilters);
@@ -32,42 +35,19 @@ const DemoPage = () => {
 
   return (
     <>
+      <GlobalNavbar></GlobalNavbar>
+
       <h1 className="m-2 p-2">Demo page</h1>
       <Searchbar
         handleSearch={updateSearch}
         className="m-2 p-2"
       />
 
-      {topFilteredCompanies.length == companies.length ? (
-        <p>Companies</p>
-      ) : (
-        <p>Showing top search results</p>
-      )}
-      {topFilteredCompanies.length != 0 ? (
-        <ul>
-          {topFilteredCompanies.map((company, index) => (
-            <li key={company.companyId}>
-              {index}: {company.companyName}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No companies match</p>
-      )}
-      {otherFilteredCompanies.length != 0 ? (
-        <>
-          <p>Other search results</p>
-          <ul>
-            {otherFilteredCompanies.map((company, index) => (
-              <li key={company.companyId}>
-                {index}: {company.companyName}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <></>
-      )}
+      <CompaniesDisplay
+        companies={companies}
+        topFilteredCompanies={topFilteredCompanies}
+        otherFilteredCompanies={otherFilteredCompanies}
+      />
     </>
   );
 };
