@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { confirmEmail, resendEmailCode } from '../api/authApi';
 import { getErrorMessage } from '../utils/errorUtils';
+import PageTransition from '../components/auth/PageTransition';
 
 const sendCodeMessageMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please enter the whole 6 digit code',
@@ -18,7 +19,9 @@ const resendCodeMessageMappings = {
   ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
 };
 
-// TODO: User should be logged in after confirming email
+// TODO: Consider how we can avoid redirecting the user to login after this for:
+// 1. Account creation
+// 2. Login for unconfirmed accounts
 
 const ConfirmEmailPage = () => {
   const location = useLocation();
@@ -39,7 +42,7 @@ const ConfirmEmailPage = () => {
     if (!email) {
       navigate('/');
     }
-  }, [email]);
+  }, [email, navigate]);
 
   useEffect(() => {
     let timerId;
@@ -57,12 +60,12 @@ const ConfirmEmailPage = () => {
     };
   }, [resendCodeCooldown]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (code) => {
     setError('');
     setIsLoading(true);
     setShowResentMessage(false);
     try {
-      await confirmCallback(email, confirmationCode);
+      await confirmCallback(email, code);
       navigate('/');
     } catch (error) {
       const message = getErrorMessage(error, sendCodeMessageMappings);
@@ -70,8 +73,6 @@ const ConfirmEmailPage = () => {
 
       // 405: Account already verified
       if (error.status === 405) {
-        // TODO: Is this the right thing to do? The user might not understand what's going
-        // on... but also, they should never even get here in the first place
         navigate('/');
       }
 
@@ -108,57 +109,58 @@ const ConfirmEmailPage = () => {
       setConfirmationCode(e.target.value.trim());
 
       if (e.target.value.trim().length == 6) {
-        // TODO: Set form valid state?
-        onSubmit();
+        onSubmit(e.target.value.trim());
       }
     }
   };
 
   return (
-    <div
-      className="p-4 border rounded d-flex flex-column align-items-center"
-      style={{ maxWidth: '21rem' }}>
-      <h2 className="mt-4 mb-0">Confirm your email</h2>
-      <p className="text-center mt-4">
-        Please check <strong>{email}</strong> and enter the code we sent you below.
-      </p>
+    <PageTransition>
+      <div
+        className="p-4 border rounded d-flex flex-column align-items-center"
+        style={{ maxWidth: '21rem' }}>
+        <h2 className="mt-4 mb-0">Confirm your email</h2>
+        <p className="text-center mt-4">
+          Please check <strong>{email}</strong> and enter the code we sent you below.
+        </p>
 
-      <Form>
-        <Row>
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Enter confirmation code"
-              isInvalid={error}
-              onChange={updateConfirmationCode}
-              value={confirmationCode}
-              disabled={isLoading}
-            />
-            <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
-          </Form.Group>
-        </Row>
-      </Form>
-      {showResentMessage && <p className="mb-1 text-success">Confirmation code resent ✓</p>}
-      {isLoading && <Spinner />}
-      <p className="mt-2">
-        Don't see an email? Check your spam folder or{' '}
-        <Link
-          onClick={resendCode}
-          className={resendCodeCooldown > 0 || isLoading ? 'text-muted text-decoration-none' : ''}
-          style={{
-            pointerEvents: resendCodeCooldown > 0 || isLoading ? 'none' : 'auto',
-            cursor: resendCodeCooldown > 0 || isLoading ? 'not-allowed' : 'pointer',
-          }}>
-          {resendCodeCooldown > 0 && <>wait {resendCodeCooldown}s to </>}
-          resend the code
-        </Link>
-        .
-      </p>
-      <p className="mt-0">
-        Not your email? Try <Link to="/signup">signing up</Link> or{' '}
-        <Link to="/login">logging in</Link> with your email.
-      </p>
-    </div>
+        <Form>
+          <Row>
+            <Form.Group className="mb-3">
+              <Form.Control
+                type="text"
+                placeholder="Enter confirmation code"
+                isInvalid={error}
+                onChange={updateConfirmationCode}
+                value={confirmationCode}
+                disabled={isLoading}
+              />
+              <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+        </Form>
+        {showResentMessage && <p className="mb-1 text-success">Confirmation code resent ✓</p>}
+        {isLoading && <Spinner />}
+        <p className="mt-2">
+          Don't see an email? Check your spam folder or{' '}
+          <Link
+            onClick={resendCode}
+            className={resendCodeCooldown > 0 || isLoading ? 'text-muted text-decoration-none' : ''}
+            style={{
+              pointerEvents: resendCodeCooldown > 0 || isLoading ? 'none' : 'auto',
+              cursor: resendCodeCooldown > 0 || isLoading ? 'not-allowed' : 'pointer',
+            }}>
+            {resendCodeCooldown > 0 && <>wait {resendCodeCooldown}s to </>}
+            resend the code
+          </Link>
+          .
+        </p>
+        <p className="mt-0">
+          Not your email? Try <Link to="/signup">signing up</Link> or{' '}
+          <Link to="/login">logging in</Link> with your email.
+        </p>
+      </div>
+    </PageTransition>
   );
 };
 
