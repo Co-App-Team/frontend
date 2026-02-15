@@ -18,9 +18,7 @@ const resendCodeMessageMappings = {
   ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
 };
 
-// TODO: Resend code cooldown
 // TODO: User should be logged in after confirming email
-// TODO: Are codes always the same length? If so, automatically send the request once the user has entered the correct number of characters
 
 const ConfirmEmailPage = () => {
   const location = useLocation();
@@ -34,26 +32,30 @@ const ConfirmEmailPage = () => {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResentMessage, setShowResentMessage] = useState(false);
-  const [resendCodeCooldown, setResendCodeCooldown] = useState(30);
+  const [resendCodeCooldown, setResendCodeCooldown] = useState(0);
 
   useEffect(() => {
     // If this page was navigated to without state, redirect the user to homepage
     if (!email) {
       navigate('/');
     }
-
-    // TODO: Make this start when the button is used and stop when it hits 0
-    // Run the interval when the component mounts
-    const id = setInterval(() => {
-      // Use a functional state update to always get the latest count value
-      setResendCodeCooldown((prevCount) => prevCount - 1);
-    }, 1000); // 1000 milliseconds = 1 second
-
-    // The return function clears the interval when the component unmounts or the effect re-runs
-    return () => {
-      clearInterval(id);
-    };
   }, [email]);
+
+  useEffect(() => {
+    let timerId;
+
+    if (resendCodeCooldown > 0) {
+      timerId = setInterval(() => {
+        setResendCodeCooldown((prevCount) => prevCount - 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timerId) {
+        clearInterval(timerId);
+      }
+    };
+  }, [resendCodeCooldown]);
 
   const onSubmit = async () => {
     setError('');
@@ -79,19 +81,24 @@ const ConfirmEmailPage = () => {
     }
   };
 
-  const resendCode = async () => {
-    setError('');
-    setIsLoading(true);
-    setShowResentMessage(false);
+  const resendCode = async (e) => {
+    e.preventDefault();
 
-    try {
-      await resendCodeCallback(email);
-      setShowResentMessage(true);
-    } catch (error) {
-      const message = getErrorMessage(error, resendCodeMessageMappings);
-      setError(message);
-    } finally {
-      setIsLoading(false);
+    if (resendCodeCooldown == 0) {
+      setError('');
+      setIsLoading(true);
+      setShowResentMessage(false);
+
+      try {
+        await resendCodeCallback(email);
+        setShowResentMessage(true);
+      } catch (error) {
+        const message = getErrorMessage(error, resendCodeMessageMappings);
+        setError(message);
+      } finally {
+        setIsLoading(false);
+        setResendCodeCooldown(30);
+      }
     }
   };
 
@@ -135,13 +142,18 @@ const ConfirmEmailPage = () => {
       {isLoading && <Spinner />}
       <p className="mt-2">
         Don't see an email? Check your spam folder or{' '}
-        <Link onClick={resendCode}>
-          {resendCodeCooldown != 0 && <>wait {resendCodeCooldown}s to </>}
+        <Link
+          onClick={resendCode}
+          className={resendCodeCooldown > 0 || isLoading ? 'text-muted text-decoration-none' : ''}
+          style={{
+            pointerEvents: resendCodeCooldown > 0 || isLoading ? 'none' : 'auto',
+            cursor: resendCodeCooldown > 0 || isLoading ? 'not-allowed' : 'pointer',
+          }}>
+          {resendCodeCooldown > 0 && <>wait {resendCodeCooldown}s to </>}
           resend the code
         </Link>
         .
       </p>
-      {/* {error && <p className="text-danger mt-3">{error}</p>} */}
       <p className="mt-0">
         Not your email? Try <Link to="/signup">signing up</Link> or{' '}
         <Link to="/login">logging in</Link> with your email.
