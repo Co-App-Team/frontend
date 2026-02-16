@@ -16,7 +16,7 @@ const sendCodeMessageMappings = {
 
 const resendCodeMessageMappings = {
   EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
-  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Uhhhhhhhhhhhhhhhhhhhhhhhhhhhh', // TODO
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'An unexpected error occured, try logging in again',
   ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
 };
 
