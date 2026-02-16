@@ -44,7 +44,9 @@ const LoginPage = () => {
       const message = getErrorMessage(error, errorMappings);
 
       if (error.status === 401 && error.serverCode === 'ACCOUNT_NOT_ACTIVATED') {
-        navigate('/confirm-email', { state: { email: formData.email } });
+        navigate('/confirm-email', {
+          state: { email: formData.email, password: formData.password },
+        });
       }
       setError(message);
     } finally {

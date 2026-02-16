@@ -20,10 +20,6 @@ const resendCodeMessageMappings = {
   ACCOUNT_ALREADY_VERIFIED: 'Your account is already verified, please sign in.',
 };
 
-// TODO: Consider how we can avoid redirecting the user to login after this for:
-// 1. Account creation
-// 2. Login for unconfirmed accounts
-
 const ConfirmEmailPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -85,15 +81,15 @@ const ConfirmEmailPage = () => {
       setConfirmationCode('');
     }
 
-    // TODO: This interaction
     if (password && success) {
+      /* eslint-disable no-unused-vars */
       try {
         await loginCallback(email, password);
         setIsLoggedIn(true);
       } catch (error) {
-        // Silently fail, and redirect to login
-        console.log(error); // TODO: Statement to make linter happy for now
+        // Silently fail, and redirect to login as before
       }
+      /* eslint-enable no-unused-vars */
     }
     setIsLoading(false);
 

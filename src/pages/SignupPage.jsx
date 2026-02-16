@@ -65,7 +65,7 @@ const SignupPage = () => {
         formData.password,
       );
 
-      navigate('/confirm-email', { state: { email: formData.email } });
+      navigate('/confirm-email', { state: { email: formData.email, password: formData.password } });
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
 
