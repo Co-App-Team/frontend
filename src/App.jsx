@@ -9,13 +9,15 @@ import SignupPage from './pages/SignupPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
+import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
 import DemoPage from './pages/DemoPage.jsx';
+import { AnimatePresence } from 'framer-motion';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
 
   return (
-    <>
+    <AnimatePresence>
       <Routes>
         {/* Unprotected routes */}
         <Route
@@ -29,6 +31,10 @@ function App() {
         <Route
           path="/forgot-password"
           element={<ForgotPasswordPage />}
+        />
+        <Route
+          path="/confirm-email"
+          element={<ConfirmEmailPage />}
         />
         <Route
           path="/demo"
@@ -66,7 +72,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
-    </>
+    </AnimatePresence>
   );
 }
 
