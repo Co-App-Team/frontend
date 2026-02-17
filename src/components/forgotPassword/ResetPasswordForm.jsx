@@ -12,6 +12,8 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isCodeValid, setIsCodeValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [passwordError, setPasswordError] = useState('Password must be at least 6 characters');
   const [showFormErrors, setShowFormErrors] = useState(false);
@@ -20,19 +22,31 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
     setShowPassword(!showPassword);
   };
 
-  // TODO: Validate email and code
-
   const onCodeChange = (e) => {
-    setFormData({ ...formData, code: e.target.value });
+    // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
+    if (Number.isInteger(+e.target.value)) {
+      setFormData({ ...formData, code: e.target.value.trim().trimStart() });
+      setIsCodeValid(validateCode(e.target.value.trim().trimStart()));
+    }
   };
 
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
+    setIsEmailValid(validateEmail(e.target.value));
   };
 
   const onPasswordChange = (e) => {
     setFormData({ ...formData, password: e.target.value.trim().trimStart() });
     setIsPasswordValid(validatePassword(e.target.value));
+  };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
+  const validateCode = (code) => {
+    return code.trim().length === 6;
   };
 
   const validatePassword = (password) => {
@@ -66,7 +80,9 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
           placeholder="Enter your email"
           onChange={onEmailChange}
           disabled={isLoading}
+          isInvalid={showFormErrors && !isEmailValid}
         />
+        <Form.Control.Feedback type="invalid">Please enter a valid email</Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group
@@ -77,11 +93,14 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
         </div>
 
         <Form.Control
-          type="email"
-          placeholder="Enter the code sent to your email"
+          type="text"
+          placeholder="Enter confirmation code"
           onChange={onCodeChange}
           disabled={isLoading}
+          isInvalid={showFormErrors && !isCodeValid}
+          value={formData.code}
         />
+        <Form.Control.Feedback type="invalid">Please enter the 6 digit code</Form.Control.Feedback>
       </Form.Group>
       <Form.Group
         name="Password"
