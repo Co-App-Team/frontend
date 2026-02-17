@@ -1,24 +1,22 @@
 import { useState } from 'react';
 import { Button, Form, Spinner } from 'react-bootstrap';
 
-// TODO: Might be nice to have a smoother transition between the 2 forms
-
 const SendForgotPasswordForm = ({ isLoading, handleSendResetCode }) => {
   const [formData, setFormData] = useState({
     email: '',
   });
-  const [isEmailValid, setIsEmailValid] = useState(false);
   const [showFormErrors, setShowFormErrors] = useState(false);
 
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
-    setIsEmailValid(validateEmail(e.target.value));
   };
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
+
+  const isEmailValid = validateEmail(formData.email);
 
   const onSubmit = () => {
     if (isEmailValid) {

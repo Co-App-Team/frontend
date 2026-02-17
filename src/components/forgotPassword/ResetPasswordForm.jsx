@@ -2,43 +2,15 @@ import { useState } from 'react';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import ShowPasswordButton from '../common/ShowPasswordButton';
 
-// TODO: Might be nice to have a smoother transition between the 2 forms
-
-const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
+const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' }) => {
   const [formData, setFormData] = useState({
-    email: '',
+    email: defaultEmail,
     code: '',
     password: '',
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isCodeValid, setIsCodeValid] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [passwordError, setPasswordError] = useState('Password must be at least 6 characters');
   const [showFormErrors, setShowFormErrors] = useState(false);
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const onCodeChange = (e) => {
-    // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
-    if (Number.isInteger(+e.target.value)) {
-      setFormData({ ...formData, code: e.target.value.trim().trimStart() });
-      setIsCodeValid(validateCode(e.target.value.trim().trimStart()));
-    }
-  };
-
-  const onEmailChange = (e) => {
-    setFormData({ ...formData, email: e.target.value });
-    setIsEmailValid(validateEmail(e.target.value));
-  };
-
-  const onPasswordChange = (e) => {
-    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
-    setIsPasswordValid(validatePassword(e.target.value));
-  };
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -50,12 +22,30 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
   };
 
   const validatePassword = (password) => {
-    if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      return false;
-    } else {
-      return true;
+    return password.length >= 6;
+  };
+
+  const isEmailValid = validateEmail(formData.email);
+  const isCodeValid = validateCode(formData.code);
+  const isPasswordValid = validatePassword(formData.password);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const onCodeChange = (e) => {
+    // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
+    if (Number.isInteger(+e.target.value)) {
+      setFormData({ ...formData, code: e.target.value.trim().trimStart() });
     }
+  };
+
+  const onEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value });
+  };
+
+  const onPasswordChange = (e) => {
+    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
   };
 
   const onSubmit = () => {
@@ -81,6 +71,7 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
           onChange={onEmailChange}
           disabled={isLoading}
           isInvalid={showFormErrors && !isEmailValid}
+          value={formData.email}
         />
         <Form.Control.Feedback type="invalid">Please enter a valid email</Form.Control.Feedback>
       </Form.Group>
@@ -126,7 +117,9 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
             onClick={toggleShowPassword}
             isInvalid={showFormErrors && !isPasswordValid}
           />
-          <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Password must be at least 6 characters
+          </Form.Control.Feedback>
         </InputGroup>
       </Form.Group>
 
