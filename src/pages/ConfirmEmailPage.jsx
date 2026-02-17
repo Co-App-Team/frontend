@@ -75,7 +75,9 @@ const ConfirmEmailPage = () => {
 
       // 405: Account already verified
       if (error.status === 405) {
-        navigate('/');
+        // Attempt logging in, if we were passed a password.
+        // Note that this path *should* never happen
+        success = true;
       }
 
       setConfirmationCode('');
@@ -86,14 +88,13 @@ const ConfirmEmailPage = () => {
       try {
         await loginCallback(email, password);
         setIsLoggedIn(true);
+        navigate('/');
       } catch (error) {
         // Silently fail, and redirect to login as before
       }
       /* eslint-enable no-unused-vars */
     }
     setIsLoading(false);
-
-    navigate('/');
   };
 
   const resendCode = async (e) => {
