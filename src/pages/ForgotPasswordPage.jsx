@@ -9,7 +9,7 @@ import PageTransition from '../components/auth/PageTransition.jsx';
 
 const sendCodeErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Request failed, please refresh the page',
-  ACCOUNT_DOES_NOT_EXIST: 'Unable to send code', // TODO: This could be a security risk, letting people know whether or not there is an account for a given email
+  ACCOUNT_DOES_NOT_EXIST: 'Unable to send code',
   ACCOUNT_NOT_ACTIVATED: 'Please activate your account first',
 };
 
