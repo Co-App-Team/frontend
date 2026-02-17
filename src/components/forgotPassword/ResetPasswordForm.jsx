@@ -94,7 +94,6 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
         <Form.Control.Feedback type="invalid">Please enter the 6 digit code</Form.Control.Feedback>
       </Form.Group>
       <Form.Group
-        name="Password"
         className={'text-start ' + (showFormErrors && !isPasswordValid ? 'mb-3' : 'mb-4')}
         controlId="formBasicPassword">
         <div className="text-start">

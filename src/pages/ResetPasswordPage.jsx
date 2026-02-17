@@ -37,6 +37,20 @@ const ResetPasswordPage = () => {
     } catch (error) {
       const message = getErrorMessage(error, updateEmailErrorMappings);
       setRequestError(message);
+
+      if (error.status === 401 && error.serverCode === 'ACCOUNT_NOT_ACTIVATED') {
+        setRequestError(
+          <>
+            Please{' '}
+            <Link
+              to="/confirm-email"
+              state={{ email: formData.email }}>
+              activate your account
+            </Link>{' '}
+            first
+          </>,
+        );
+      }
     }
 
     if (success) {
@@ -68,7 +82,7 @@ const ResetPasswordPage = () => {
           defaultEmail={email}
         />
         {requestError && <p className="text-danger mt-3">{requestError}</p>}
-        <p className="mt-3 mb-0">
+        <p className={'mb-0 ' + (requestError ? 'mt-0' : 'mt-4')}>
           <Link to="/login">Back to sign in</Link>
         </p>
       </div>
