@@ -12,16 +12,13 @@ const updateEmailErrorMappings = {
   INVALID_CONFIRMATION_CODE: 'Incorrect confirmation code. Please check your email and try again.',
   ACCOUNT_NOT_ACTIVATED: 'Please activate your account first',
   EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
-
-  // TODO: Tell Bao to make an error for invalid passwords (whitespace rules)
-  // Bao will update docs with the solution, it'll return EMAIL_NOT_REGISTERED
 };
 
 const ResetPasswordPage = () => {
   const location = useLocation();
   const { setIsLoggedIn } = useAuthContext();
   const { email } = location.state || '';
-  console.log('Email: ' + email);
+
   const navigate = useNavigate();
 
   const [requestError, setRequestError] = useState(false);

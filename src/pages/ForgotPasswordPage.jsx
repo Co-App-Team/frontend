@@ -10,10 +10,8 @@ import PageTransition from '../components/auth/PageTransition.jsx';
 const sendCodeErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Request failed, please refresh the page',
   ACCOUNT_DOES_NOT_EXIST: 'Unable to send code', // TODO: This could be a security risk, letting people know whether or not there is an account for a given email
-  ACCOUNT_NOT_ACTIVATED: 'Please activate your account',
+  ACCOUNT_NOT_ACTIVATED: 'Please activate your account first',
 };
-
-// TODO: Set default email value for 2nd form
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -28,18 +26,24 @@ const ForgotPasswordPage = () => {
     try {
       await sendResetCodeCallback(formData.email);
       navigate('/reset-password', { state: { email: formData.email } });
-      // setCodeSent(true);
     } catch (error) {
       const message = getErrorMessage(error, sendCodeErrorMappings);
       setRequestError(message);
 
       if (error.status === 401 && error.serverCode === 'ACCOUNT_NOT_ACTIVATED') {
-        // TODO: User might not understand why they're redirected
-        // navigate('/confirm-email', { state: { email: formData.email } });
+        setRequestError(
+          <>
+            Please{' '}
+            <Link
+              to="/confirm-email"
+              state={{ email: formData.email }}>
+              activate your account
+            </Link>{' '}
+            first
+          </>,
+        );
       }
     }
-    // TODO: Remove me
-    navigate('/reset-password', { state: { email: formData.email } });
   };
 
   return (
@@ -58,7 +62,7 @@ const ForgotPasswordPage = () => {
         />
 
         {requestError && <p className="text-danger mt-3">{requestError}</p>}
-        <p className="mt-3 mb-0">
+        <p className={'mb-0 ' + (requestError ? 'mt-0' : 'mt-4')}>
           <Link to="/login">Back to sign in</Link>
         </p>
       </div>

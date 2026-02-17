@@ -29,7 +29,7 @@ const SendForgotPasswordForm = ({ isLoading, handleSendResetCode }) => {
   return (
     <Form>
       <Form.Group
-        className="mb-3"
+        className={showFormErrors && !isEmailValid ? 'mb-3' : 'mb-4'}
         controlId="formBasicEmail">
         <div className="text-start mt-4 mb-1">
           <Form.Label>Email</Form.Label>
