@@ -17,6 +17,7 @@ const sendCodeErrorMappings = {
 const updateEmailErrorMappings = {
   INVALID_CONFIRMATION_CODE: 'Incorrect confirmation code. Please check your email and try again.',
   // TODO: Tell Bao to make an error for invalid passwords (whitespace rules)
+  // Bao will update docs with the solution, it'll return EMAIL_NOT_REGISTERED
 };
 
 // TOOD: Might be nice to have a smoother transition between the 2 forms
