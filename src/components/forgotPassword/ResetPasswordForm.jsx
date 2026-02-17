@@ -1,0 +1,136 @@
+import { useState } from 'react';
+import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import ShowPasswordButton from '../common/ShowPasswordButton';
+
+// TODO: Might be nice to have a smoother transition between the 2 forms
+
+const ResetPasswordForm = ({ handleUpdatePassword, isLoading }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    code: '',
+    password: '',
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [passwordError, setPasswordError] = useState('Password must be at least 6 characters');
+  const [showFormErrors, setShowFormErrors] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // TODO: Validate email and code
+
+  const onCodeChange = (e) => {
+    setFormData({ ...formData, code: e.target.value });
+  };
+
+  const onEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value });
+  };
+
+  const onPasswordChange = (e) => {
+    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
+    setIsPasswordValid(validatePassword(e.target.value));
+  };
+
+  const validatePassword = (password) => {
+    if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const onSubmit = () => {
+    if (isPasswordValid) {
+      handleUpdatePassword(formData);
+    } else {
+      setShowFormErrors(true);
+    }
+  };
+
+  return (
+    <Form>
+      <Form.Group
+        className="mb-3"
+        controlId="formBasicEmail">
+        <div className="text-start mt-4 mb-1">
+          <Form.Label>Email</Form.Label>
+        </div>
+
+        <Form.Control
+          type="email"
+          placeholder="Enter your email"
+          onChange={onEmailChange}
+          disabled={isLoading}
+        />
+      </Form.Group>
+
+      <Form.Group
+        className="mb-3"
+        controlId="formBasicCode">
+        <div className="text-start mt-4 mb-1">
+          <Form.Label>Confirmation Code</Form.Label>
+        </div>
+
+        <Form.Control
+          type="email"
+          placeholder="Enter the code sent to your email"
+          onChange={onCodeChange}
+          disabled={isLoading}
+        />
+      </Form.Group>
+      <Form.Group
+        name="Password"
+        className={'text-start ' + (showFormErrors && !isPasswordValid ? 'mb-3' : 'mb-4')}
+        controlId="formBasicPassword">
+        <div className="text-start">
+          <Form.Label>New Password</Form.Label>
+        </div>
+
+        <InputGroup hasValidation>
+          <Form.Control
+            autoComplete="new-password"
+            type={showPassword ? 'text' : 'password'}
+            isInvalid={showFormErrors && !isPasswordValid}
+            placeholder="Enter a new password"
+            onChange={onPasswordChange}
+            disabled={isLoading}
+            value={formData.password}
+          />
+          <ShowPasswordButton
+            isShowingPassword={showPassword}
+            isLoading={isLoading}
+            onClick={toggleShowPassword}
+            isInvalid={showFormErrors && !isPasswordValid}
+          />
+          <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
+        </InputGroup>
+      </Form.Group>
+
+      <div className="d-grid">
+        <Button
+          variant="primary"
+          type="button"
+          onClick={onSubmit}
+          size="lg"
+          disabled={isLoading}>
+          {isLoading ? (
+            <Spinner
+              animation="border"
+              role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          ) : (
+            'Reset Password'
+          )}
+        </Button>
+      </div>
+    </Form>
+  );
+};
+
+export default ResetPasswordForm;
