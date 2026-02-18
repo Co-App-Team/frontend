@@ -19,3 +19,11 @@ export const signup = (firstName, lastName, email, password) => {
 export const signOut = () => {
   return axiosClient.get('/auth/logout');
 };
+
+export const forgotPassword = (email) => {
+  return axiosClient.patch('/auth/forgot-password', { email });
+};
+
+export const updatePassword = (email, verifyCode, newPassword) => {
+  return axiosClient.patch('/auth/update-password', { email, verifyCode, newPassword });
+};

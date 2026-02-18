@@ -13,6 +13,7 @@ import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
 import DemoPage from './pages/DemoPage.jsx';
 import { AnimatePresence } from 'framer-motion';
 import AccountPage from './pages/AccountPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 
 function App() {
@@ -49,6 +50,10 @@ function App() {
           <Route
             path="/forgot-password"
             element={<ForgotPasswordPage />}
+          />
+          <Route
+            path="/reset-password"
+            element={<ResetPasswordPage />}
           />
           <Route
             path="/confirm-email"
