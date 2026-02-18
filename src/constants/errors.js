@@ -5,6 +5,8 @@ export const GLOBAL_ERRORS = {
   INVALID_TOKEN: 'Your session has expired. Please log in again.',
   TOKEN_EXPIRE: 'Your session has expired. Please log in again.',
 
+  EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
+
   INTERNAL_ERROR: 'Something went wrong on our end. Please try again later.',
 
   // HTTP response codes, checked second

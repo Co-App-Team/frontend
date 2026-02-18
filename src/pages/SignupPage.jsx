@@ -27,11 +27,6 @@ const SignupPage = () => {
     password: '',
   });
 
-  const [isEmailValid, setIsEmailValid] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [passwordError, setPasswordError] = useState('Password must be at least 6 characters');
-  const [isFirstNameValid, setIsFirstNameValid] = useState(false);
-  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +37,28 @@ const SignupPage = () => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
+
+  const validateFirstName = (firstName) => {
+    return firstName.trim() !== '';
+  };
+
+  const validateLastName = (lastName) => {
+    return lastName.trim() !== '';
+  };
+
+  const isEmailValid = validateEmail(formData.email);
+  const isPasswordValid = validatePassword(formData.password);
+  const isFirstNameValid = validateFirstName(formData.firstName);
+  const isLastNameValid = validateLastName(formData.lastName);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,44 +96,18 @@ const SignupPage = () => {
 
   const onFirstNameChange = (e) => {
     setFormData({ ...formData, firstName: e.target.value });
-    setIsFirstNameValid(validateFirstName(e.target.value));
   };
 
   const onLastNameChange = (e) => {
     setFormData({ ...formData, lastName: e.target.value });
-    setIsLastNameValid(validateLastName(e.target.value));
   };
 
   const onEmailChange = (e) => {
     setFormData({ ...formData, email: e.target.value });
-    setIsEmailValid(validateEmail(e.target.value));
   };
 
   const onPasswordChange = (e) => {
     setFormData({ ...formData, password: e.target.value.trim().trimStart() });
-    setIsPasswordValid(validatePassword(e.target.value));
-  };
-
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const validatePassword = (password) => {
-    if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validateFirstName = (firstName) => {
-    return firstName.trim() !== '';
-  };
-
-  const validateLastName = (lastName) => {
-    return lastName.trim() !== '';
   };
 
   return (
@@ -218,7 +209,9 @@ const SignupPage = () => {
                 onClick={toggleShowPassword}
                 isInvalid={showError && !isPasswordValid}
               />
-              <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Password must be at least 6 characters
+              </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
           <div className="d-grid">
