@@ -33,13 +33,12 @@ const ForgotPasswordPage = () => {
       if (error.status === 401 && error.serverCode === 'ACCOUNT_NOT_ACTIVATED') {
         setRequestError(
           <>
-            Please{' '}
+            Account not activated. Please activate your account first{' '}
             <Link
               to="/confirm-email"
               state={{ email: formData.email }}>
-              activate your account
+              here
             </Link>{' '}
-            first
           </>,
         );
       }
