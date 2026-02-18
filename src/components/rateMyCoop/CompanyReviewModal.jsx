@@ -1,12 +1,23 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
+import {
+  faStar,
+  faMapPin,
+  faLink,
+  faTrash,
+  faPen,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 import { getReviews } from '../../api/rateMyCoopApi';
 import { useState, useEffect } from 'react';
-import { Spinner } from 'react-bootstrap';
+import { Col, Container, Row, Spinner } from 'react-bootstrap';
 function CompanyReviewModal({ company, showModal, hideModal }) {
   const [currReviews, setCurrReviews] = useState();
+
+  // const [writingReview, setWritingReview] = useState(false);
+  // const [editingReview, setEditingReview] = useState(false);
+  // const [deleteReview, setDeleteReview] = useState(false);
   useEffect(() => {
     async function loadCompanies() {
       if (company) {
@@ -25,33 +36,35 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered>
-      <Modal.Header className="d-flex flex-column justify-content-start align-items-start">
-        <Modal.Title id="contained-modal-title-vcenter">{company.companyName}</Modal.Title>
-        <div className="d-flex">
-          <div className="mx-4 ms-0">
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faStar}
-            />
-            Average Rating: {company.avgRating}/5
-          </div>
-          <div className="vr"></div>
-          <div className="mx-4">
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faMapPin}
-            />
-            Location: {company.location}
-          </div>
-          <div className="vr"></div>
-          <div className="mx-4">
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faLink}
-            />
-            <i>
-              <a href={company.website}>{company.website}</a>
-            </i>
+      <Modal.Header closeButton>
+        <div className="d-flex flex-column justify-content-start align-items-start">
+          <Modal.Title id="contained-modal-title-vcenter">{company.companyName}</Modal.Title>
+          <div className="d-flex">
+            <div className="mx-4 ms-0">
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faStar}
+              />
+              Average Rating: {company.avgRating}/5
+            </div>
+            <div className="vr"></div>
+            <div className="mx-4">
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faMapPin}
+              />
+              Location: {company.location}
+            </div>
+            <div className="vr"></div>
+            <div className="mx-4">
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faLink}
+              />
+              <i>
+                <a href={company.website}>{company.website}</a>
+              </i>
+            </div>
           </div>
         </div>
       </Modal.Header>
@@ -71,7 +84,39 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={hideModal}>Close</Button>
+        <Container fluid>
+          <Row>
+            <Col className="text-center">
+              <Button onClick={hideModal}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPlus}
+                />
+                Write a Review
+              </Button>
+            </Col>
+            <Col className="text-center">
+              <Button onClick={hideModal}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPen}
+                />
+                Edit your Review
+              </Button>
+            </Col>
+            <Col className="text-center">
+              <Button
+                onClick={hideModal}
+                variant="danger">
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faTrash}
+                />
+                Delete your Review
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       </Modal.Footer>
     </Modal>
   );
