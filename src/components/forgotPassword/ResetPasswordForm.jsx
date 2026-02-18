@@ -59,7 +59,7 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
   return (
     <Form>
       <Form.Group
-        className="mb-3"
+        className={'text-start ' + (showFormErrors && !isEmailValid ? 'mb-2' : 'mb-3')}
         controlId="formBasicEmail">
         <div className="text-start mt-4 mb-1">
           <Form.Label>Email</Form.Label>
@@ -77,9 +77,9 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
       </Form.Group>
 
       <Form.Group
-        className="mb-3"
+        className={'text-start ' + (showFormErrors && !isCodeValid ? 'mb-2' : 'mb-3')}
         controlId="formBasicCode">
-        <div className="text-start mt-4 mb-1">
+        <div className="text-start mt-0 mb-1">
           <Form.Label>Confirmation Code</Form.Label>
         </div>
 
