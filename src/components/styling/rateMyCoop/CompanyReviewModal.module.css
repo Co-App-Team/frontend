@@ -1,0 +1,23 @@
+.companies-container {
+  height: 70vh;
+  width: 80vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  text-align: center;
+
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: lightgray;
+}
+
+.company-modal {
+  border-left: 0.5rem;
+  border-style: solid;
+  border-left-color: var(--primary);
+  width: 78vw;
+  padding: 0;
+  transition: filter 0.2s ease;
+}

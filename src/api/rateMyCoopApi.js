@@ -2,7 +2,7 @@
 
 export const getCompanies = async () => {
   // TODO: When implemented, connect to real API
-  new Promise((resolve) => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   return {
     companies: [
       {
