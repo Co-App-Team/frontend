@@ -15,3 +15,7 @@ export const resendEmailCode = (email) => {
 export const signup = (firstName, lastName, email, password) => {
   return axiosClient.post('/auth/register', { firstName, lastName, email, password });
 };
+
+export const signOut = () => {
+  return axiosClient.get('/auth/logout');
+};

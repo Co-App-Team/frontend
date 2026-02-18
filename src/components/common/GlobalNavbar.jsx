@@ -1,10 +1,10 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, NavDropdown } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 function GlobalNavbar() {
   return (
@@ -16,7 +16,8 @@ function GlobalNavbar() {
           <Row className="d-flex align-items-center me-2 border-end">
             <Col className="pe-0">
               <Navbar.Brand
-                href="/"
+                as={NavLink}
+                to="/"
                 className={styles.logo}>
                 <img
                   src={coappLogo}
@@ -31,10 +32,30 @@ function GlobalNavbar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/login">Login</Nav.Link>
-              <Nav.Link href="/example1">Example 1</Nav.Link>
-              <Nav.Link href="/example2">Example 2</Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/login">
+                Login
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/example1">
+                Example 1
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/example2">
+                Example 2
+              </Nav.Link>
             </Nav>
+          </Navbar.Collapse>
+          <Navbar.Collapse className="justify-content-end">
+            <Nav.Link
+              className="ms-2 me-2"
+              as={NavLink}
+              to="/account">
+              Aidan McLeod
+            </Nav.Link>
           </Navbar.Collapse>
         </Container>
       </Navbar>

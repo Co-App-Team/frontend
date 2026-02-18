@@ -12,6 +12,7 @@ import RateMyCoop from './pages/RateMyCoop.jsx';
 import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
 import DemoPage from './pages/DemoPage.jsx';
 import { AnimatePresence } from 'framer-motion';
+import AccountPage from './pages/AccountPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -68,6 +69,10 @@ function App() {
             <Route
               path="/"
               element={<HomePage />}
+            />
+            <Route
+              element={<AccountPage />}
+              path="/account"
             />
           </Route>
         </Route>
