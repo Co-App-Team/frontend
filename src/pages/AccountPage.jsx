@@ -10,10 +10,10 @@ import { getErrorMessage } from '../utils/errorUtils';
 import ChangePasswordCard from '../components/account/ChangePasswordCard';
 import ProfileCard from '../components/account/ProfileCard';
 
-// Wait fuck these are 401s but I don't want them to sign the user out....
+// TODO: Consider error mappings and how 401s might be handled differently here (not log out)
 const changePasswordErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please provide both your current password, and a new one',
-  EMAIL_NOT_REGISTERED: 'Your account is not activated, please try logging in again', // TODO: This should log the user out wtf
+  EMAIL_NOT_REGISTERED: 'Your account is not activated, please try logging in again',
   ACCOUNT_NOT_ACTIVATED: 'New password must be at least 6 characters',
   INVALID_EMAIL_OR_PASSWORD: 'Huh',
 };
