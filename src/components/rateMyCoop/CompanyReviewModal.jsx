@@ -2,7 +2,23 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
+import { getReviews } from '../../api/rateMyCoopApi';
+import { useState, useEffect } from 'react';
 function CompanyReviewModal({ company, showModal, hideModal }) {
+  const [currReviews, setCurrReviews] = useState();
+  useEffect(() => {
+    async function loadCompanies() {
+      console.log('hi');
+      if (company) {
+        const data = await getReviews(company.companyId);
+        console.log(data);
+        setCurrReviews(data);
+      } else {
+        setCurrReviews(null);
+      }
+    }
+    loadCompanies();
+  }, [showModal]);
   return (
     <Modal
       show={showModal}
@@ -46,6 +62,7 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
           Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
           in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
         </p>
+        {currReviews}
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={hideModal}>Close</Button>

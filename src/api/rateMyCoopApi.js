@@ -1,4 +1,45 @@
-// import { get } from "./api";
+// import { get } from './api';
+
+let reviews = new Map();
+
+const nicheReviews = {
+  company: {
+    companyId: '1',
+    companyName: 'Niche',
+    location: 'wpg',
+    website: 'linkHere',
+    avgRating: 4.5,
+  },
+  reviews: [
+    {
+      reviewId: '1',
+      authorName: 'aidan',
+      rating: 5,
+      comment: 'Great work life balance and mentorship opportunities.',
+      workTermSeason: 'Summer',
+      workTermYear: 2025,
+      jobTitle: 'Software developer',
+    },
+    {
+      reviewId: '2',
+      authorName: 'bao',
+      rating: 3,
+      comment: 'mid work life balance and mentorship opportunities.',
+      workTermSeason: 'Summer',
+      workTermYear: 2025,
+      jobTitle: 'Software developer',
+    },
+  ],
+  reviewsPagination: {
+    currentPage: 0,
+    totalPages: 1,
+    totalItems: 2,
+    itemsPerPage: 10,
+    hasNext: false,
+    hasPrevious: false,
+  },
+};
+reviews.set(1, nicheReviews);
 
 export const getCompanies = async () => {
   // TODO: When implemented, connect to real API
@@ -35,4 +76,12 @@ export const getCompanies = async () => {
       },
     ],
   };
+};
+
+export const getReviews = async (companyId) => {
+  // TODO: Use real API once implemented
+  // const response = await axios.get(`/api/companies/${companyId}`);
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return reviews.get(companyId);
 };
