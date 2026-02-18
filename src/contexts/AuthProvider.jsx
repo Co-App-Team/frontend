@@ -1,9 +1,12 @@
-import { useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { setAuthFailedCallback } from '../api/api';
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+  const setIsLoggedIn = (value) => {
+    localStorage.setItem('isLoggedIn', value);
+  };
 
   setAuthFailedCallback(() => {
     setIsLoggedIn(false);
