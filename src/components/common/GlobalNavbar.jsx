@@ -1,12 +1,21 @@
-import { Container, Row, Col, NavDropdown } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
 import { NavLink, Outlet } from 'react-router-dom';
+import useApi from '../../hooks/useApi';
+import { whoami } from '../../api/userApi';
+import { useEffect } from 'react';
 
-function GlobalNavbar() {
+const GlobalNavbar = () => {
+  const { request: whoamiCallback, data: user } = useApi(whoami);
+
+  useEffect(() => {
+    whoamiCallback();
+  }, [whoamiCallback]);
+
   return (
     <>
       <Navbar
@@ -54,7 +63,7 @@ function GlobalNavbar() {
               className="ms-2 me-2"
               as={NavLink}
               to="/account">
-              Aidan McLeod
+              {user && `${user.firstName} ${user.lastName}`}
             </Nav.Link>
           </Navbar.Collapse>
         </Container>
@@ -62,6 +71,6 @@ function GlobalNavbar() {
       <Outlet />
     </>
   );
-}
+};
 
 export default GlobalNavbar;

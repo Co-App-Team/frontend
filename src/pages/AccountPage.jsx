@@ -1,128 +1,87 @@
-import { Button, Form, InputGroup, Row } from 'react-bootstrap';
+// Component developed in part using Gemini: https://gemini.google.com/share/c31dbfa579e1
+
+import { useEffect, useState } from 'react';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import useApi from '../hooks/useApi';
 import { useAuthContext } from '../contexts/AuthContext';
 import { signOut } from '../api/authApi';
-import { useState } from 'react';
-import ShowPasswordButton from '../components/common/ShowPasswordButton';
-import { changePassword } from '../api/userApi';
+import { changePassword, whoami } from '../api/userApi';
 import { getErrorMessage } from '../utils/errorUtils';
+import ChangePasswordCard from '../components/account/ChangePasswordCard';
+import ProfileCard from '../components/account/ProfileCard';
+
+// Wait fuck these are 401s but I don't want them to sign the user out....
+const changePasswordErrorMappings = {
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please provide both your current password, and a new one',
+  EMAIL_NOT_REGISTERED: 'Your account is not activated, please try logging in again', // TODO: This should log the user out wtf
+  ACCOUNT_NOT_ACTIVATED: 'New password must be at least 6 characters',
+  INVALID_EMAIL_OR_PASSWORD: 'Huh',
+};
 
 const AccountPage = () => {
   const { request: signOutCallback } = useApi(signOut);
   const { request: changePasswordCallback, isLoading } = useApi(changePassword);
+  const { request: whoamiCallback, data: user } = useApi(whoami);
+
+  useEffect(() => {
+    whoamiCallback();
+  }, [whoamiCallback]);
 
   const { setIsLoggedIn } = useAuthContext();
 
-  const [formData, setFormData] = useState({
-    oldPassword: '',
-    newPassword: '',
-  });
-
-  const [error, setError] = useState('');
-  const [showError, setShowError] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  // TODO: 2 of these?
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 6;
-  };
-
-  const isPasswordValid = validatePassword(formData.oldPassword);
+  const [changePasswordError, setChangePasswordError] = useState('');
+  const [signOutError, setSignOutError] = useState('');
 
   const handleSignOut = async () => {
+    setSignOutError('');
     try {
       await signOutCallback();
       setIsLoggedIn(false);
     } catch (error) {
-      // Bruh
-      // TODO: Error paths
-
       const message = getErrorMessage(error);
-      setError(message);
-      console.log(error);
+      setSignOutError(message);
     }
   };
 
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-
-    if (!isPasswordValid) {
-      setShowError(true);
-      return;
-    }
+  const handlePasswordChange = async (oldPassword, newPassword) => {
+    setChangePasswordError('');
     try {
-      await changePasswordCallback(formData.oldPassword, formData.newPassword);
+      await changePasswordCallback(oldPassword, newPassword);
+      return true;
     } catch (error) {
-      // TODO: Error paths
-      console.log(error);
-      const message = getErrorMessage(error);
-      setError(message);
+      const message = getErrorMessage(error, changePasswordErrorMappings);
+      setChangePasswordError(message);
+      return false;
     }
-  };
-
-  const onPasswordChange = (e) => {
-    setFormData({ ...formData, oldPassword: e.target.value.trim().trimStart() });
   };
 
   return (
-    <>
-      <Button onClick={handleSignOut}>Sign out</Button>
-
-      <Form>
-        <Form.Group
-          name="Password"
-          className={'text-start ' + (showError && !isPasswordValid ? 'mb-3' : 'mb-4')}
-          controlId="formBasicPassword">
-          <div className="text-start">
-            <Form.Label>Password</Form.Label>
+    <Container className="py-5">
+      <Row className="justify-content-center">
+        <Col
+          xs={12}
+          md={12}
+          lg={12}
+          xl={12}>
+          <div className="mb-4">
+            <h2>Account Settings</h2>
+            <p className="text-muted">Manage your profile and security preferences.</p>
           </div>
 
-          <InputGroup hasValidation>
-            <Form.Control
-              autoComplete="new-password"
-              type={showPassword ? 'text' : 'password'}
-              isInvalid={showError && !isPasswordValid}
-              placeholder="Enter your password"
-              onChange={onPasswordChange}
-              disabled={isLoading}
-              value={formData.password}
-            />
-            <ShowPasswordButton
-              isShowingPassword={showPassword}
-              isLoading={isLoading}
-              onClick={toggleShowPassword}
-              isInvalid={showError && !isPasswordValid}
-            />
-            <Form.Control.Feedback type="invalid">
-              Password must be at least 6 characters
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
-        <div className="d-grid">
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={handlePasswordChange}
-            size="lg"
-            disabled={isLoading}>
-            {isLoading ? (
-              <Spinner
-                animation="border"
-                role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            ) : (
-              'Update password'
-            )}
-          </Button>
-        </div>
-      </Form>
-      {error && <span className="text-danger mt-3">{error}</span>}
-    </>
+          <ProfileCard
+            user={user}
+            onSignOut={handleSignOut}
+            error={signOutError}
+          />
+
+          <ChangePasswordCard
+            isLoading={isLoading}
+            onSubmit={handlePasswordChange}
+            error={changePasswordError}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
