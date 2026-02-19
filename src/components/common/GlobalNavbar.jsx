@@ -35,6 +35,7 @@ const GlobalNavbar = () => {
             </Col>
           </Row>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link
@@ -53,19 +54,20 @@ const GlobalNavbar = () => {
                 Example 2
               </Nav.Link>
             </Nav>
-          </Navbar.Collapse>
-          <Navbar.Collapse className="justify-content-end">
-            <Nav.Link
-              className="ms-2 me-2 align-items-center d-flex"
-              as={NavLink}
-              to="/account">
-              {user && `${user.firstName} ${user.lastName}`}
-              <FontAwesomeIcon
-                icon={faUserCircle}
-                size="2x"
-                className="text-secondary ms-1"
-              />
-            </Nav.Link>
+
+            <Nav>
+              <Nav.Link
+                className="ms-2 me-2 align-items-center justify-content-center d-flex"
+                as={NavLink}
+                to="/account">
+                {user && `${user.firstName} ${user.lastName}`}
+                <FontAwesomeIcon
+                  icon={faUserCircle}
+                  size="2x"
+                  className="text-secondary ms-1"
+                />
+              </Nav.Link>
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
