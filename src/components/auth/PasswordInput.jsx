@@ -13,20 +13,24 @@ const PasswordInput = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const [passwordError, setPasswordError] = useState('');
+  const [showWhitespaceError, setShowWhitespaceError] = useState(false);
+
+  const [showLengthError, setShowLengthError] = useState(true);
 
   const validatePassword = (password) => {
     if (password.trim().trimStart() !== password) {
-      setPasswordError('Password cannot start or end with whitespace');
+      setShowWhitespaceError(true);
+      setShowLengthError(false);
       return false;
     } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
+      setShowWhitespaceError(false);
+      setShowLengthError(true);
       return false;
     } else {
-      setPasswordError('');
+      setShowWhitespaceError(false);
+      setShowLengthError(false);
       return true;
     }
-    // return password.length >= 6;
   };
 
   const handlePasswordChange = (e) => {
@@ -34,14 +38,14 @@ const PasswordInput = ({
     onPasswordChange({ ...e, target: { value: e.target.value.trim().trimStart() } });
   };
 
-  const isPasswordValid = passwordError === '';
+  const isPasswordValid = !showLengthError && !showWhitespaceError;
 
   return (
     <InputGroup hasValidation>
       <Form.Control
         autoComplete={autoComplete}
         type={showPassword ? 'text' : 'password'}
-        isInvalid={showError && !isPasswordValid}
+        isInvalid={showWhitespaceError || (showError && !isPasswordValid)}
         placeholder={placeholder}
         onChange={handlePasswordChange}
         disabled={isLoading}
@@ -51,11 +55,11 @@ const PasswordInput = ({
         isShowingPassword={showPassword}
         isLoading={isLoading}
         onClick={() => setShowPassword((prev) => !prev)}
-        isInvalid={showError && !isPasswordValid}
+        isInvalid={showWhitespaceError || (showError && !isPasswordValid)}
       />
       <Form.Control.Feedback type="invalid">
-        {passwordError}
-        {/* Password must be at least 6 characters */}
+        {showWhitespaceError && 'Password cannot start or end with spaces'}
+        {showLengthError && 'Password must be at least 6 characters'}
       </Form.Control.Feedback>
     </InputGroup>
   );
