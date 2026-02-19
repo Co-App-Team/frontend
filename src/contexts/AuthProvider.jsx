@@ -1,18 +1,25 @@
 import { AuthContext } from './AuthContext';
 import { setAuthFailedCallback } from '../api/api';
+import { useEffect, useState } from 'react';
 
 export const AuthProvider = ({ children }) => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const storedLoginStatus = localStorage.getItem('isLoggedIn') === 'true';
+  const [isLoggedIn, setIsLoggedIn] = useState(storedLoginStatus);
 
-  const setIsLoggedIn = (value) => {
+  useEffect(() => {
+    setAuthFailedCallback(() => {
+      setIsLoggedIn(false);
+    });
+  }, []);
+
+  const setIsLoggedInWrapper = (value) => {
+    setIsLoggedIn(value);
     localStorage.setItem('isLoggedIn', value);
   };
 
-  setAuthFailedCallback(() => {
-    setIsLoggedIn(false);
-  });
-
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn: setIsLoggedInWrapper }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
