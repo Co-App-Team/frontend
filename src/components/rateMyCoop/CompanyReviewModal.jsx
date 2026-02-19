@@ -82,8 +82,6 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
             <Spinner />
           </>
         )}
-      </Modal.Body>
-      <Modal.Footer>
         <Container fluid>
           <Row>
             <Col className="text-center">
@@ -117,6 +115,9 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
             </Col>
           </Row>
         </Container>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={hideModal}>Close</Button>
       </Modal.Footer>
     </Modal>
   );
