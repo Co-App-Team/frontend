@@ -10,7 +10,6 @@ import { getErrorMessage } from '../utils/errorUtils';
 import ChangePasswordCard from '../components/account/ChangePasswordCard';
 import ProfileCard from '../components/account/ProfileCard';
 
-// TODO: Consider error mappings and how 401s might be handled differently here (not log out)
 const changePasswordErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please provide both your current password, and a new one',
   EMAIL_NOT_REGISTERED: 'Invalid session. Please sign out and sign back in',
