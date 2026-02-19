@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
-import ShowPasswordButton from '../common/ShowPasswordButton';
+import { Button, Form, Spinner } from 'react-bootstrap';
+import PasswordInput from '../auth/PasswordInput';
 
 const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' }) => {
   const [formData, setFormData] = useState({
@@ -9,7 +9,6 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
     password: '',
   });
 
-  const [showPassword, setShowPassword] = useState(false);
   const [showFormErrors, setShowFormErrors] = useState(false);
 
   const validateEmail = (email) => {
@@ -29,10 +28,6 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
   const isCodeValid = validateCode(formData.code);
   const isPasswordValid = validatePassword(formData.password);
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   const onCodeChange = (e) => {
     // Enforces numeric inputs ('+' converts to int, because... JavaScript....)
     if (Number.isInteger(+e.target.value)) {
@@ -49,7 +44,7 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
   };
 
   const onSubmit = () => {
-    if (isPasswordValid) {
+    if (isPasswordValid && isEmailValid && isCodeValid) {
       handleUpdatePassword(formData);
     } else {
       setShowFormErrors(true);
@@ -99,27 +94,14 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
         <div className="text-start">
           <Form.Label>New Password</Form.Label>
         </div>
-
-        <InputGroup hasValidation>
-          <Form.Control
-            autoComplete="new-password"
-            type={showPassword ? 'text' : 'password'}
-            isInvalid={showFormErrors && !isPasswordValid}
-            placeholder="Enter a new password"
-            onChange={onPasswordChange}
-            disabled={isLoading}
-            value={formData.password}
-          />
-          <ShowPasswordButton
-            isShowingPassword={showPassword}
-            isLoading={isLoading}
-            onClick={toggleShowPassword}
-            isInvalid={showFormErrors && !isPasswordValid}
-          />
-          <Form.Control.Feedback type="invalid">
-            Password must be at least 6 characters
-          </Form.Control.Feedback>
-        </InputGroup>
+        <PasswordInput
+          showError={showFormErrors}
+          onPasswordChange={onPasswordChange}
+          isLoading={isLoading}
+          value={formData.password}
+          autoComplete="new-password"
+          placeholder="Enter a new password"
+        />
       </Form.Group>
 
       <div className="d-grid">
