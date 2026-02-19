@@ -1,6 +1,11 @@
+import axiosClient from './api';
+
 export const changePassword = (oldPassword, newPassword) => {
-  return { message: 'Password updated successfully.' + oldPassword + newPassword };
-  // return axiosClient.get('/user/update-password', { oldPassword, newPassword });
+  return axiosClient.post(
+    '/user/update-password',
+    { oldPassword, newPassword },
+    { skipAuthRefresh: true },
+  );
 };
 
 export const whoami = () => {

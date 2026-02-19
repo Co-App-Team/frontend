@@ -8,6 +8,8 @@ import { NavLink, Outlet } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import { whoami } from '../../api/userApi';
 import { useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 
 const GlobalNavbar = () => {
   const { request: whoamiCallback, data: user } = useApi(whoami);
@@ -60,10 +62,15 @@ const GlobalNavbar = () => {
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <Nav.Link
-              className="ms-2 me-2"
+              className="ms-2 me-2 align-items-center d-flex"
               as={NavLink}
               to="/account">
               {user && `${user.firstName} ${user.lastName}`}
+              <FontAwesomeIcon
+                icon={faUserCircle}
+                size="2x"
+                className="text-secondary ms-1"
+              />
             </Nav.Link>
           </Navbar.Collapse>
         </Container>

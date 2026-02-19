@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import ShowPasswordButton from '../common/ShowPasswordButton';
 
-const ChangePasswordCard = ({ isLoading, onSubmit, error }) => {
+const ChangePasswordCard = ({ isLoading, onSubmit, error, success }) => {
   const [formData, setFormData] = useState({ oldPassword: '', newPassword: '' });
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -130,6 +130,7 @@ const ChangePasswordCard = ({ isLoading, onSubmit, error }) => {
           </div>
         </Form>
         {error && <p className="text-danger mt-3 mb-0">{error}</p>}
+        {success && <p className="text-success mt-3 mb-0">{success}</p>}
       </Card.Body>
     </Card>
   );
