@@ -57,7 +57,27 @@ const nicheReviews = {
     hasPrevious: false,
   },
 };
+
+const amazonReviews = {
+  company: {
+    companyId: '3',
+    companyName: 'Amazon',
+    location: 'wpg',
+    website: 'linkHere',
+    avgRating: 4.5,
+  },
+  reviews: [],
+  reviewsPagination: {
+    currentPage: 0,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 10,
+    hasNext: false,
+    hasPrevious: false,
+  },
+};
 reviews.set(1, nicheReviews);
+reviews.set(3, amazonReviews);
 
 export const getCompanies = async () => {
   // TODO: When implemented, connect to real API

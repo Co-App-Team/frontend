@@ -79,6 +79,13 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
         <div className={styles['reviews-container']}>
           {currReviews ? (
             <>
+              <div className="text-center">
+                {currReviews.reviews.length == 0 && (
+                  <h4>
+                    <i>No Reviews.</i>
+                  </h4>
+                )}
+              </div>
               {currReviews.reviews.map((review, index) => (
                 <Card
                   className={styles['review-card']}
@@ -114,9 +121,9 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
               ))}
             </>
           ) : (
-            <>
+            <div className="text-center">
               <Spinner />
-            </>
+            </div>
           )}
         </div>
         <Container
