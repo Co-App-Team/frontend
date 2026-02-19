@@ -9,6 +9,5 @@ export const changePassword = (oldPassword, newPassword) => {
 };
 
 export const whoami = () => {
-  return { email: 'aidan.c.mcleod@gmail.com', firstName: 'Aidan', lastName: 'McLeod' };
-  // return axiosClient.get('/user/whoami');
+  return axiosClient.get('/user/about-me');
 };
