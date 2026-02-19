@@ -18,7 +18,14 @@ export const AuthProvider = ({ children }) => {
   const { request: whoamiCallback, data: user } = useApi(whoami);
 
   useEffect(() => {
-    whoamiCallback();
+    async function fetchUser() {
+      try {
+        await whoamiCallback();
+      } catch (error) {
+        console.log('Failed to fetch user data on app load:', error);
+      }
+    }
+    fetchUser();
   }, [whoamiCallback]);
 
   return (
