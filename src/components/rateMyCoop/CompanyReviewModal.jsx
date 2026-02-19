@@ -40,7 +40,11 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       centered>
       <Modal.Header closeButton>
         <div className="d-flex flex-column justify-content-start align-items-start">
-          <Modal.Title id="contained-modal-title-vcenter">{company.companyName}</Modal.Title>
+          <Modal.Title
+            as="h2"
+            id="contained-modal-title-vcenter">
+            {company.companyName}
+          </Modal.Title>
           <div className="d-flex">
             <div className="mx-4 ms-0">
               <FontAwesomeIcon
