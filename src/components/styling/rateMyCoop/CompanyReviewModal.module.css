@@ -1,11 +1,11 @@
-.companies-container {
+.reviews-container {
   height: 70vh;
-  width: 80vw;
+  width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.5rem;
   margin-top: 1rem;
-  text-align: center;
+  text-align: left;
 
   border: 0.2rem;
   border-style: solid;
@@ -13,11 +13,10 @@
   border-color: lightgray;
 }
 
-.company-modal {
-  border-left: 0.5rem;
-  border-style: solid;
-  border-left-color: var(--primary);
-  width: 78vw;
+.review-card {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
   padding: 0;
   transition: filter 0.2s ease;
 }

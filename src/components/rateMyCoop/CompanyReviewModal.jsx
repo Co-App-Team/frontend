@@ -11,7 +11,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { getReviews } from '../../api/rateMyCoopApi';
 import { useState, useEffect } from 'react';
-import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import { Card, Col, Container, Row, Spinner } from 'react-bootstrap';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import styles from '../styling/rateMyCoop/CompanyReviewModal.module.css';
 function CompanyReviewModal({ company, showModal, hideModal }) {
   const [currReviews, setCurrReviews] = useState();
 
@@ -70,19 +72,52 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       </Modal.Header>
       <Modal.Body>
         <h4>Reviews</h4>
-        <p></p>
-        {currReviews ? (
-          <>
-            {currReviews.reviews.map((review, index) => (
-              <p key={index}>{review.comment}</p>
-            ))}
-          </>
-        ) : (
-          <>
-            <Spinner />
-          </>
-        )}
-        <Container fluid>
+        <div className={styles['reviews-container']}>
+          {currReviews ? (
+            <>
+              {currReviews.reviews.map((review, index) => (
+                <Card
+                  className={styles['review-card']}
+                  key={index}>
+                  <Card.Body>
+                    <Container>
+                      <Row>
+                        <Col>
+                          <h5>{review.authorName}</h5>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <p className="m-0">
+                            Term: {review.workTermSeason} {review.workTermYear}
+                            <FontAwesomeIcon icon={faCalendar} />
+                          </p>
+                        </Col>
+                        <Col>
+                          <p className="m-0">
+                            Rating: {review.rating}/5
+                            <FontAwesomeIcon icon={faStar} />
+                          </p>
+                        </Col>
+                      </Row>
+                      <hr></hr>
+                      <Row>
+                        <p>{review.comment}</p>
+                      </Row>
+                    </Container>
+                  </Card.Body>
+                </Card>
+              ))}
+            </>
+          ) : (
+            <>
+              <Spinner />
+            </>
+          )}
+        </div>
+        <Container
+          fluid
+          className="m-2">
           <Row>
             <Col className="text-center">
               <Button onClick={hideModal}>
