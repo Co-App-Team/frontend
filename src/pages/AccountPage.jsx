@@ -1,11 +1,11 @@
 // Component developed in part using Gemini: https://gemini.google.com/share/c31dbfa579e1
 
-import { useEffect, useState } from 'react';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import useApi from '../hooks/useApi';
 import { useAuthContext } from '../contexts/AuthContext';
 import { signOut } from '../api/authApi';
-import { changePassword, whoami } from '../api/userApi';
+import { changePassword } from '../api/userApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import ChangePasswordCard from '../components/account/ChangePasswordCard';
 import ProfileCard from '../components/account/ProfileCard';
@@ -21,11 +21,8 @@ const changePasswordErrorMappings = {
 const AccountPage = () => {
   const { request: signOutCallback } = useApi(signOut);
   const { request: changePasswordCallback, loading: isLoading } = useApi(changePassword);
-  const { request: whoamiCallback, data: user } = useApi(whoami);
 
-  useEffect(() => {
-    whoamiCallback();
-  }, [whoamiCallback]);
+  const { user } = useAuthContext();
 
   const { setIsLoggedIn } = useAuthContext();
 

@@ -5,18 +5,12 @@ import styles from '../styling/common/GlobalNavbar.module.css';
 
 import coappLogo from '../../assets/coapp_logo.png';
 import { NavLink, Outlet } from 'react-router-dom';
-import useApi from '../../hooks/useApi';
-import { whoami } from '../../api/userApi';
-import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { useAuthContext } from '../../contexts/AuthContext';
 
 const GlobalNavbar = () => {
-  const { request: whoamiCallback, data: user } = useApi(whoami);
-
-  useEffect(() => {
-    whoamiCallback();
-  }, [whoamiCallback]);
+  const { user } = useAuthContext();
 
   return (
     <>
