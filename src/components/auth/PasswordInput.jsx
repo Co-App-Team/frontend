@@ -2,6 +2,7 @@ import { Form, InputGroup } from 'react-bootstrap';
 import ShowPasswordButton from '../common/ShowPasswordButton';
 import { useState } from 'react';
 
+// TODO: Put into change password screen once it's merged
 const PasswordInput = ({
   showError,
   onPasswordChange,
@@ -12,15 +13,28 @@ const PasswordInput = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const [passwordError, setPasswordError] = useState('');
+
   const validatePassword = (password) => {
-    return password.length >= 6;
+    if (password.trim().trimStart() !== password) {
+      setPasswordError('Password cannot start or end with whitespace');
+      return false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return false;
+    } else {
+      setPasswordError('');
+      return true;
+    }
+    // return password.length >= 6;
   };
 
   const handlePasswordChange = (e) => {
-    onPasswordChange(e);
+    validatePassword(e.target.value);
+    onPasswordChange({ ...e, target: { value: e.target.value.trim().trimStart() } });
   };
 
-  const isPasswordValid = validatePassword(value);
+  const isPasswordValid = passwordError === '';
 
   return (
     <InputGroup hasValidation>
@@ -40,7 +54,8 @@ const PasswordInput = ({
         isInvalid={showError && !isPasswordValid}
       />
       <Form.Control.Feedback type="invalid">
-        Password must be at least 6 characters
+        {passwordError}
+        {/* Password must be at least 6 characters */}
       </Form.Control.Feedback>
     </InputGroup>
   );

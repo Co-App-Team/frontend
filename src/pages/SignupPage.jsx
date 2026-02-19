@@ -102,7 +102,7 @@ const SignupPage = () => {
   };
 
   const onPasswordChange = (e) => {
-    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
+    setFormData({ ...formData, password: e.target.value });
   };
 
   return (

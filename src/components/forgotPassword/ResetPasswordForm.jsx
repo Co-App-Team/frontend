@@ -40,7 +40,7 @@ const ResetPasswordForm = ({ handleUpdatePassword, isLoading, defaultEmail = '' 
   };
 
   const onPasswordChange = (e) => {
-    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
+    setFormData({ ...formData, password: e.target.value });
   };
 
   const onSubmit = () => {
