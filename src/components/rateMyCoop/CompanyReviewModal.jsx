@@ -30,7 +30,7 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       }
     }
     loadCompanies();
-  }, [showModal]);
+  }, [company, showModal]);
   return (
     <Modal
       show={showModal}
