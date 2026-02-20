@@ -100,14 +100,20 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
                       <Row>
                         <Col>
                           <p className="m-0">
+                            <FontAwesomeIcon
+                              className="me-1"
+                              icon={faCalendar}
+                            />
                             Term: {review.workTermSeason} {review.workTermYear}
-                            <FontAwesomeIcon icon={faCalendar} />
                           </p>
                         </Col>
                         <Col>
                           <p className="m-0">
+                            <FontAwesomeIcon
+                              className="me-1"
+                              icon={faStar}
+                            />
                             Rating: {review.rating}/5
-                            <FontAwesomeIcon icon={faStar} />
                           </p>
                         </Col>
                       </Row>
