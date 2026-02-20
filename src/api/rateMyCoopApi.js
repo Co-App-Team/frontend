@@ -79,41 +79,43 @@ const amazonReviews = {
 reviews.set(1, nicheReviews);
 reviews.set(3, amazonReviews);
 
+let mockedCompanies = {
+  companies: [
+    {
+      companyId: '1',
+      companyName: 'Niche',
+      location: 'wpg',
+      website: 'www.linkHere.com',
+      avgRating: '4.5',
+    },
+    {
+      companyId: '2',
+      companyName: 'Varian',
+      location: 'wpg',
+      website: 'www.linkHere.com',
+      avgRating: '4.5',
+    },
+    {
+      companyId: '3',
+      companyName: 'Amazon',
+      location: 'wpg',
+      website: 'www.linkHere.com',
+      avgRating: '4.5',
+    },
+    {
+      companyId: '4',
+      companyName: 'NML',
+      location: 'wpg',
+      website: 'www.linkHere.com',
+      avgRating: '4.5',
+    },
+  ],
+};
+
 export const getCompanies = async () => {
   // TODO: When implemented, connect to real API
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  return {
-    companies: [
-      {
-        companyId: '1',
-        companyName: 'Niche',
-        location: 'wpg',
-        website: 'www.linkHere.com',
-        avgRating: '4.5',
-      },
-      {
-        companyId: '2',
-        companyName: 'Varian',
-        location: 'wpg',
-        website: 'www.linkHere.com',
-        avgRating: '4.5',
-      },
-      {
-        companyId: '3',
-        companyName: 'Amazon',
-        location: 'wpg',
-        website: 'www.linkHere.com',
-        avgRating: '4.5',
-      },
-      {
-        companyId: '4',
-        companyName: 'NML',
-        location: 'wpg',
-        website: 'www.linkHere.com',
-        avgRating: '4.5',
-      },
-    ],
-  };
+  return mockedCompanies;
 };
 
 export const getReviews = async (companyId) => {
@@ -122,4 +124,12 @@ export const getReviews = async (companyId) => {
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return reviews.get(companyId);
+};
+
+export const addNewCompany = async (newCompany) => {
+  // TODO: Use real API once implemented
+  // const response = await axios.get(`/api/companies/${companyId}`);
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return mockedCompanies.companies.push(newCompany);
 };
