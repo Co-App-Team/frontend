@@ -1,4 +1,4 @@
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 
 import styles from '../styling/rateMyCoop/CompaniesDisplay.module.css';
 import CompanyCard from './CompanyCard';
@@ -10,6 +10,8 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
         {topFilteredCompanies.length == companies.length ? (
           <>
             <h3>Companies</h3>
+
+            {companies.length == 0 && <Spinner />}
 
             <Container className="d-flex flex-column p-0 m-0">
               {companies.map((company, index) => (
