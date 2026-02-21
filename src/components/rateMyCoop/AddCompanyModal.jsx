@@ -1,6 +1,6 @@
 import { Modal, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 
-// import { addNewCompany } from '../../api/rateMyCoopApi';
+import { addNewCompany } from '../../api/rateMyCoopApi';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ function AddCompanyModal({ showModal, hideModal }) {
   const [formData, setFormData] = useState({
     companyName: '',
     location: '',
-    link: '',
+    website: '',
   });
 
   const validateCompanyName = (companyName) => {
@@ -24,13 +24,13 @@ function AddCompanyModal({ showModal, hideModal }) {
     return location.trim() != '';
   };
 
-  const validateLink = (link) => {
-    return link.trim() != '';
+  const validateWebsite = (website) => {
+    return website.trim() != '';
   };
 
   const isCompanyNameValid = validateCompanyName(formData.companyName);
   const isLocationValid = validateLocation(formData.location);
-  const isLinkValid = validateLink(formData.link);
+  const isWebsiteValid = validateWebsite(formData.website);
 
   const onCompanyNameChange = (e) => {
     setFormData({ ...formData, companyName: e.target.value });
@@ -40,8 +40,8 @@ function AddCompanyModal({ showModal, hideModal }) {
     setFormData({ ...formData, location: e.target.value });
   };
 
-  const onLinkChange = (e) => {
-    setFormData({ ...formData, link: e.target.value });
+  const onWebsiteChange = (e) => {
+    setFormData({ ...formData, website: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -50,7 +50,7 @@ function AddCompanyModal({ showModal, hideModal }) {
   };
 
   const submit = async () => {
-    if (!isCompanyNameValid || !isLocationValid || !isLinkValid) {
+    if (!isCompanyNameValid || !isLocationValid || !isWebsiteValid) {
       setShowError(true);
       return;
     }
@@ -59,8 +59,8 @@ function AddCompanyModal({ showModal, hideModal }) {
     setError('');
 
     try {
-      console.log('yo');
       await new Promise((resolve) => setTimeout(resolve, 2000));
+      addNewCompany(formData);
     } catch (error) {
       // const message = getErrorMessage(error, errorMappings);
       const message = 'Oopsie. Something went wrong'; // TODO: Make this a real error message when API is hooked up
@@ -69,13 +69,14 @@ function AddCompanyModal({ showModal, hideModal }) {
         setError(message);
       }
     } finally {
-      setFormData({ companyName: '', location: '', link: '' });
+      setFormData({ companyName: '', location: '', website: '' });
       setIsLoading(false);
+      handleModalClose();
     }
   };
 
   const handleModalClose = () => {
-    setFormData({ companyName: '', location: '', link: '' });
+    setFormData({ companyName: '', location: '', website: '' });
     setError('');
     setShowError(false);
     hideModal();
@@ -148,11 +149,13 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Control
                 type="text"
                 placeholder="Enter the link to the company's website"
-                onChange={onLinkChange}
-                isInvalid={showError && !isLinkValid}
+                onChange={onWebsiteChange}
+                isInvalid={showError && !isWebsiteValid}
                 disabled={isLoading}
               />
-              <Form.Control.Feedback type="invalid">Please provide a link.</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                Please provide a website.
+              </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
         </Form>

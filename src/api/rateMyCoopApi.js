@@ -112,6 +112,8 @@ let mockedCompanies = {
   ],
 };
 
+let companyId = 99;
+
 export const getCompanies = async () => {
   // TODO: When implemented, connect to real API
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -131,5 +133,7 @@ export const addNewCompany = async (newCompany) => {
   // const response = await axios.get(`/api/companies/${companyId}`);
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  return mockedCompanies.companies.push(newCompany);
+  newCompany.companyId = companyId++;
+  newCompany.avgRating = 0.0;
+  mockedCompanies.companies.push(newCompany);
 };
