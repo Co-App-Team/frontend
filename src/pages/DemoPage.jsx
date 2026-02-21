@@ -21,6 +21,7 @@ const DemoPage = () => {
     setTopFilteredCompanies(data.companies);
   }
 
+  // For some reason, the linter doesn't like use calling "loadCompanies" directly in useEffect()
   useEffect(() => {
     async function firstFetchCompanies() {
       const data = await getCompanies();
