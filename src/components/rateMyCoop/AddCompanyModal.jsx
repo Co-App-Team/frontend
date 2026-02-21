@@ -7,11 +7,84 @@ import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-ico
 
 function AddCompanyModal({ showModal, hideModal }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [formData, setFormData] = useState({
+    companyName: '',
+    location: '',
+    link: '',
+  });
+
+  const validateCompanyName = (companyName) => {
+    return companyName.trim() != '';
+  };
+
+  const validateLocation = (location) => {
+    return location.trim() != '';
+  };
+
+  const validateLink = (link) => {
+    return link.trim() != '';
+  };
+
+  const isCompanyNameValid = validateCompanyName(formData.companyName);
+  const isLocationValid = validateLocation(formData.location);
+  const isLinkValid = validateLink(formData.link);
+
+  const onCompanyNameChange = (e) => {
+    setFormData({ ...formData, companyName: e.target.value });
+  };
+
+  const onLocationChange = (e) => {
+    setFormData({ ...formData, location: e.target.value });
+  };
+
+  const onLinkChange = (e) => {
+    setFormData({ ...formData, link: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    submit();
+  };
+
+  const submit = async () => {
+    if (!isCompanyNameValid || !isLocationValid || !isLinkValid) {
+      setShowError(true);
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      console.log('yo');
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    } catch (error) {
+      // const message = getErrorMessage(error, errorMappings);
+      const message = 'Oopsie. Something went wrong'; // TODO: Make this a real error message when API is hooked up
+
+      if (error.serverCode !== 'REQUEST_HAS_NULL_OR_EMPTY_FIELD') {
+        setError(message);
+      }
+    } finally {
+      setFormData({ companyName: '', location: '', link: '' });
+      setIsLoading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    setFormData({ companyName: '', location: '', link: '' });
+    setError('');
+    setShowError(false);
+    hideModal();
+  };
 
   return (
     <Modal
       show={showModal}
-      onHide={hideModal}
+      onHide={handleModalClose}
       size="lg"
       centered>
       <Modal.Header closeButton>
@@ -30,8 +103,12 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Control
                 type="text"
                 placeholder="Enter the company name"
-                onChange={() => console.log('changed')}
+                onChange={onCompanyNameChange}
+                isInvalid={showError && !isCompanyNameValid}
                 disabled={isLoading}></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Please provide a company name.
+              </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
 
@@ -48,9 +125,13 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Control
                 type="text"
                 placeholder="Enter the company's location"
-                onChange={() => console.log('changed')}
+                onChange={onLocationChange}
+                isInvalid={showError && !isLocationValid}
                 disabled={isLoading}
               />
+              <Form.Control.Feedback type="invalid">
+                Please provide a location.
+              </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
 
@@ -67,12 +148,15 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Control
                 type="text"
                 placeholder="Enter the link to the company's website"
-                onChange={() => console.log('changed')}
+                onChange={onLinkChange}
+                isInvalid={showError && !isLinkValid}
                 disabled={isLoading}
               />
+              <Form.Control.Feedback type="invalid">Please provide a link.</Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
         </Form>
+        {error && <span className="text-danger mt-3">{error}</span>}
       </Modal.Body>
       <Modal.Footer>
         <Button
@@ -80,13 +164,12 @@ function AddCompanyModal({ showModal, hideModal }) {
           onClick={() => {
             hideModal();
             setIsLoading(false);
-          }}>
+          }}
+          disabled={isLoading}>
           Cancel
         </Button>
         <Button
-          onClick={() => {
-            setIsLoading(true);
-          }}
+          onClick={handleSubmit}
           disabled={isLoading}>
           {isLoading && <Spinner size="sm" />} Submit
         </Button>
