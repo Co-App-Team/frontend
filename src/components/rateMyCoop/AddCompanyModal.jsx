@@ -2,6 +2,8 @@ import { Modal, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 
 // import { addNewCompany } from '../../api/rateMyCoopApi';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-icons';
 
 function AddCompanyModal({ showModal, hideModal }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,16 +22,17 @@ function AddCompanyModal({ showModal, hideModal }) {
           <Form.Group
             className="my-2"
             controlId="formBasicEmail">
-            <div>
-              <Form.Label>Company Name</Form.Label>
-            </div>
-
-            <Form.Control
-              type="text"
-              placeholder="Enter the company name"
-              onChange={() => console.log('changed')}
-              disabled={isLoading}
-            />
+            <Form.Label>Company Name</Form.Label>
+            <InputGroup>
+              <InputGroup.Text>
+                <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon>
+              </InputGroup.Text>
+              <Form.Control
+                type="text"
+                placeholder="Enter the company name"
+                onChange={() => console.log('changed')}
+                disabled={isLoading}></Form.Control>
+            </InputGroup>
           </Form.Group>
 
           <Form.Group
@@ -39,6 +42,9 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Label>Location</Form.Label>
             </div>
             <InputGroup>
+              <InputGroup.Text>
+                <FontAwesomeIcon icon={faMapPin}></FontAwesomeIcon>
+              </InputGroup.Text>
               <Form.Control
                 type="text"
                 placeholder="Enter the company's location"
@@ -55,6 +61,9 @@ function AddCompanyModal({ showModal, hideModal }) {
               <Form.Label>Company Website</Form.Label>
             </div>
             <InputGroup>
+              <InputGroup.Text>
+                <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>
+              </InputGroup.Text>
               <Form.Control
                 type="text"
                 placeholder="Enter the link to the company's website"
