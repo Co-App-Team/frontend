@@ -15,14 +15,27 @@ const DemoPage = () => {
 
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
 
+  async function loadCompanies() {
+    const data = await getCompanies();
+    setCompanies(data.companies);
+    setTopFilteredCompanies(data.companies);
+  }
+
   useEffect(() => {
-    async function loadCompanies() {
+    async function firstFetchCompanies() {
       const data = await getCompanies();
       setCompanies(data.companies);
       setTopFilteredCompanies(data.companies);
     }
-    loadCompanies();
+    firstFetchCompanies();
   }, []);
+
+  async function handleCreateCompanyModalClose() {
+    setShowAddCompanyModal(false);
+    setCompanies([]);
+    setTopFilteredCompanies([]);
+    await loadCompanies();
+  }
 
   const updateSearch = (value) => {
     const topFilter = companies.filter((c) =>
@@ -74,7 +87,7 @@ const DemoPage = () => {
 
       <AddCompanyModal
         showModal={showAddCompanyModal}
-        hideModal={() => setShowAddCompanyModal(false)}></AddCompanyModal>
+        hideModal={handleCreateCompanyModalClose}></AddCompanyModal>
     </>
   );
 };
