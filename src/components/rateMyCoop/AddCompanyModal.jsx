@@ -9,9 +9,10 @@ function AddCompanyModal({ showModal, hideModal }) {
   return (
     <Modal
       show={showModal}
+      onHide={hideModal}
       size="lg"
       centered>
-      <Modal.Header>
+      <Modal.Header closeButton>
         <Modal.Title as="h3">Add new company</Modal.Title>
       </Modal.Header>
       <Modal.Body>
