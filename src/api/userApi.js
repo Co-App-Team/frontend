@@ -1,7 +1,7 @@
 import axiosClient from './api';
 
 export const changePassword = (oldPassword, newPassword) => {
-  return axiosClient.post(
+  return axiosClient.patch(
     '/user/update-password',
     { oldPassword, newPassword },
     { skipAuthRefresh: true },
