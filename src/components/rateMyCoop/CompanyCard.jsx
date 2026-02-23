@@ -1,15 +1,22 @@
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import CompanyReviewModal from './CompanyReviewModal';
 import styles from '../styling/rateMyCoop/CompaniesDisplay.module.css';
 
 const CompanyCard = ({ company }) => {
+  const [modalShow, setModalShow] = useState(false);
+  function hideModal() {
+    setModalShow(false);
+  }
+
   return (
     <>
       <Card
         className={styles['company-card']}
         onClick={() => {
-          console.log('bruh');
+          setModalShow(true);
         }}>
         <Card.Header as={'h5'}>{company.companyName}</Card.Header>
         <Card.Body>
@@ -42,6 +49,11 @@ const CompanyCard = ({ company }) => {
           </div>
         </Card.Body>
       </Card>
+      <CompanyReviewModal
+        showModal={modalShow}
+        hideModal={hideModal}
+        company={company}
+      />
     </>
   );
 };
