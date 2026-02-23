@@ -30,8 +30,10 @@ axiosClient.interceptors.response.use(
     const status = error.response?.status || 0;
     const responseData = error.response?.data || {};
 
-    if (status === 401) {
-      // Fire the auth failed callback
+    const shouldSkipAuth = error.config?.skipAuthRefresh;
+
+    if (status === 401 && !shouldSkipAuth) {
+      // Fire auth failed callback
       if (authFailedCallback) {
         authFailedCallback();
       }
