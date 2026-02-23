@@ -10,6 +10,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
 import DemoPage from './pages/DemoPage.jsx';
+import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -38,6 +39,11 @@ function App() {
         <Route
           path="/demo"
           element={<DemoPage />}
+        />
+
+        <Route
+          path="/job-applications"
+          element={<JobApplicationsPage />}
         />
 
         {/* Unprotected routes with app header */}
