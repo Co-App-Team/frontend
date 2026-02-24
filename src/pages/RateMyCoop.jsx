@@ -33,7 +33,9 @@ const RateMyCoop = () => {
 
   async function handleCreateCompanyModalClose() {
     setShowAddCompanyModal(false);
+  }
 
+  async function refreshCompanyList() {
     try {
       const companies = await getCompaniesCallback();
       setTopFilteredCompanies(companies.companies);
@@ -98,6 +100,7 @@ const RateMyCoop = () => {
       <AddCompanyModal
         showModal={showAddCompanyModal}
         hideModal={handleCreateCompanyModalClose}
+        refreshCompanies={refreshCompanyList}
       />
     </>
   );

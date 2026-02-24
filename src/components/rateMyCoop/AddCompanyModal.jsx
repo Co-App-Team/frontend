@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-icons';
 
-function AddCompanyModal({ showModal, hideModal }) {
+function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState(false);
@@ -59,8 +59,7 @@ function AddCompanyModal({ showModal, hideModal }) {
     setError('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      addNewCompany(formData);
+      await addNewCompany(formData);
     } catch (error) {
       // const message = getErrorMessage(error, errorMappings);
       const message = 'Oopsie. Something went wrong'; // TODO: Make this a real error message when API is hooked up
@@ -71,6 +70,7 @@ function AddCompanyModal({ showModal, hideModal }) {
     } finally {
       setFormData({ companyName: '', location: '', website: '' });
       setIsLoading(false);
+      await refreshCompanies();
       handleModalClose();
     }
   };
