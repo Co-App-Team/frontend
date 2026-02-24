@@ -23,7 +23,7 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
   useEffect(() => {
     async function loadCompanies() {
       if (company) {
-        const data = await getReviews(parseInt(company.companyId));
+        const data = await getReviews(company.companyId);
         setCurrReviews(data);
       } else {
         setCurrReviews(null);
