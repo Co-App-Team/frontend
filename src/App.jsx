@@ -10,7 +10,6 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
 import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
-import DemoPage from './pages/DemoPage.jsx';
 import { AnimatePresence } from 'framer-motion';
 import AccountPage from './pages/AccountPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
@@ -23,10 +22,6 @@ function App() {
     <AnimatePresence>
       <Routes>
         {/* Globally accessible routes */}
-        <Route
-          path="/demo"
-          element={<DemoPage />}
-        />
 
         {/* Globally accessible routes with app header */}
         <Route element={<GlobalNavbar />}>
