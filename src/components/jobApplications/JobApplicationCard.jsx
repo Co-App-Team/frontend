@@ -23,7 +23,7 @@ const JobApplicationCard = ({ jobApplication }) => {
   }
 
   const dateCreated = formatDate(jobApplication.dateCreated);
-  const deadlineDate = formatDate(jobApplication.deadlineDate);
+  const deadlineDate = formatDate(jobApplication.applicationDeadline);
 
   const isLoading = !company || !status || !dateCreated || !deadlineDate;
 
