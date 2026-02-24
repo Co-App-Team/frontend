@@ -9,55 +9,50 @@ import SignupPage from './pages/SignupPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import GlobalNavbar from './components/common/GlobalNavbar.jsx';
 import RateMyCoop from './pages/RateMyCoop.jsx';
-import DemoPage from './pages/DemoPage.jsx';
-import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
+import ConfirmEmailPage from './pages/ConfirmEmailPage.jsx';
+import { AnimatePresence } from 'framer-motion';
+import AccountPage from './pages/AccountPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import PreAuthRoute from './components/PreAuthRoute.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
 
   return (
-    <>
+    <AnimatePresence>
       <Routes>
-        {/* Unprotected routes */}
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
-        <Route
-          path="/signup"
-          element={<SignupPage />}
-        />
-        <Route
-          path="/forgot-password"
-          element={<ForgotPasswordPage />}
-        />
-        <Route
-          path="/demo"
-          element={<DemoPage />}
-        />
+        {/* Globally accessible routes */}
 
-        <Route
-          path="/demo"
-          element={<DemoPage />}
-        />
-
-        {/* Unprotected routes with app header */}
+        {/* Globally accessible routes with app header */}
         <Route element={<GlobalNavbar />}>
           {/* Not found page for non mapped routings, must not be grouped under */}
           <Route
             path="*"
             element={<NotFoundPage />}
           />
+        </Route>
 
-          {/* Rate My Co-op Screen. TODO: Move to protected route once authentication is implemented */}
+        {/* Unprotected routes that require the user be unauthenticated to access (blocks access if logged in) */}
+        <Route element={<PreAuthRoute isAuthenticated={isLoggedIn} />}>
           <Route
-            path="rate-my-co-op"
-            element={<RateMyCoop />}
+            path="/login"
+            element={<LoginPage />}
           />
-
           <Route
-            path="/job-applications"
-            element={<JobApplicationsPage />}
+            path="/signup"
+            element={<SignupPage />}
+          />
+          <Route
+            path="/forgot-password"
+            element={<ForgotPasswordPage />}
+          />
+          <Route
+            path="/reset-password"
+            element={<ResetPasswordPage />}
+          />
+          <Route
+            path="/confirm-email"
+            element={<ConfirmEmailPage />}
           />
         </Route>
 
@@ -69,10 +64,18 @@ function App() {
               path="/"
               element={<HomePage />}
             />
+            <Route
+              element={<AccountPage />}
+              path="/account"
+            />
+            <Route
+              path="rate-my-co-op"
+              element={<RateMyCoop />}
+            />
           </Route>
         </Route>
       </Routes>
-    </>
+    </AnimatePresence>
   );
 }
 
