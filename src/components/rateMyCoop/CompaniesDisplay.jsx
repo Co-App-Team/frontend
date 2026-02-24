@@ -7,23 +7,24 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
   return (
     <>
       <div className={styles['companies-container']}>
-        <h3>Companies</h3>
-        {companies == null || loading ? (
+        {companies.length == 0 && loading ? (
           <Spinner />
         ) : (
           <>
             {topFilteredCompanies.length == companies.length && (
-              <Container className="d-flex flex-column p-0 m-0">
-                {companies.map((company, index) => (
-                  <Row
-                    className="py-2 px-0"
-                    key={index}>
-                    <Col key={index}>
-                      <CompanyCard company={company} />
-                    </Col>
-                  </Row>
-                ))}
-              </Container>
+              <>
+                <Container className="d-flex flex-column p-0 m-0">
+                  {companies.map((company, index) => (
+                    <Row
+                      className="py-2 px-0"
+                      key={index}>
+                      <Col key={index}>
+                        <CompanyCard company={company} />
+                      </Col>
+                    </Row>
+                  ))}
+                </Container>
+              </>
             )}
 
             {/* Case 1: No top filters, no other filters */}
@@ -38,7 +39,6 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
               otherFilteredCompanies.length !== companies.length &&
               otherFilteredCompanies.length == 0 && (
                 <>
-                  <h3>Case 2:</h3>
                   <Container className="m-0 p-0">
                     {topFilteredCompanies.map((company, index) => (
                       <Row
@@ -59,7 +59,6 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
               otherFilteredCompanies.length !== companies.length &&
               otherFilteredCompanies.length != 0 && (
                 <>
-                  <h3>Case 3:</h3>
                   <h3>
                     <i>Did you mean?</i>
                   </h3>
@@ -83,7 +82,6 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
               otherFilteredCompanies.length !== companies.length &&
               otherFilteredCompanies.length != 0 && (
                 <>
-                  <h3>Case 4:</h3>
                   <h3>Top Results:</h3>
                   <Container className="m-0 p-0">
                     {topFilteredCompanies.map((company, index) => (

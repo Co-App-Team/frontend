@@ -15,6 +15,7 @@ const RateMyCoop = () => {
       try {
         const companies = await getCompaniesCallback();
         console.log(companies.companies);
+        setTopFilteredCompanies(companies.companies);
         setOtherFilteredCompanies(companies.companies);
       } catch (error) {
         const message = getErrorMessage(error, {}); // No error mappings yet
@@ -52,7 +53,7 @@ const RateMyCoop = () => {
       />
 
       <CompaniesDisplay
-        companies={data.companies}
+        companies={data ? data.companies : []}
         topFilteredCompanies={topFilteredCompanies}
         otherFilteredCompanies={otherFilteredCompanies}
         loading={loading}
