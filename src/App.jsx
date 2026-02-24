@@ -41,11 +41,6 @@ function App() {
           element={<DemoPage />}
         />
 
-        <Route
-          path="/job-applications"
-          element={<JobApplicationsPage />}
-        />
-
         {/* Unprotected routes with app header */}
         <Route element={<GlobalNavbar />}>
           {/* Not found page for non mapped routings, must not be grouped under */}
@@ -58,6 +53,11 @@ function App() {
           <Route
             path="rate-my-co-op"
             element={<RateMyCoop />}
+          />
+
+          <Route
+            path="/job-applications"
+            element={<JobApplicationsPage />}
           />
         </Route>
 

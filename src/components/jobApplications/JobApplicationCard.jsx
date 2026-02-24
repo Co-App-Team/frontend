@@ -77,8 +77,7 @@ const JobApplicationCard = ({ jobApplication }) => {
     <>
       <Card
         className={styles['application-card']}
-        style={{ borderLeftColor: borderColor }}
-        onClick={() => {}}>
+        style={{ borderLeftColor: borderColor }}>
         <Card.Header
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
@@ -147,11 +146,11 @@ const JobApplicationCard = ({ jobApplication }) => {
 
           <div className="d-flex flex-column text-end">
             <span className="text-muted fs-6">
-              Added at
+              Added
               <span className="text-dark">{' ' + dateCreated}</span>
             </span>
             <span className="text-muted fs-6">
-              Due at
+              Due
               <span className="text-dark">{' ' + deadlineDate}</span>
             </span>
           </div>

@@ -20,8 +20,6 @@ const JobApplicationsPage = () => {
 
   return (
     <>
-      <GlobalNavbar></GlobalNavbar>
-
       <h1 className="m-2 p-2">Job Applications Page</h1>
 
       <div className={styles['applications-wrapper']}>
@@ -38,22 +36,18 @@ const JobApplicationsPage = () => {
         </div>
 
         <div className={styles['applications-container']}>
-          {applications.length > 0 ? (
-            <>
-              <Container className="d-flex flex-column p-0 m-0">
-                {applications.map((application, index) => (
-                  <Row
-                    className="py-2 px-0"
-                    key={index}>
-                    <Col key={index}>
-                      <JobApplicationCard jobApplication={application} />
-                    </Col>
-                  </Row>
-                ))}
-              </Container>
-            </>
-          ) : (
-            <></>
+          {applications.length > 0 && (
+            <Container className="d-flex flex-column p-0 m-0">
+              {applications.map((application, index) => (
+                <Row
+                  className="py-2 px-0"
+                  key={index}>
+                  <Col key={index}>
+                    <JobApplicationCard jobApplication={application} />
+                  </Col>
+                </Row>
+              ))}
+            </Container>
           )}
         </div>
       </div>
