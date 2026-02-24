@@ -5,7 +5,7 @@ import { Button, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 import Col from 'react-bootstrap/Col';
-import ShowPasswordButton from '../components/common/ShowPasswordButton';
+import PasswordInput from '../components/auth/PasswordInput';
 import { signup } from '../api/authApi';
 import useApi from '../hooks/useApi';
 import { getErrorMessage } from '../utils/errorUtils';
@@ -28,15 +28,10 @@ const SignupPage = () => {
   });
 
   const [showError, setShowError] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const { request: signupCallback } = useApi(signup);
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -107,7 +102,7 @@ const SignupPage = () => {
   };
 
   const onPasswordChange = (e) => {
-    setFormData({ ...formData, password: e.target.value.trim().trimStart() });
+    setFormData({ ...formData, password: e.target.value });
   };
 
   return (
@@ -193,26 +188,14 @@ const SignupPage = () => {
               <Form.Label>Password</Form.Label>
             </div>
 
-            <InputGroup hasValidation>
-              <Form.Control
-                autoComplete="new-password"
-                type={showPassword ? 'text' : 'password'}
-                isInvalid={showError && !isPasswordValid}
-                placeholder="Enter your password"
-                onChange={onPasswordChange}
-                disabled={isLoading}
-                value={formData.password}
-              />
-              <ShowPasswordButton
-                isShowingPassword={showPassword}
-                isLoading={isLoading}
-                onClick={toggleShowPassword}
-                isInvalid={showError && !isPasswordValid}
-              />
-              <Form.Control.Feedback type="invalid">
-                Password must be at least 6 characters
-              </Form.Control.Feedback>
-            </InputGroup>
+            <PasswordInput
+              showError={showError}
+              onPasswordChange={onPasswordChange}
+              isLoading={isLoading}
+              value={formData.password}
+              autoComplete="new-password"
+              placeholder="Enter your password"
+            />
           </Form.Group>
           <div className="d-grid">
             <Button

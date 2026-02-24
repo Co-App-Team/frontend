@@ -5,11 +5,11 @@ import { Button, Form, InputGroup, Card, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import ShowPasswordButton from '../common/ShowPasswordButton';
+import PasswordInput from '../auth/PasswordInput';
 
 const ChangePasswordCard = ({ isLoading, onSubmit, error, success }) => {
   const [formData, setFormData] = useState({ oldPassword: '', newPassword: '' });
   const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
   const [validated, setValidated] = useState(false);
 
   const isNewPasswordValid = formData.newPassword.length >= 6;
@@ -52,7 +52,6 @@ const ChangePasswordCard = ({ isLoading, onSubmit, error, success }) => {
         <Form
           noValidate
           onSubmit={handleSubmit}>
-          {/* Old Password */}
           <Form.Group
             className="text-start mb-3"
             controlId="oldPassword">
@@ -78,32 +77,21 @@ const ChangePasswordCard = ({ isLoading, onSubmit, error, success }) => {
               </Form.Control.Feedback>
             </InputGroup>
           </Form.Group>
-
-          {/* New Password */}
           <Form.Group
-            className="text-start mb-4"
+            className={'text-start ' + (validated && !isNewPasswordValid ? 'mb-3' : 'mb-4')}
             controlId="newPassword">
-            <Form.Label>New Password</Form.Label>
-            <InputGroup hasValidation>
-              <Form.Control
-                name="newPassword"
-                type={showNewPassword ? 'text' : 'password'}
-                value={formData.newPassword}
-                onChange={onChange}
-                placeholder="Enter new password"
-                isInvalid={validated && !isNewPasswordValid}
-                disabled={isLoading}
-              />
-              <ShowPasswordButton
-                isShowingPassword={showNewPassword}
-                isLoading={isLoading}
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                isInvalid={validated && !isNewPasswordValid}
-              />
-              <Form.Control.Feedback type="invalid">
-                Password must be at least 6 characters.
-              </Form.Control.Feedback>
-            </InputGroup>
+            <div className="text-start">
+              <Form.Label>New Password</Form.Label>
+            </div>
+            <PasswordInput
+              showError={validated}
+              onPasswordChange={onChange}
+              isLoading={isLoading}
+              value={formData.newPassword}
+              autoComplete="new-password"
+              placeholder="Enter a new password"
+              name="newPassword"
+            />
           </Form.Group>
 
           <div className="d-grid d-flex justify-content-center">

@@ -12,6 +12,7 @@ const updateEmailErrorMappings = {
   INVALID_CONFIRMATION_CODE: 'Incorrect confirmation code. Please check your email and try again.',
   ACCOUNT_NOT_ACTIVATED: 'Please activate your account first',
   EMAIL_NOT_REGISTERED: 'Your email is not registered in our servers, please try signing up again.',
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Missing email/code/password',
 };
 
 const ResetPasswordPage = () => {
