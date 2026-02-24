@@ -16,6 +16,10 @@ export const signup = (firstName, lastName, email, password) => {
   return axiosClient.post('/auth/register', { firstName, lastName, email, password });
 };
 
+export const signOut = () => {
+  return axiosClient.get('/auth/logout');
+};
+
 export const forgotPassword = (email) => {
   return axiosClient.patch('/auth/forgot-password', { email });
 };
