@@ -6,6 +6,7 @@ import { confirmEmail, login, resendEmailCode } from '../api/authApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageTransition from '../components/auth/PageTransition';
 import { useAuthContext } from '../contexts/AuthContext';
+import ResendCodeButton from '../components/auth/ResendCodeButton';
 
 const sendCodeMessageMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please enter the whole 6 digit code',
@@ -35,7 +36,6 @@ const ConfirmEmailPage = () => {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResentMessage, setShowResentMessage] = useState(false);
-  const [resendCodeCooldown, setResendCodeCooldown] = useState(0);
 
   useEffect(() => {
     // If this page was navigated to without state, redirect the user to homepage
@@ -43,22 +43,6 @@ const ConfirmEmailPage = () => {
       navigate('/');
     }
   }, [email, navigate]);
-
-  useEffect(() => {
-    let timerId;
-
-    if (resendCodeCooldown > 0) {
-      timerId = setInterval(() => {
-        setResendCodeCooldown((prevCount) => prevCount - 1);
-      }, 1000);
-    }
-
-    return () => {
-      if (timerId) {
-        clearInterval(timerId);
-      }
-    };
-  }, [resendCodeCooldown]);
 
   const onSubmit = async (code) => {
     setError('');
@@ -97,24 +81,19 @@ const ConfirmEmailPage = () => {
     setIsLoading(false);
   };
 
-  const resendCode = async (e) => {
-    e.preventDefault();
+  const resendCode = async () => {
+    setError('');
+    setIsLoading(true);
+    setShowResentMessage(false);
 
-    if (resendCodeCooldown == 0) {
-      setError('');
-      setIsLoading(true);
-      setShowResentMessage(false);
-
-      try {
-        await resendCodeCallback(email);
-        setShowResentMessage(true);
-      } catch (error) {
-        const message = getErrorMessage(error, resendCodeMessageMappings);
-        setError(message);
-      } finally {
-        setIsLoading(false);
-        setResendCodeCooldown(30);
-      }
+    try {
+      await resendCodeCallback(email);
+      setShowResentMessage(true);
+    } catch (error) {
+      const message = getErrorMessage(error, resendCodeMessageMappings);
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -158,16 +137,10 @@ const ConfirmEmailPage = () => {
         {isLoading && <Spinner />}
         <p className="mt-2">
           Don't see an email? Check your spam folder or{' '}
-          <Link
-            onClick={resendCode}
-            className={resendCodeCooldown > 0 || isLoading ? 'text-muted text-decoration-none' : ''}
-            style={{
-              pointerEvents: resendCodeCooldown > 0 || isLoading ? 'none' : 'auto',
-              cursor: resendCodeCooldown > 0 || isLoading ? 'not-allowed' : 'pointer',
-            }}>
-            {resendCodeCooldown > 0 && <>wait {resendCodeCooldown}s to </>}
-            resend the code
-          </Link>
+          <ResendCodeButton
+            resendCodeCallback={resendCode}
+            isLoading={isLoading}
+          />
           .
         </p>
         <p className="mt-0">

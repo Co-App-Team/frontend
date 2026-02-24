@@ -22,12 +22,14 @@ const ResetPasswordPage = () => {
   const navigate = useNavigate();
 
   const [requestError, setRequestError] = useState(false);
+  const [showResentMessage, setShowResentMessage] = useState(false);
 
   const { request: updatePasswordCallback, loading: isLoading } = useApi(updatePassword);
   const { request: loginCallback } = useApi(login);
 
   const handleUpdatePassword = async (formData) => {
     setRequestError('');
+    setShowResentMessage(false);
 
     let success = false;
 
@@ -82,7 +84,12 @@ const ResetPasswordPage = () => {
           defaultEmail={email}
         />
         {requestError && <p className="text-danger mt-3">{requestError}</p>}
-        <p className={'mb-0 ' + (requestError ? 'mt-0' : 'mt-4')}>
+        {showResentMessage && <p className="mt-3 text-success">Confirmation code resent ✓</p>}
+        <p className={'mb-0 ' + (requestError || showResentMessage ? 'mt-0' : 'mt-4')}>
+          Don't see an email? Check your spam folder or{' '}
+          <Link to="/forgot-password">resend the code</Link>.
+        </p>
+        <p className="mt-3 mb-0">
           <Link to="/login">Back to sign in</Link>
         </p>
       </div>
