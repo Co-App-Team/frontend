@@ -45,8 +45,8 @@ const GlobalNavbar = () => {
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
-                to="/example1">
-                Example 1
+                to="/rate-my-co-op">
+                Rate My Co-op
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
