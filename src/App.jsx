@@ -14,6 +14,7 @@ import { AnimatePresence } from 'framer-motion';
 import AccountPage from './pages/AccountPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
+import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -71,6 +72,10 @@ function App() {
             <Route
               path="rate-my-co-op"
               element={<RateMyCoop />}
+            />
+            <Route
+              path="/job-applications"
+              element={<JobApplicationsPage />}
             />
           </Route>
         </Route>
