@@ -1,15 +1,33 @@
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CompanyReviewModal from './CompanyReviewModal';
 import styles from '../styling/rateMyCoop/CompaniesDisplay.module.css';
+import useApi from '../../hooks/useApi';
+import { getReviews } from '../../api/rateMyCoopApi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 const CompanyCard = ({ company }) => {
   const [modalShow, setModalShow] = useState(false);
   function hideModal() {
     setModalShow(false);
   }
+
+  const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
+  useEffect(() => {
+    async function loadCompanies() {
+      if (company) {
+        try {
+          await getReviewsCallback(company.companyId);
+        } catch (error) {
+          const message = getErrorMessage(error, {});
+          console.log(message);
+        }
+      }
+    }
+    loadCompanies();
+  }, [getReviewsCallback, company]);
 
   return (
     <>
@@ -26,7 +44,11 @@ const CompanyCard = ({ company }) => {
                 className="me-1"
                 icon={faStar}
               />
-              Average Rating: {company.avgRating}/5
+              {reviews && reviews.reviewsPagination.totalItems > 0 ? (
+                <>Average Rating: {company.avgRating}/5</>
+              ) : (
+                <>No Reviews Yet!</>
+              )}
             </div>
             <div className="vr"></div>
             <div className="mx-4">

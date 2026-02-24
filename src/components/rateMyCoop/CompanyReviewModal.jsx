@@ -10,23 +10,28 @@ import {
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { getReviews } from '../../api/rateMyCoopApi';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import styles from '../styling/rateMyCoop/CompanyReviewModal.module.css';
-function CompanyReviewModal({ company, showModal, hideModal }) {
-  const [currReviews, setCurrReviews] = useState();
+import useApi from '../../hooks/useApi';
+import { getErrorMessage } from '../utils/errorUtils';
 
+function CompanyReviewModal({ company, showModal, hideModal }) {
   // const [writingReview, setWritingReview] = useState(false);
   // const [editingReview, setEditingReview] = useState(false);
   // const [deleteReview, setDeleteReview] = useState(false);
+
+  const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
   useEffect(() => {
     async function loadCompanies() {
       if (company) {
-        const data = await getReviews(company.companyId);
-        setCurrReviews(data);
-      } else {
-        setCurrReviews(null);
+        try {
+          await getReviewsCallback(company.companyId);
+        } catch (error) {
+          const message = getErrorMessage(error, {});
+          console.log(message);
+        }
       }
     }
     loadCompanies();
@@ -51,7 +56,11 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
                 className="me-1"
                 icon={faStar}
               />
-              Average Rating: {company.avgRating}/5
+              {reviews && reviews.reviewsPagination.totalItems > 0 ? (
+                <>Average Rating: {company.avgRating}/5</>
+              ) : (
+                <>No Reviews Yet!</>
+              )}
             </div>
             <div className="vr"></div>
             <div className="mx-4">
@@ -77,16 +86,16 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       <Modal.Body>
         <h4>Reviews</h4>
         <div className={styles['reviews-container']}>
-          {currReviews ? (
+          {reviews ? (
             <>
               <div className="text-center">
-                {currReviews.reviews.length == 0 && (
+                {reviews.reviews.length == 0 && (
                   <h4>
                     <i>No Reviews.</i>
                   </h4>
                 )}
               </div>
-              {currReviews.reviews.map((review, index) => (
+              {reviews.reviews.map((review, index) => (
                 <Card
                   className={styles['review-card']}
                   key={index}>
