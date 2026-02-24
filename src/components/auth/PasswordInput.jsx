@@ -2,7 +2,6 @@ import { Form, InputGroup } from 'react-bootstrap';
 import ShowPasswordButton from '../common/ShowPasswordButton';
 import { useState } from 'react';
 
-// TODO: Put into change password screen once it's merged
 const PasswordInput = ({
   showError,
   onPasswordChange,
@@ -10,6 +9,7 @@ const PasswordInput = ({
   value,
   autoComplete,
   placeholder,
+  name = 'password',
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +35,10 @@ const PasswordInput = ({
 
   const handlePasswordChange = (e) => {
     validatePassword(e.target.value);
-    onPasswordChange({ ...e, target: { value: e.target.value.trim().trimStart() } });
+    onPasswordChange({
+      ...e,
+      target: { name: e.target.name, value: e.target.value.trim().trimStart() },
+    });
   };
 
   const isPasswordValid = !showLengthError && !showWhitespaceError;
@@ -50,6 +53,7 @@ const PasswordInput = ({
         onChange={handlePasswordChange}
         disabled={isLoading}
         value={value}
+        name={name}
       />
       <ShowPasswordButton
         isShowingPassword={showPassword}
