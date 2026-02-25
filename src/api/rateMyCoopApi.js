@@ -7,3 +7,7 @@ export const getCompanies = async () => {
 export const getReviews = async (companyId) => {
   return await axiosClient.get(`/companies/${companyId}`);
 };
+
+export const addNewCompany = async (newCompany) => {
+  return await axiosClient.post('/companies', newCompany);
+};
