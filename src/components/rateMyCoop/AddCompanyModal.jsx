@@ -19,8 +19,9 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
 
   const errorMappings = {
     INVALID_WEBSITE: "The website must start with 'http://' or 'https://' ",
-    INVALID_EMAIL_OR_PASSWORD: 'Incorrect email or password',
-    ACCOUNT_NOT_ACTIVATED: 'Please activate your account',
+    COMPANY_ALREADY_EXISTS: 'A company with that name already exists. Please choose another',
+    UNAUTHORIZED: 'You are not logged in. Please log in and try again.',
+    INTERNAL_SERVER_ERROR: 'Something unexpected went wrong. Please try again later.',
   };
 
   const validateCompanyName = (companyName) => {
@@ -69,10 +70,10 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
     // Note that this is necessary for the use of annotations in the backend
     const normalizedData = {
       ...formData,
-      // website:
-      //   formData.website.startsWith('http') || formData.website.startsWith('https')
-      //     ? formData.website
-      //     : `https://${formData.website}`,
+      website:
+        formData.website.startsWith('http') || formData.website.startsWith('https')
+          ? formData.website
+          : `https://${formData.website}`,
     };
 
     try {
