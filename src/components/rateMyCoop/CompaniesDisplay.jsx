@@ -3,7 +3,13 @@ import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
 import styles from '../styling/rateMyCoop/CompaniesDisplay.module.css';
 import CompanyCard from './CompanyCard';
 
-const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompanies, loading }) => {
+const CompaniesDisplay = ({
+  companies,
+  topFilteredCompanies,
+  otherFilteredCompanies,
+  loading,
+  refreshCompanies,
+}) => {
   return (
     <>
       <div className={styles['companies-container']}>
@@ -19,7 +25,10 @@ const CompaniesDisplay = ({ companies, topFilteredCompanies, otherFilteredCompan
                       className="py-2 px-0"
                       key={index}>
                       <Col key={index}>
-                        <CompanyCard company={company} />
+                        <CompanyCard
+                          company={company}
+                          refreshCompanies={refreshCompanies}
+                        />
                       </Col>
                     </Row>
                   ))}

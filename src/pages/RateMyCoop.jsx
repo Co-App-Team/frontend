@@ -95,6 +95,7 @@ const RateMyCoop = () => {
         topFilteredCompanies={topFilteredCompanies}
         otherFilteredCompanies={otherFilteredCompanies}
         loading={loading}
+        refreshCompanies={refreshCompanyList}
       />
 
       <AddCompanyModal

@@ -38,7 +38,7 @@ import styles from '../styling/rateMyCoop/CompanyReviewModal.module.css';
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 
-function CompanyReviewModal({ company, showModal, hideModal }) {
+function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies }) {
   const [writingReview, setWritingReview] = useState(false);
   const [editingReview, setEditingReview] = useState(false);
   const [deletingReview, setdeletingReview] = useState(false);
@@ -159,8 +159,6 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
       workTermSeason: capitalizeFirstLetter(formData.workTermSeason),
     };
 
-    console.log(normalizedData);
-
     try {
       if (type == requestType.post) {
         await addReviewCallback(normalizedData, company.companyId);
@@ -175,6 +173,7 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
 
       return;
     }
+    await refreshCompanies();
     hideModal();
   };
 
@@ -190,6 +189,7 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
 
       return;
     }
+    await refreshCompanies();
     hideModal();
   };
 
@@ -199,8 +199,6 @@ function CompanyReviewModal({ company, showModal, hideModal }) {
         try {
           await getYearBoundsCallback();
           await getTermsCallback();
-          console.log(termYearBounds);
-          console.log(validWorkTerms);
           await getReviewsCallback(company.companyId);
         } catch (error) {
           const message = getErrorMessage(error, {});
