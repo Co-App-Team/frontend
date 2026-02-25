@@ -4,9 +4,9 @@ import { addNewCompany } from '../../api/rateMyCoopApi';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-icons';
+import useApi from '../../hooks/useApi';
 
 function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
-  const [isLoading, setIsLoading] = useState(false);
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState(false);
 
@@ -49,29 +49,38 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
     submit();
   };
 
+  const { request: addNewCompanyCallback, loading: isLoading } = useApi(addNewCompany);
+
   const submit = async () => {
     if (!isCompanyNameValid || !isLocationValid || !isWebsiteValid) {
       setShowError(true);
       return;
     }
 
-    setIsLoading(true);
     setError('');
 
+    // Pre-pends http or https if it does not already exist
+    // Note that this is necessary for the use of annotations in the backend
+    const normalizedData = {
+      ...formData,
+      website:
+        formData.website.startsWith('http') || formData.website.startsWith('https')
+          ? formData.website
+          : `https://${formData.website}`,
+    };
+
     try {
-      await addNewCompany(formData);
+      await addNewCompanyCallback(normalizedData);
+      await refreshCompanies();
+      handleModalClose();
     } catch (error) {
-      // const message = getErrorMessage(error, errorMappings);
-      const message = 'Oopsie. Something went wrong'; // TODO: Make this a real error message when API is hooked up
+      const message = 'Oopsie. Something went wrong';
 
       if (error.serverCode !== 'REQUEST_HAS_NULL_OR_EMPTY_FIELD') {
         setError(message);
       }
     } finally {
       setFormData({ companyName: '', location: '', website: '' });
-      setIsLoading(false);
-      await refreshCompanies();
-      handleModalClose();
     }
   };
 
@@ -97,7 +106,7 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
             className="my-2"
             controlId="formBasicEmail">
             <Form.Label>Company Name</Form.Label>
-            <InputGroup>
+            <InputGroup hasValidation>
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon>
               </InputGroup.Text>
@@ -119,7 +128,7 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
             <div>
               <Form.Label>Location</Form.Label>
             </div>
-            <InputGroup>
+            <InputGroup hasValidation>
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faMapPin}></FontAwesomeIcon>
               </InputGroup.Text>
@@ -142,7 +151,7 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
             <div>
               <Form.Label>Company Website</Form.Label>
             </div>
-            <InputGroup>
+            <InputGroup hasValidation>
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>
               </InputGroup.Text>
@@ -166,7 +175,6 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
           variant="outline-danger"
           onClick={() => {
             hideModal();
-            setIsLoading(false);
           }}
           disabled={isLoading}>
           Cancel
