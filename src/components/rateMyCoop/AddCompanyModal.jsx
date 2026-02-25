@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-icons';
 import useApi from '../../hooks/useApi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
   const [showError, setShowError] = useState(false);
@@ -15,6 +16,12 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
     location: '',
     website: '',
   });
+
+  const errorMappings = {
+    INVALID_WEBSITE: "The website must start with 'http://' or 'https://' ",
+    INVALID_EMAIL_OR_PASSWORD: 'Incorrect email or password',
+    ACCOUNT_NOT_ACTIVATED: 'Please activate your account',
+  };
 
   const validateCompanyName = (companyName) => {
     return companyName.trim() != '';
@@ -27,7 +34,6 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
   const validateWebsite = (website) => {
     return website.trim() != '';
   };
-
   const isCompanyNameValid = validateCompanyName(formData.companyName);
   const isLocationValid = validateLocation(formData.location);
   const isWebsiteValid = validateWebsite(formData.website);
@@ -63,25 +69,26 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
     // Note that this is necessary for the use of annotations in the backend
     const normalizedData = {
       ...formData,
-      website:
-        formData.website.startsWith('http') || formData.website.startsWith('https')
-          ? formData.website
-          : `https://${formData.website}`,
+      // website:
+      //   formData.website.startsWith('http') || formData.website.startsWith('https')
+      //     ? formData.website
+      //     : `https://${formData.website}`,
     };
 
     try {
       await addNewCompanyCallback(normalizedData);
       await refreshCompanies();
-      handleModalClose();
     } catch (error) {
-      const message = 'Oopsie. Something went wrong';
+      const message = getErrorMessage(error, errorMappings);
 
       if (error.serverCode !== 'REQUEST_HAS_NULL_OR_EMPTY_FIELD') {
         setError(message);
       }
-    } finally {
-      setFormData({ companyName: '', location: '', website: '' });
+
+      return;
     }
+    handleModalClose();
+    setFormData({ companyName: '', location: '', website: '' });
   };
 
   const handleModalClose = () => {
@@ -95,6 +102,7 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
     <Modal
       show={showModal}
       onHide={handleModalClose}
+      onShow={() => setError('')}
       size="lg"
       centered>
       <Modal.Header closeButton>
