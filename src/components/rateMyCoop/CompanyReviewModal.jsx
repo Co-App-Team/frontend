@@ -15,7 +15,7 @@ import { Card, Col, Container, Row, Spinner } from 'react-bootstrap';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import styles from '../styling/rateMyCoop/CompanyReviewModal.module.css';
 import useApi from '../../hooks/useApi';
-import { getErrorMessage } from '../utils/errorUtils';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 function CompanyReviewModal({ company, showModal, hideModal }) {
   // const [writingReview, setWritingReview] = useState(false);
