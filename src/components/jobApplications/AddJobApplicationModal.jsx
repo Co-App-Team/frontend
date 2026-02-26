@@ -68,9 +68,15 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
     return date.trim() != '';
   };
 
+  const validateNumPositions = (num) => {
+    return num > 0;
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
   const isCompanyValid = company != '';
+  const isNumPositionsValid =
+    formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
 
   const onJobTitleChange = (e) => {
     setFormData({ ...formData, jobTitle: e.target.value });
@@ -114,8 +120,12 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
   };
 
   const submit = async () => {
-    if (!isJobTitleValid || !isApplicationDeadlineValid || !isCompanyValid) {
-      console.log('hello');
+    if (
+      !isJobTitleValid ||
+      !isApplicationDeadlineValid ||
+      !isCompanyValid ||
+      !isNumPositionsValid
+    ) {
       setShowError(true);
       return;
     }
@@ -175,9 +185,10 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                     type="number"
                     min="0"
                     onChange={onNumPositionsChange}
+                    isInvalid={showError && !isNumPositionsValid}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please provide the number of positions available.
+                    Please provide a positive number.
                   </Form.Control.Feedback>
                 </Col>
               </Row>
