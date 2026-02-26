@@ -91,7 +91,12 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
     editReview: 'PUT',
   };
 
-  const errorMappings = {};
+  const errorMappings = {
+    REVIEW_ALREADY_EXISTS:
+      "You've already submitted a review for this company! Please edit your review instead.",
+    UNAUTHORIZED: "You've been logged out. Log in and try again.",
+    INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
+  };
 
   const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
   const {
@@ -168,9 +173,18 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       }
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
-      setError(message); //TODO: error mappings
-      setShowError(true);
+      setError(message);
+      if (error.status === 404 && type == requestType.post) {
+        setError("We couldn't find this company. It may no longer exist. Please try again later.");
+      }
 
+      if (error.status === 404 && type == requestType.put) {
+        setError(
+          "We couldn't find your review for this company. Try writing a new review instead.",
+        );
+      }
+
+      setShowError(true);
       return;
     }
     await refreshCompanies();
@@ -184,7 +198,10 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       await deleteReviewCallback(company.companyId);
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
-      setError(message); //TODO: error mappings
+      setError(message);
+      if (error.status === 404) {
+        setError('You do not have a review for this company!');
+      }
       setShowError(true);
 
       return;
@@ -201,7 +218,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
           await getTermsCallback();
           await getReviewsCallback(company.companyId);
         } catch (error) {
-          const message = getErrorMessage(error, {});
+          const message = getErrorMessage(error, errorMappings);
           console.log(message);
         }
       }
