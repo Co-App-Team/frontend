@@ -243,6 +243,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
         setdeletingReview(false);
         setEditingReview(false);
         setError('');
+        setReviewsPerPage(5);
       }}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
