@@ -12,6 +12,8 @@ import {
   faSave,
   faPencil,
   faIdBadge,
+  faCaretLeft,
+  faCaretRight,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   getReviews,
@@ -45,6 +47,8 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
 
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState(false);
+
+  const [reviewsPerPage, setReviewsPerPage] = useState(5);
 
   const [formData, setFormData] = useState({
     jobTitle: '',
@@ -98,7 +102,11 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
     INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
   };
 
-  const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
+  const {
+    request: getReviewsCallback,
+    data: reviews,
+    loading: getReviewsLoading,
+  } = useApi(getReviews);
   const {
     request: getYearBoundsCallback,
     data: termYearBounds,
@@ -217,6 +225,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
           await getYearBoundsCallback();
           await getTermsCallback();
           await getReviewsCallback(company.companyId);
+          console.log(reviews.reviewsPagination);
         } catch (error) {
           const message = getErrorMessage(error, errorMappings);
           console.log(message);
@@ -282,8 +291,60 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
         {!writingReview && !deletingReview && !editingReview && (
           <>
             <h4>Reviews</h4>
+            {reviews ? (
+              <>
+                <div className="d-flex justify-content-end">
+                  <InputGroup className="w-auto d-inline-flex mx-1">
+                    <InputGroup.Text>Reviews per page:</InputGroup.Text>
+
+                    <Form.Select
+                      value={reviewsPerPage}
+                      onChange={(e) => {
+                        setReviewsPerPage(Number(e.target.value));
+                        getReviewsCallback(company.companyId, 0, e.target.value);
+                      }}
+                      disabled={getReviewsLoading}
+                      className="w-auto">
+                      {[1, 5, 10, 50].map((num) => (
+                        <option
+                          key={num}
+                          value={num}>
+                          {num}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </InputGroup>
+                  <Button
+                    className="mx-1"
+                    onClick={() => {
+                      const currPage = reviews.reviewsPagination.currentPage;
+                      getReviewsCallback(company.companyId, currPage - 1, reviewsPerPage);
+                    }}
+                    disabled={!reviews.reviewsPagination.hasPrevious}>
+                    <FontAwesomeIcon icon={faCaretLeft} />
+                  </Button>
+                  <Button
+                    className="mx-1"
+                    onClick={() => {
+                      const currPage = reviews.reviewsPagination.currentPage;
+                      getReviewsCallback(company.companyId, currPage + 1, reviewsPerPage);
+                    }}
+                    disabled={!reviews.reviewsPagination.hasNext}>
+                    <FontAwesomeIcon icon={faCaretRight} />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="d-flex justify-content-end">
+                  <Placeholder
+                    className="mx-1"
+                    xs={3}></Placeholder>
+                </div>
+              </>
+            )}
             <div className={styles['reviews-container']}>
-              {reviews ? (
+              {reviews && !getReviewsLoading ? (
                 <>
                   <div className="text-center">
                     {reviews.reviews.length == 0 && (
@@ -560,7 +621,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                               <option
                                 key={workTerm}
                                 value={workTerm}>
-                                {workTerm}
+                                {capitalizeFirstLetter(workTerm)}
                               </option>
                             ))}
                           </Form.Select>
