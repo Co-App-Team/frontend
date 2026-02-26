@@ -1,22 +1,42 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
-import { getJobApplications } from '../api/jobApplications';
-import GlobalNavbar from '../components/common/GlobalNavbar';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import { getJobApplications, getCompanies } from '../api/jobApplications';
 import JobApplicationCard from '../components/jobApplications/JobApplicationCard';
 import styles from '../components/styling/jobApplications/JobApplications.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
+import NewApplicationModal from '../components/jobApplications/AddJobApplicationModal';
 
 const JobApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [showApplicationModal, setShowApplicationModal] = useState(false);
 
   useEffect(() => {
     async function loadApplications() {
       const data = await getJobApplications();
-      setApplications(data.jobApplications);
+      setApplications(data);
     }
     loadApplications();
   }, []);
+
+  useEffect(() => {
+    async function loadCompanies() {
+      const data = await getCompanies();
+      setCompanies(data);
+    }
+    loadCompanies();
+  }, []);
+
+  async function refreshApplicationsList() {
+    const data = await getJobApplications();
+    setApplications(data);
+  }
+
+  async function hideApplicationModal() {
+    setShowApplicationModal(false);
+    await refreshApplicationsList();
+  }
 
   return (
     <>
@@ -26,7 +46,7 @@ const JobApplicationsPage = () => {
         <div className={styles['top-right-button']}>
           <Button
             className="btn btn-primary"
-            onClick={console.log('okay')}>
+            onClick={() => setShowApplicationModal(true)}>
             <FontAwesomeIcon
               className="me-1"
               icon={faAdd}
@@ -51,6 +71,11 @@ const JobApplicationsPage = () => {
           )}
         </div>
       </div>
+
+      <NewApplicationModal
+        onShow={showApplicationModal}
+        onHide={hideApplicationModal}
+        companies={companies}></NewApplicationModal>
     </>
   );
 };

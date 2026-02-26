@@ -50,8 +50,8 @@ const GlobalNavbar = () => {
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
-                to="/example2">
-                Example 2
+                to="/job-applications">
+                Job Applications
               </Nav.Link>
             </Nav>
 

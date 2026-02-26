@@ -91,7 +91,7 @@ const JobApplicationCard = ({ jobApplication }) => {
                 {formatStatus[status]}
               </Dropdown.Toggle>
 
-              <Dropdown.Menu className={styles['status-dropdown']}>
+              <Dropdown.Menu className={styles['dropdown']}>
                 <Dropdown.Item
                   onClick={() => {
                     setStatus('NOT_APPLIED');
