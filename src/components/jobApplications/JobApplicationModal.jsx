@@ -39,7 +39,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     status: data?.status || '',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
     jobDescription: data?.jobDescription || '',
-    sourceLink: data?.sourceLink || '',
+    sourceLink: data?.sourceLink?.replace('https://', '') || '',
   });
 
   const filterCompanies = (value) => {
@@ -143,7 +143,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     let finalFormData = {
       ...formData,
       status: status,
-      sourceLink: 'https://' + formData.sourceLink,
+      sourceLink: formData.sourceLink,
     };
 
     setIsLoading(true);
