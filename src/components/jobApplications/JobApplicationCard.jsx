@@ -20,7 +20,9 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const [companies, setCompanies] = useState([]);
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-GB', {
+    const [year, month, day] = date.split('T')[0].split('-');
+
+    return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
