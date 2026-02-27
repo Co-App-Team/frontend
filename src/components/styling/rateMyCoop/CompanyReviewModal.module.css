@@ -1,6 +1,6 @@
 .reviews-container {
-  height: 50vh;
   width: 100%;
+  min-height: 80%;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.5rem;

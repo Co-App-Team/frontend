@@ -247,6 +247,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       }}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
+      fullscreen
       centered>
       <Modal.Header closeButton>
         <div className="d-flex flex-column justify-content-start align-items-start">
@@ -288,7 +289,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
           </div>
         </div>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="overflow-x-hidden">
         {!writingReview && !deletingReview && !editingReview && (
           <>
             <h4>Reviews</h4>
@@ -735,14 +736,17 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
             </Alert>
           </div>
         )}
-
+        {error && <span className="text-danger mt-3">{error}</span>}
+      </Modal.Body>
+      <Modal.Footer>
         {!writingReview && !editingReview && !deletingReview && (
           <Container
             fluid
             className="m-2">
             <Row>
-              <Col className="text-center">
+              <Col className="text-end">
                 <Button
+                  className="mx-1"
                   onClick={() => {
                     setWritingReview(true);
                     setdeletingReview(false);
@@ -755,9 +759,8 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                   />
                   Write a Review
                 </Button>
-              </Col>
-              <Col className="text-center">
                 <Button
+                  className="mx-1"
                   onClick={() => {
                     setWritingReview(false);
                     setdeletingReview(false);
@@ -769,9 +772,8 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                   />
                   Edit your Review
                 </Button>
-              </Col>
-              <Col className="text-center">
                 <Button
+                  className="mx-1"
                   onClick={() => {
                     setWritingReview(false);
                     setdeletingReview(true);
@@ -789,7 +791,49 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
             </Row>
           </Container>
         )}
-
+        {deletingReview && (
+          <Container
+            fluid
+            className="m-2">
+            <Row>
+              <Col className="text-end">
+                <Button
+                  className="mx-1"
+                  variant="outline-primary"
+                  onClick={() => {
+                    setWritingReview(false);
+                    setdeletingReview(false);
+                    setEditingReview(false);
+                    setError('');
+                  }}
+                  disabled={deleteIsLoading}>
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faX}
+                  />
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handledeletingReview}
+                  className="mx-1"
+                  variant="danger"
+                  disabled={deleteIsLoading}>
+                  {deleteIsLoading ? (
+                    <Spinner
+                      className="me-1"
+                      size="sm"></Spinner>
+                  ) : (
+                    <FontAwesomeIcon
+                      className="me-1"
+                      icon={faTrash}
+                    />
+                  )}
+                  Delete
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        )}
         {(writingReview || editingReview) && (
           <Container
             fluid
@@ -839,54 +883,6 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
             </Row>
           </Container>
         )}
-
-        {deletingReview && (
-          <Container
-            fluid
-            className="m-2">
-            <Row>
-              <Col className="text-end">
-                <Button
-                  className="mx-1"
-                  variant="outline-primary"
-                  onClick={() => {
-                    setWritingReview(false);
-                    setdeletingReview(false);
-                    setEditingReview(false);
-                    setError('');
-                  }}
-                  disabled={deleteIsLoading}>
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faX}
-                  />
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handledeletingReview}
-                  className="mx-1"
-                  variant="danger"
-                  disabled={deleteIsLoading}>
-                  {deleteIsLoading ? (
-                    <Spinner
-                      className="me-1"
-                      size="sm"></Spinner>
-                  ) : (
-                    <FontAwesomeIcon
-                      className="me-1"
-                      icon={faTrash}
-                    />
-                  )}
-                  Delete
-                </Button>
-              </Col>
-            </Row>
-          </Container>
-        )}
-        {error && <span className="text-danger mt-3">{error}</span>}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={hideModal}>Close</Button>
       </Modal.Footer>
     </Modal>
   );
