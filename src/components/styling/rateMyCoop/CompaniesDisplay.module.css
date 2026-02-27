@@ -23,6 +23,7 @@
 }
 .company-card:hover {
   filter: brightness(0.9);
+  cursor: pointer;
 }
 
 .company-card-row {
