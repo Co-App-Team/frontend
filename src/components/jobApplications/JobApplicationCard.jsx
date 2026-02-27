@@ -70,7 +70,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     loadCompany();
   }, [jobApplication.companyId]);
 
-  //TODO: move getting companies to the modal itself
   useEffect(() => {
     async function loadCompanies() {
       const data = await getCompanies();
