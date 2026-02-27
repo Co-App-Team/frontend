@@ -81,6 +81,8 @@ const jobApplications = [
     applicationDeadline: '2026-03-01T23:59:00',
     dateCreated: '2026-02-10T23:59:00',
     dateModified: '2026-02-10T23:59:00',
+    sourceLink: 'www.google.com',
+    jobDescription: 'very sick job',
   },
   {
     applicationId: '2',
@@ -132,7 +134,7 @@ export const getCompanies = async () => {
 
 export const getJobApplications = async () => {
   await new Promise((resolve) => setTimeout(resolve, 100));
-  return jobApplications;
+  return [...jobApplications];
 };
 
 export const addNewJobApplication = async (application) => {
@@ -141,4 +143,22 @@ export const addNewJobApplication = async (application) => {
 
   application.dateCreated = new Date().toLocaleDateString('en-CA');
   jobApplications.push(application);
+};
+
+export const editExistingJobApplication = async (updatedApplication) => {
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  const index = jobApplications.findIndex(
+    (application) => application.applicationId === updatedApplication.applicationId,
+  );
+
+  if (index == -1) {
+    console.log('error');
+    return;
+  }
+
+  jobApplications[index] = {
+    ...jobApplications[index],
+    ...updatedApplication,
+  };
 };

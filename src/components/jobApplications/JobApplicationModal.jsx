@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { addNewJobApplication } from '../../api/jobApplications';
+import { addNewJobApplication, editExistingJobApplication } from '../../api/jobApplications';
 
-function AddJobApplicationModal({ onShow, onHide, companies }) {
+function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [company, setCompany] = useState('');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [status, setStatus] = useState('NOT_APPLIED');
@@ -95,7 +95,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
   };
 
   const onSourceLinkChange = (e) => {
-    setFormData({ ...formData, sourceLink: 'https://' + e.target.value });
+    setFormData({ ...formData, sourceLink: e.target.value });
   };
 
   const onJobDescriptionChange = (e) => {
@@ -130,19 +130,32 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
       return;
     }
 
-    const finalFormData = {
+    let finalFormData = {
       ...formData,
       status: status,
+      sourceLink: 'https://' + formData.sourceLink,
     };
 
     setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log('this is formData', finalFormData);
-      await addNewJobApplication(finalFormData);
+      console.log('final form data', finalFormData);
+      if (data) {
+        finalFormData = {
+          ...finalFormData,
+          applicationId: data.applicationId,
+        };
+        await editExistingJobApplication(finalFormData);
+        await onSaved();
+        onHide();
+      } else {
+        await addNewJobApplication(finalFormData);
+      }
     } catch (error) {
       console.log('Something wrong happened.', error);
+    } finally {
+      await onSaved();
     }
 
     reset();
@@ -154,6 +167,31 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
     submit();
   };
 
+  useEffect(() => {
+    if (!onShow) return;
+
+    if (data) {
+      console.log('this is data', data);
+      console.log('this is companies', companies);
+
+      const oldCompany = companies.find((c) => c.companyId === data.companyId);
+      console.log('old company', oldCompany);
+
+      setFormData({
+        companyId: data.companyId || '',
+        jobTitle: data.jobTitle || '',
+        numPositions: data.numPositions || '',
+        status: data.status || '',
+        applicationDeadline: data.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+        jobDescription: data.jobDescription || '',
+        sourceLink: data.sourceLink || '',
+      });
+
+      setStatus(data.status);
+      setCompany(oldCompany?.companyName || '');
+    }
+  }, [onShow]);
+
   return (
     <>
       <Modal
@@ -161,7 +199,11 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
         onHide={onHide}
         centered>
         <Modal.Header closeButton>
-          <Modal.Title className={styles['black-text']}>New Job Application</Modal.Title>
+          {data != null ? (
+            <Modal.Title className={styles['black-text']}>Edit Job Application</Modal.Title>
+          ) : (
+            <Modal.Title className={styles['black-text']}>New Job Application</Modal.Title>
+          )}
         </Modal.Header>
 
         <Modal.Body>
@@ -174,6 +216,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                     type="text"
                     onChange={onJobTitleChange}
                     isInvalid={showError && !isJobTitleValid}
+                    value={formData.jobTitle}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a job title.
@@ -186,6 +229,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                     min="0"
                     onChange={onNumPositionsChange}
                     isInvalid={showError && !isNumPositionsValid}
+                    value={formData.numPositions}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a positive number.
@@ -221,7 +265,9 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
               </div>
 
               <Form.Label>Status</Form.Label>
-              <Form.Select onChange={onStatusChange}>
+              <Form.Select
+                value={formData.status}
+                onChange={onStatusChange}>
                 {Object.entries(statusMappings).map(([key, label]) => (
                   <option
                     key={key}
@@ -238,6 +284,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                 onClick={(e) => e.target.showPicker?.()}
                 onChange={onDeadlineDateChange}
                 isInvalid={showError && !isApplicationDeadlineValid}
+                value={formData.applicationDeadline}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide the application deadline.
@@ -249,6 +296,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                 <Form.Control
                   type="url"
                   onChange={onSourceLinkChange}
+                  value={formData.sourceLink}
                 />
               </InputGroup>
 
@@ -258,6 +306,7 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
                 rows={3}
                 className={styles['text-field']}
                 onChange={onJobDescriptionChange}
+                value={formData.jobDescription}
               />
             </Form.Group>
           </Form>
@@ -280,4 +329,4 @@ function AddJobApplicationModal({ onShow, onHide, companies }) {
   );
 }
 
-export default AddJobApplicationModal;
+export default JobApplicationModal;

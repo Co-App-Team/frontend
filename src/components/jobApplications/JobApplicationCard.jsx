@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Button } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapPin, faBuilding, faExternalLink } from '@fortawesome/free-solid-svg-icons';
+import { faMapPin, faBuilding, faExternalLink, faPen } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { getCompany } from '../../api/jobApplications';
+import { getCompanies, getCompany } from '../../api/jobApplications';
+import EditApplicationModal from './JobApplicationModal';
 
-const JobApplicationCard = ({ jobApplication }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const [status, setStatus] = useState(jobApplication.status);
   const [company, setCompany] = useState(null);
 
   const companyName = company?.companyName;
   const location = company ? `${company.city}, ${company.country}` : '';
-  const companyWebsite = company ? `https://${company.website}` : '';
+
+  const sourceLink = jobApplication.sourceLink ? `https://${jobApplication.sourceLink}` : '';
+
+  const [editApplication, setEditApplication] = useState(false);
+  const [companies, setCompanies] = useState([]);
 
   function formatDate(date) {
     return new Date(date).toLocaleDateString('en-GB', {
@@ -51,6 +56,10 @@ const JobApplicationCard = ({ jobApplication }) => {
 
   const [statusColor, borderColor] = status != null ? (statusColorMap[status] ?? []) : [];
 
+  const hideEditApplicationModal = () => {
+    setEditApplication(false);
+  };
+
   useEffect(() => {
     async function loadCompany() {
       const data = await getCompany(jobApplication.companyId);
@@ -58,6 +67,15 @@ const JobApplicationCard = ({ jobApplication }) => {
     }
     loadCompany();
   }, [jobApplication.companyId]);
+
+  //TODO: move getting companies to the modal itself
+  useEffect(() => {
+    async function loadCompanies() {
+      const data = await getCompanies();
+      setCompanies(data);
+    }
+    loadCompanies();
+  }, []);
 
   if (isLoading) {
     return (
@@ -142,6 +160,18 @@ const JobApplicationCard = ({ jobApplication }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setEditApplication(true)}>
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faPen}
+                size="sm"
+              />
+              Edit
+            </Button>
           </div>
 
           <div className="d-flex flex-column text-end">
@@ -180,7 +210,7 @@ const JobApplicationCard = ({ jobApplication }) => {
               }}>
               <i>
                 <a
-                  href={companyWebsite}
+                  href={sourceLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-decoration-none text-muted">
@@ -195,6 +225,15 @@ const JobApplicationCard = ({ jobApplication }) => {
           </div>
         </Card.Body>
       </Card>
+
+      {editApplication && (
+        <EditApplicationModal
+          onShow={setEditApplication}
+          onHide={hideEditApplicationModal}
+          companies={companies}
+          data={jobApplication}
+          onSaved={onUpdated}></EditApplicationModal>
+      )}
     </>
   );
 };
