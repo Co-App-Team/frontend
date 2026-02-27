@@ -4,7 +4,7 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapPin, faBuilding, faExternalLink, faPen } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { getCompanies, getCompany } from '../../api/jobApplications';
+import { getCompanies, getCompany, editExistingJobApplication } from '../../api/jobApplications';
 import EditApplicationModal from './JobApplicationModal';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
@@ -79,12 +79,31 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     loadCompanies();
   }, []);
 
+  useEffect(() => {
+    const submit = async () => {
+      let finalFormData = {
+        ...jobApplication,
+        status: status,
+      };
+
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await editExistingJobApplication(finalFormData);
+        await onUpdated();
+      } catch (error) {
+        console.log('error happened', error);
+      }
+    };
+
+    if (status != jobApplication.status) submit();
+  }, [status, jobApplication, onUpdated]);
+
   if (isLoading) {
     return (
       <>
         <Card
           className={styles['application-card']}
-          style={{ borderLeftColor: borderColor }}>
+          style={{ borderLeftColor: 'var(--bs-info)' }}>
           <Card.Body className="text-center">
             <Spinner animation="border" />
           </Card.Body>

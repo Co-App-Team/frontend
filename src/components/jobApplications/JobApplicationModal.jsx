@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { addNewJobApplication, editExistingJobApplication } from '../../api/jobApplications';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
-  const [company, setCompany] = useState('');
+  const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
+
+  const [company, setCompany] = useState(oldCompany?.companyName || '');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [status, setStatus] = useState('NOT_APPLIED');
 
@@ -23,13 +25,21 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const [formData, setFormData] = useState({
-    companyId: '',
-    jobTitle: '',
-    numPositions: '',
-    status: status,
-    applicationDeadline: '',
-    jobDescription: '',
-    sourceLink: '',
+    // companyId: '',
+    // jobTitle: '',
+    // numPositions: '',
+    // status: status,
+    // applicationDeadline: '',
+    // jobDescription: '',
+    // sourceLink: '',
+
+    companyId: data?.companyId || '',
+    jobTitle: data?.jobTitle || '',
+    numPositions: data?.numPositions || '',
+    status: data?.status || '',
+    applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+    jobDescription: data?.jobDescription || '',
+    sourceLink: data?.sourceLink || '',
   });
 
   const filterCompanies = (value) => {
@@ -154,8 +164,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       }
     } catch (error) {
       console.log('Something wrong happened.', error);
-    } finally {
-      await onSaved();
     }
 
     reset();
@@ -167,30 +175,24 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     submit();
   };
 
-  useEffect(() => {
-    if (!onShow) return;
+  // useEffect(() => {
+  //   if (!onShow) return;
 
-    if (data) {
-      console.log('this is data', data);
-      console.log('this is companies', companies);
+  //   if (data) {
+  //     console.log('this is data', data);
+  //     console.log('this is companies', companies);
 
-      const oldCompany = companies.find((c) => c.companyId === data.companyId);
-      console.log('old company', oldCompany);
-
-      setFormData({
-        companyId: data.companyId || '',
-        jobTitle: data.jobTitle || '',
-        numPositions: data.numPositions || '',
-        status: data.status || '',
-        applicationDeadline: data.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
-        jobDescription: data.jobDescription || '',
-        sourceLink: data.sourceLink || '',
-      });
-
-      setStatus(data.status);
-      setCompany(oldCompany?.companyName || '');
-    }
-  }, [onShow]);
+  //     setFormData({
+  //       companyId: data.companyId || '',
+  //       jobTitle: data.jobTitle || '',
+  //       numPositions: data.numPositions || '',
+  //       status: data.status || '',
+  //       applicationDeadline: data.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+  //       jobDescription: data.jobDescription || '',
+  //       sourceLink: data.sourceLink || '',
+  //     });
+  //   }
+  // }, [onShow]);
 
   return (
     <>
@@ -264,19 +266,23 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 })}
               </div>
 
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                value={formData.status}
-                onChange={onStatusChange}>
-                {Object.entries(statusMappings).map(([key, label]) => (
-                  <option
-                    key={key}
-                    value={key}>
-                    {' '}
-                    {label}
-                  </option>
-                ))}
-              </Form.Select>
+              {data == null && (
+                <>
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select
+                    value={status}
+                    onChange={onStatusChange}>
+                    {Object.entries(statusMappings).map(([key, label]) => (
+                      <option
+                        key={key}
+                        value={key}>
+                        {' '}
+                        {label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </>
+              )}
 
               <Form.Label>Deadline Date</Form.Label>
               <Form.Control
