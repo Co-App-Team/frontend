@@ -29,7 +29,7 @@ const RateMyCoop = () => {
     }
 
     fetchCompanies();
-  }, []);
+  }, [getCompaniesCallback]);
 
   async function handleCreateCompanyModalClose() {
     setShowAddCompanyModal(false);
