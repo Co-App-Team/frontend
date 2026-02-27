@@ -15,6 +15,7 @@ const changePasswordErrorMappings = {
   EMAIL_NOT_REGISTERED: 'Invalid session. Please sign out and sign back in',
   ACCOUNT_NOT_ACTIVATED: 'Invalid session. Please sign out and sign back in',
   INVALID_EMAIL_OR_PASSWORD: 'Incorrect password entered',
+  NEW_PASSWORD_SAME_WITH_OLD_PASSWORD: 'New password cannot be the same as the old password',
 };
 
 const AccountPage = () => {
