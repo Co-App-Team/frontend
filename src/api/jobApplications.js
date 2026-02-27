@@ -161,4 +161,6 @@ export const editExistingJobApplication = async (updatedApplication) => {
     ...jobApplications[index],
     ...updatedApplication,
   };
+
+  console.log('FINAL: ', jobApplications[index]);
 };

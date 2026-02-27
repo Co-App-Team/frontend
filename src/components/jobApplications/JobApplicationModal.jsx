@@ -8,7 +8,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
   const [company, setCompany] = useState(oldCompany?.companyName || '');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const [status, setStatus] = useState('NOT_APPLIED');
 
   const [showError, setShowError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,18 +24,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const [formData, setFormData] = useState({
-    // companyId: '',
-    // jobTitle: '',
-    // numPositions: '',
-    // status: status,
-    // applicationDeadline: '',
-    // jobDescription: '',
-    // sourceLink: '',
-
     companyId: data?.companyId || '',
     jobTitle: data?.jobTitle || '',
     numPositions: data?.numPositions || '',
-    status: data?.status || '',
+    status: data?.status || 'NOT_APPLIED',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
     jobDescription: data?.jobDescription || '',
     sourceLink: data?.sourceLink?.replace('https://', '') || '',
@@ -82,11 +73,16 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return num > 0;
   };
 
+  const validateStatus = (status) => {
+    return status.trim() != '';
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
   const isCompanyValid = company != '';
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
+  const isStatusValid = validateStatus(formData.status);
 
   const onJobTitleChange = (e) => {
     setFormData({ ...formData, jobTitle: e.target.value });
@@ -97,7 +93,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const onStatusChange = (e) => {
-    setStatus(e.target.value);
+    setFormData({
+      ...formData,
+      status: e.target.value,
+    });
   };
 
   const onDeadlineDateChange = (e) => {
@@ -125,7 +124,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
     setShowError(false);
     setIsLoading(false);
-    setStatus('NOT_APPLIED');
     setCompany('');
   };
 
@@ -134,33 +132,27 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isJobTitleValid ||
       !isApplicationDeadlineValid ||
       !isCompanyValid ||
-      !isNumPositionsValid
+      !isNumPositionsValid ||
+      !isStatusValid
     ) {
       setShowError(true);
       return;
     }
 
-    let finalFormData = {
-      ...formData,
-      status: status,
-      sourceLink: formData.sourceLink,
-    };
-
     setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log('final form data', finalFormData);
       if (data) {
-        finalFormData = {
-          ...finalFormData,
+        let finalFormData = {
+          ...formData,
           applicationId: data.applicationId,
         };
         await editExistingJobApplication(finalFormData);
         await onSaved();
         onHide();
       } else {
-        await addNewJobApplication(finalFormData);
+        await addNewJobApplication(formData);
       }
     } catch (error) {
       console.log('Something wrong happened.', error);
@@ -174,25 +166,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     e.preventDefault();
     submit();
   };
-
-  // useEffect(() => {
-  //   if (!onShow) return;
-
-  //   if (data) {
-  //     console.log('this is data', data);
-  //     console.log('this is companies', companies);
-
-  //     setFormData({
-  //       companyId: data.companyId || '',
-  //       jobTitle: data.jobTitle || '',
-  //       numPositions: data.numPositions || '',
-  //       status: data.status || '',
-  //       applicationDeadline: data.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
-  //       jobDescription: data.jobDescription || '',
-  //       sourceLink: data.sourceLink || '',
-  //     });
-  //   }
-  // }, [onShow]);
 
   return (
     <>
@@ -270,7 +243,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 <>
                   <Form.Label>Status</Form.Label>
                   <Form.Select
-                    value={status}
+                    value={formData.status}
                     onChange={onStatusChange}>
                     {Object.entries(statusMappings).map(([key, label]) => (
                       <option
