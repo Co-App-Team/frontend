@@ -29,7 +29,7 @@ const RateMyCoop = () => {
     }
 
     fetchCompanies();
-  }, []);
+  }, [getCompaniesCallback]);
 
   async function handleCreateCompanyModalClose() {
     setShowAddCompanyModal(false);
@@ -95,6 +95,7 @@ const RateMyCoop = () => {
         topFilteredCompanies={topFilteredCompanies}
         otherFilteredCompanies={otherFilteredCompanies}
         loading={loading}
+        refreshCompanies={refreshCompanyList}
       />
 
       <AddCompanyModal

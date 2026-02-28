@@ -8,7 +8,7 @@ import useApi from '../../hooks/useApi';
 import { getReviews } from '../../api/rateMyCoopApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 
-const CompanyCard = ({ company }) => {
+const CompanyCard = ({ company, refreshCompanies }) => {
   const [modalShow, setModalShow] = useState(false);
   function hideModal() {
     setModalShow(false);
@@ -75,6 +75,7 @@ const CompanyCard = ({ company }) => {
         showModal={modalShow}
         hideModal={hideModal}
         company={company}
+        refreshCompanies={refreshCompanies}
       />
     </>
   );
