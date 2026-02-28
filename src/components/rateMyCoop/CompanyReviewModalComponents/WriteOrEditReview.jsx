@@ -66,15 +66,6 @@ function WriteOrEditReviews({
     setFormData({ ...formData, comment: e.target.value });
   };
 
-  const requestType = {
-    post: 'POST',
-    put: 'PUT',
-    new: 'POST',
-    newReview: 'POST',
-    edit: 'PUT',
-    editReview: 'PUT',
-  };
-
   const errorMappings = {
     REVIEW_ALREADY_EXISTS:
       "You've already submitted a review for this company! Please edit your review instead.",
@@ -132,7 +123,7 @@ function WriteOrEditReviews({
   const isRatingValid = validateRating(formData.rating);
   const isCommentValid = validateComment(formData.comment);
 
-  const submit = async (type) => {
+  const submit = async (callback) => {
     if (
       !isTermSeasonValid ||
       !isTermYearValid ||
@@ -153,20 +144,15 @@ function WriteOrEditReviews({
     };
 
     try {
-      if (type == requestType.post) {
-        await addReviewCallback(normalizedData, company.companyId);
-      }
-      if (type == requestType.put) {
-        await editReviewCallback(normalizedData, company.companyId);
-      }
+      await callback(normalizedData, company.companyId);
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
       setError(message);
-      if (error.status === 404 && type == requestType.post) {
+      if (error.status === 404 && callback == addReviewCallback) {
         setError("We couldn't find this company. It may no longer exist. Please try again later.");
       }
 
-      if (error.status === 404 && type == requestType.put) {
+      if (error.status === 404 && callback == editReviewCallback) {
         setError(
           "We couldn't find your review for this company. Try writing a new review instead.",
         );
@@ -365,9 +351,9 @@ function WriteOrEditReviews({
             <Button
               onClick={() => {
                 if (writingReview) {
-                  submit(requestType.newReview);
+                  submit(addReviewCallback);
                 } else if (editingReview) {
-                  submit(requestType.editReview);
+                  submit(editReviewCallback);
                 }
               }}
               className="mx-1"
