@@ -248,7 +248,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
 
       {editApplication && (
         <EditApplicationModal
-          onShow={setEditApplication}
+          onShow={editApplication}
           onHide={hideEditApplicationModal}
           companies={companies}
           data={jobApplication}
