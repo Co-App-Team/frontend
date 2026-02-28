@@ -5,7 +5,7 @@ import JobApplicationCard from '../components/jobApplications/JobApplicationCard
 import styles from '../components/styling/jobApplications/JobApplications.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
-import NewApplicationModal from '../components/jobApplications/AddJobApplicationModal';
+import NewApplicationModal from '../components/jobApplications/JobApplicationModal';
 
 const JobApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
@@ -63,7 +63,10 @@ const JobApplicationsPage = () => {
                   className="py-2 px-0"
                   key={index}>
                   <Col key={index}>
-                    <JobApplicationCard jobApplication={application} />
+                    <JobApplicationCard
+                      jobApplication={application}
+                      onUpdated={refreshApplicationsList}
+                    />
                   </Col>
                 </Row>
               ))}
@@ -75,7 +78,9 @@ const JobApplicationsPage = () => {
       <NewApplicationModal
         onShow={showApplicationModal}
         onHide={hideApplicationModal}
-        companies={companies}></NewApplicationModal>
+        companies={companies}
+        data={null}
+        onSaved={null}></NewApplicationModal>
     </>
   );
 };

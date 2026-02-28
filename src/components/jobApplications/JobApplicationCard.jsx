@@ -1,21 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Button } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapPin, faBuilding, faExternalLink } from '@fortawesome/free-solid-svg-icons';
+import { faMapPin, faBuilding, faExternalLink, faPen } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { getCompany } from '../../api/jobApplications';
+import { getCompanies, getCompany, editExistingJobApplication } from '../../api/jobApplications';
+import EditApplicationModal from './JobApplicationModal';
 
-const JobApplicationCard = ({ jobApplication }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const [status, setStatus] = useState(jobApplication.status);
   const [company, setCompany] = useState(null);
 
   const companyName = company?.companyName;
   const location = company ? `${company.city}, ${company.country}` : '';
-  const companyWebsite = company ? `https://${company.website}` : '';
+
+  const sourceLink = jobApplication.sourceLink ? `https://${jobApplication.sourceLink}` : '';
+
+  const [editApplication, setEditApplication] = useState(false);
+  const [companies, setCompanies] = useState([]);
 
   function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-GB', {
+    const [year, month, day] = date.split('T')[0].split('-');
+
+    return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -51,6 +58,10 @@ const JobApplicationCard = ({ jobApplication }) => {
 
   const [statusColor, borderColor] = status != null ? (statusColorMap[status] ?? []) : [];
 
+  const hideEditApplicationModal = () => {
+    setEditApplication(false);
+  };
+
   useEffect(() => {
     async function loadCompany() {
       const data = await getCompany(jobApplication.companyId);
@@ -59,12 +70,39 @@ const JobApplicationCard = ({ jobApplication }) => {
     loadCompany();
   }, [jobApplication.companyId]);
 
+  useEffect(() => {
+    async function loadCompanies() {
+      const data = await getCompanies();
+      setCompanies(data);
+    }
+    loadCompanies();
+  }, []);
+
+  useEffect(() => {
+    const submit = async () => {
+      let finalFormData = {
+        ...jobApplication,
+        status: status,
+      };
+
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await editExistingJobApplication(finalFormData);
+        await onUpdated();
+      } catch (error) {
+        console.log('error happened', error);
+      }
+    };
+
+    if (status != jobApplication.status) submit();
+  }, [status, jobApplication, onUpdated]);
+
   if (isLoading) {
     return (
       <>
         <Card
           className={styles['application-card']}
-          style={{ borderLeftColor: borderColor }}>
+          style={{ borderLeftColor: 'var(--bs-info)' }}>
           <Card.Body className="text-center">
             <Spinner animation="border" />
           </Card.Body>
@@ -142,6 +180,18 @@ const JobApplicationCard = ({ jobApplication }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setEditApplication(true)}>
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faPen}
+                size="sm"
+              />
+              Edit
+            </Button>
           </div>
 
           <div className="d-flex flex-column text-end">
@@ -180,7 +230,7 @@ const JobApplicationCard = ({ jobApplication }) => {
               }}>
               <i>
                 <a
-                  href={companyWebsite}
+                  href={sourceLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-decoration-none text-muted">
@@ -195,6 +245,15 @@ const JobApplicationCard = ({ jobApplication }) => {
           </div>
         </Card.Body>
       </Card>
+
+      {editApplication && (
+        <EditApplicationModal
+          onShow={editApplication}
+          onHide={hideEditApplicationModal}
+          companies={companies}
+          data={jobApplication}
+          onSaved={onUpdated}></EditApplicationModal>
+      )}
     </>
   );
 };
