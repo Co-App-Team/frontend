@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faCaretLeft, faCaretRight, faUser } from '@fortawesome/free-solid-svg-icons';
 import { getReviews } from '../../../api/rateMyCoopApi';
 import { useEffect, useState } from 'react';
 import { Card, Col, Container, Row, Spinner, InputGroup, Form, Placeholder } from 'react-bootstrap';
@@ -103,7 +103,18 @@ function ViewReviews({ company, showModal }) {
                   <Container>
                     <Row>
                       <Col>
-                        <h5>{review.authorName}</h5>
+                        <h5>{review.jobTitle}</h5>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col className="mb-1">
+                        <p className="m-0">
+                          <FontAwesomeIcon
+                            className="me-1"
+                            icon={faUser}
+                          />
+                          Reviewer: {review.authorName}
+                        </p>
                       </Col>
                     </Row>
                     <Row>
