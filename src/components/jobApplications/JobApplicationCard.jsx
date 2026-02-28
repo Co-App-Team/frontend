@@ -2,10 +2,17 @@ import { useState, useEffect } from 'react';
 import { Card, Spinner, Button } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapPin, faBuilding, faExternalLink, faPen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMapPin,
+  faBuilding,
+  faExternalLink,
+  faPen,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { getCompanies, getCompany, editExistingJobApplication } from '../../api/jobApplications';
 import EditApplicationModal from './JobApplicationModal';
+import DeleteApplicationModal from './JobApplicationWarning';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const [status, setStatus] = useState(jobApplication.status);
@@ -17,6 +24,8 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const sourceLink = jobApplication.sourceLink ? `https://${jobApplication.sourceLink}` : '';
 
   const [editApplication, setEditApplication] = useState(false);
+  const [deleteApplication, setDeleteApplication] = useState(false);
+
   const [companies, setCompanies] = useState([]);
 
   function formatDate(date) {
@@ -28,6 +37,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
       year: 'numeric',
     });
   }
+
+  useEffect(() => {
+    console.log('this is application', jobApplication);
+  });
 
   const dateCreated = formatDate(jobApplication.dateCreated);
   const deadlineDate = formatDate(jobApplication.applicationDeadline);
@@ -60,6 +73,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
 
   const hideEditApplicationModal = () => {
     setEditApplication(false);
+  };
+
+  const hideDeleteApplicationModal = () => {
+    setDeleteApplication(false);
   };
 
   useEffect(() => {
@@ -192,6 +209,18 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
               />
               Edit
             </Button>
+
+            <Button
+              variant="danger"
+              size="md"
+              onClick={() => setDeleteApplication(true)}>
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faTrash}
+                size="sm"
+              />
+              Delete
+            </Button>
           </div>
 
           <div className="d-flex flex-column text-end">
@@ -246,14 +275,18 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Body>
       </Card>
 
-      {editApplication && (
-        <EditApplicationModal
-          onShow={editApplication}
-          onHide={hideEditApplicationModal}
-          companies={companies}
-          data={jobApplication}
-          onSaved={onUpdated}></EditApplicationModal>
-      )}
+      <EditApplicationModal
+        onShow={editApplication}
+        onHide={hideEditApplicationModal}
+        companies={companies}
+        data={jobApplication}
+        onSaved={onUpdated}></EditApplicationModal>
+
+      <DeleteApplicationModal
+        onShow={deleteApplication}
+        onHide={hideDeleteApplicationModal}
+        data={jobApplication}
+        onSaved={onUpdated}></DeleteApplicationModal>
     </>
   );
 };

@@ -72,7 +72,7 @@ const companies = [
   },
 ];
 
-const jobApplications = [
+let jobApplications = [
   {
     applicationId: '1',
     companyId: '1',
@@ -162,5 +162,17 @@ export const editExistingJobApplication = async (updatedApplication) => {
     ...updatedApplication,
   };
 
-  console.log('FINAL: ', jobApplications[index]);
+  console.log('FINAL in edit: ', jobApplications[index]);
+};
+
+export const deleteExistingJobApplication = async (toDelete) => {
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  const updated = jobApplications.filter(
+    (application) => application.applicationId !== toDelete.applicationId,
+  );
+
+  jobApplications = updated;
+
+  console.log('FINAL in delete: ', jobApplications);
 };

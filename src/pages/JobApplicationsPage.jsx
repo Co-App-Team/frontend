@@ -30,6 +30,7 @@ const JobApplicationsPage = () => {
 
   async function refreshApplicationsList() {
     const data = await getJobApplications();
+    console.log('this is data in refresh', data);
     setApplications(data);
   }
 
