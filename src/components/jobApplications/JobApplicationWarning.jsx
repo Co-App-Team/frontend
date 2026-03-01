@@ -23,6 +23,8 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
       console.log('Something wrong happened.', error);
       onHide();
     }
+
+    setIsLoading(false);
   };
 
   const handleSubmit = (e) => {
