@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  Alert,
-  Form,
-  Row,
-  Col,
-  InputGroup,
-  Modal,
-  Button,
-  Spinner,
-  Dropdown,
-} from 'react-bootstrap';
+import { Modal, Button, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import { deleteExistingJobApplication } from '../../api/jobApplications';
@@ -18,26 +8,11 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const submit = async () => {
-    // if (
-    //   !isJobTitleValid ||
-    //   !isApplicationDeadlineValid ||
-    //   !isCompanyValid ||
-    //   !isNumPositionsValid ||
-    //   !isStatusValid
-    // ) {
-    //   setShowError(true);
-    //   return;
-    // }
-
     setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
-        // let finalFormData = {
-        //   ...formData,
-        //   applicationId: data.applicationId,
-        // };
         await deleteExistingJobApplication(data);
         await onSaved();
         onHide();
@@ -48,8 +23,6 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
       console.log('Something wrong happened.', error);
       onHide();
     }
-
-    // reset();
   };
 
   const handleSubmit = (e) => {
@@ -65,28 +38,15 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
         centered>
         <Modal.Header
           closeButton
-          className="border-0">
-          {/* <Modal.Title className={styles['black-text']}>Are you sure?</Modal.Title> */}
-        </Modal.Header>
+          className="border-0"></Modal.Header>
 
         <Modal.Body className="text-center">
-          {/* <div className="d-flex justify-content-center">
-              <Col>
-              <Row> */}
           <FontAwesomeIcon
             className="me-1 text-danger"
             icon={faCircleXmark}
             size="5x"
           />
-          {/* </Row> */}
-
-          {/* <Row> */}
-          {/* <div className="text-center p-3"> */}
           <Modal.Title className="p-2 fs-2">Are you sure?</Modal.Title>
-          {/* </div>
-              </Row>
-              </Col> */}
-          {/* </div> */}
           <p className="text-muted">
             Do you really want to delete this job application?
             <br />

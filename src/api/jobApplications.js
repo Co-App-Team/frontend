@@ -148,31 +148,21 @@ export const addNewJobApplication = async (application) => {
 export const editExistingJobApplication = async (updatedApplication) => {
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  const index = jobApplications.findIndex(
-    (application) => application.applicationId === updatedApplication.applicationId,
+  jobApplications = jobApplications.map((app) =>
+    app.applicationId === updatedApplication.applicationId
+      ? { ...app, ...updatedApplication }
+      : app,
   );
 
-  if (index == -1) {
-    console.log('error');
-    return;
-  }
-
-  jobApplications[index] = {
-    ...jobApplications[index],
-    ...updatedApplication,
-  };
-
-  console.log('FINAL in edit: ', jobApplications[index]);
+  return [...jobApplications];
 };
 
 export const deleteExistingJobApplication = async (toDelete) => {
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  const updated = jobApplications.filter(
+  jobApplications = jobApplications.filter(
     (application) => application.applicationId !== toDelete.applicationId,
   );
 
-  jobApplications = updated;
-
-  console.log('FINAL in delete: ', jobApplications);
+  return jobApplications;
 };

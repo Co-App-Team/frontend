@@ -15,7 +15,7 @@ import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
-  const [status, setStatus] = useState(jobApplication.status);
+  const status = jobApplication.status;
   const [company, setCompany] = useState(null);
 
   const companyName = company?.companyName;
@@ -79,6 +79,19 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     setDeleteApplication(false);
   };
 
+  const updateStatus = async (newStatus) => {
+    try {
+      await editExistingJobApplication({
+        ...jobApplication,
+        status: newStatus,
+      });
+
+      await onUpdated();
+    } catch (error) {
+      console.log('something wrong happened', error);
+    }
+  };
+
   useEffect(() => {
     async function loadCompany() {
       const data = await getCompany(jobApplication.companyId);
@@ -94,25 +107,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     }
     loadCompanies();
   }, []);
-
-  useEffect(() => {
-    const submit = async () => {
-      let finalFormData = {
-        ...jobApplication,
-        status: status,
-      };
-
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        await editExistingJobApplication(finalFormData);
-        await onUpdated();
-      } catch (error) {
-        console.log('error happened', error);
-      }
-    };
-
-    if (status != jobApplication.status) submit();
-  }, [status, jobApplication, onUpdated]);
 
   if (isLoading) {
     return (
@@ -149,49 +143,49 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
               <Dropdown.Menu className={styles['dropdown']}>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('NOT_APPLIED');
+                    updateStatus('NOT_APPLIED');
                   }}>
                   {formatStatus['NOT_APPLIED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('APPLIED');
+                    updateStatus('APPLIED');
                   }}>
                   {formatStatus['APPLIED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('INTERVIEW_SCHEDULED');
+                    updateStatus('INTERVIEW_SCHEDULED');
                   }}>
                   {formatStatus['INTERVIEW_SCHEDULED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('INTERVIEWING');
+                    updateStatus('INTERVIEWING');
                   }}>
                   {formatStatus['INTERVIEWING']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('REJECTED');
+                    updateStatus('REJECTED');
                   }}>
                   {formatStatus['REJECTED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('WITHDRAWN');
+                    updateStatus('WITHDRAWN');
                   }}>
                   {formatStatus['WITHDRAWN']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('OFFER_RECEIVED');
+                    updateStatus('OFFER_RECEIVED');
                   }}>
                   {formatStatus['OFFER_RECEIVED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('ACCEPTED');
+                    updateStatus('ACCEPTED');
                   }}>
                   {formatStatus['ACCEPTED']}
                 </Dropdown.Item>
