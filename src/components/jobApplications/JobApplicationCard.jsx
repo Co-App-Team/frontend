@@ -269,12 +269,14 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Body>
       </Card>
 
-      <EditApplicationModal
-        onShow={editApplication}
-        onHide={hideEditApplicationModal}
-        companies={companies}
-        data={jobApplication}
-        onSaved={onUpdated}></EditApplicationModal>
+      {editApplication && (
+        <EditApplicationModal
+          onShow={editApplication}
+          onHide={hideEditApplicationModal}
+          companies={companies}
+          data={jobApplication}
+          onSaved={onUpdated}></EditApplicationModal>
+      )}
 
       <DeleteApplicationModal
         onShow={deleteApplication}
