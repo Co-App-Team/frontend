@@ -72,7 +72,7 @@ const companies = [
   },
 ];
 
-const jobApplications = [
+let jobApplications = [
   {
     applicationId: '1',
     companyId: '1',
@@ -148,19 +148,21 @@ export const addNewJobApplication = async (application) => {
 export const editExistingJobApplication = async (updatedApplication) => {
   await new Promise((resolve) => setTimeout(resolve, 100));
 
-  const index = jobApplications.findIndex(
-    (application) => application.applicationId === updatedApplication.applicationId,
+  jobApplications = jobApplications.map((app) =>
+    app.applicationId === updatedApplication.applicationId
+      ? { ...app, ...updatedApplication }
+      : app,
   );
 
-  if (index == -1) {
-    console.log('error');
-    return;
-  }
+  return [...jobApplications];
+};
 
-  jobApplications[index] = {
-    ...jobApplications[index],
-    ...updatedApplication,
-  };
+export const deleteExistingJobApplication = async (toDelete) => {
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
-  console.log('FINAL: ', jobApplications[index]);
+  jobApplications = jobApplications.filter(
+    (application) => application.applicationId !== toDelete.applicationId,
+  );
+
+  return jobApplications;
 };

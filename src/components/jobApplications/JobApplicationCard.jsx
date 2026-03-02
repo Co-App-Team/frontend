@@ -2,13 +2,20 @@ import { useState, useEffect } from 'react';
 import { Card, Spinner, Button } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapPin, faBuilding, faExternalLink, faPen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMapPin,
+  faBuilding,
+  faExternalLink,
+  faPen,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { getCompanies, getCompany, editExistingJobApplication } from '../../api/jobApplications';
 import EditApplicationModal from './JobApplicationModal';
+import DeleteApplicationModal from './JobApplicationWarning';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
-  const [status, setStatus] = useState(jobApplication.status);
+  const status = jobApplication.status;
   const [company, setCompany] = useState(null);
 
   const companyName = company?.companyName;
@@ -17,6 +24,8 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const sourceLink = jobApplication.sourceLink ? `https://${jobApplication.sourceLink}` : '';
 
   const [editApplication, setEditApplication] = useState(false);
+  const [deleteApplication, setDeleteApplication] = useState(false);
+
   const [companies, setCompanies] = useState([]);
 
   function formatDate(date) {
@@ -28,6 +37,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
       year: 'numeric',
     });
   }
+
+  useEffect(() => {
+    console.log('this is application', jobApplication);
+  });
 
   const dateCreated = formatDate(jobApplication.dateCreated);
   const deadlineDate = formatDate(jobApplication.applicationDeadline);
@@ -62,6 +75,23 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     setEditApplication(false);
   };
 
+  const hideDeleteApplicationModal = () => {
+    setDeleteApplication(false);
+  };
+
+  const updateStatus = async (newStatus) => {
+    try {
+      await editExistingJobApplication({
+        ...jobApplication,
+        status: newStatus,
+      });
+
+      await onUpdated();
+    } catch (error) {
+      console.log('something wrong happened', error);
+    }
+  };
+
   useEffect(() => {
     async function loadCompany() {
       const data = await getCompany(jobApplication.companyId);
@@ -77,25 +107,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
     }
     loadCompanies();
   }, []);
-
-  useEffect(() => {
-    const submit = async () => {
-      let finalFormData = {
-        ...jobApplication,
-        status: status,
-      };
-
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        await editExistingJobApplication(finalFormData);
-        await onUpdated();
-      } catch (error) {
-        console.log('error happened', error);
-      }
-    };
-
-    if (status != jobApplication.status) submit();
-  }, [status, jobApplication, onUpdated]);
 
   if (isLoading) {
     return (
@@ -132,49 +143,49 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
               <Dropdown.Menu className={styles['dropdown']}>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('NOT_APPLIED');
+                    updateStatus('NOT_APPLIED');
                   }}>
                   {formatStatus['NOT_APPLIED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('APPLIED');
+                    updateStatus('APPLIED');
                   }}>
                   {formatStatus['APPLIED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('INTERVIEW_SCHEDULED');
+                    updateStatus('INTERVIEW_SCHEDULED');
                   }}>
                   {formatStatus['INTERVIEW_SCHEDULED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('INTERVIEWING');
+                    updateStatus('INTERVIEWING');
                   }}>
                   {formatStatus['INTERVIEWING']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('REJECTED');
+                    updateStatus('REJECTED');
                   }}>
                   {formatStatus['REJECTED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('WITHDRAWN');
+                    updateStatus('WITHDRAWN');
                   }}>
                   {formatStatus['WITHDRAWN']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('OFFER_RECEIVED');
+                    updateStatus('OFFER_RECEIVED');
                   }}>
                   {formatStatus['OFFER_RECEIVED']}
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => {
-                    setStatus('ACCEPTED');
+                    updateStatus('ACCEPTED');
                   }}>
                   {formatStatus['ACCEPTED']}
                 </Dropdown.Item>
@@ -191,6 +202,18 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
                 size="sm"
               />
               Edit
+            </Button>
+
+            <Button
+              variant="danger"
+              size="md"
+              onClick={() => setDeleteApplication(true)}>
+              <FontAwesomeIcon
+                className="me-1"
+                icon={faTrash}
+                size="sm"
+              />
+              Delete
             </Button>
           </div>
 
@@ -246,14 +269,18 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Body>
       </Card>
 
-      {editApplication && (
-        <EditApplicationModal
-          onShow={editApplication}
-          onHide={hideEditApplicationModal}
-          companies={companies}
-          data={jobApplication}
-          onSaved={onUpdated}></EditApplicationModal>
-      )}
+      <EditApplicationModal
+        onShow={editApplication}
+        onHide={hideEditApplicationModal}
+        companies={companies}
+        data={jobApplication}
+        onSaved={onUpdated}></EditApplicationModal>
+
+      <DeleteApplicationModal
+        onShow={deleteApplication}
+        onHide={hideDeleteApplicationModal}
+        data={jobApplication}
+        onSaved={onUpdated}></DeleteApplicationModal>
     </>
   );
 };
