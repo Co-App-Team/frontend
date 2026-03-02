@@ -59,12 +59,14 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
         <Modal.Footer className="border-0">
           <Button
             variant="info"
-            onClick={onHide}>
+            onClick={onHide}
+            disabled={isLoading}>
             Cancel
           </Button>
           <Button
             variant="danger"
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+            disabled={isLoading}>
             {isLoading && <Spinner size="sm" />} Delete
           </Button>
         </Modal.Footer>
