@@ -13,18 +13,28 @@ const RateMyCoop = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
   const [otherFilteredCompanies, setOtherFilteredCompanies] = useState([]);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
+  const [error, setError] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const { request: getCompaniesCallback, data, loading } = useApi(getCompanies);
 
+  const errorMappings = {
+    UNAUTHORIZED: "You've been logged out. Log in and try again.",
+    INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
+  };
+
   useEffect(() => {
     async function fetchCompanies() {
+      // setShowError(false)
+      // setError('')
       try {
         const companies = await getCompaniesCallback();
         setTopFilteredCompanies(companies.companies);
         setOtherFilteredCompanies(companies.companies);
       } catch (error) {
-        const message = getErrorMessage(error, {});
-        console.log(message);
+        const message = getErrorMessage(error, errorMappings);
+        setError(message);
+        setShowError(true);
       }
     }
 
@@ -42,7 +52,8 @@ const RateMyCoop = () => {
       setOtherFilteredCompanies(companies.companies);
     } catch (error) {
       const message = getErrorMessage(error, {});
-      console.log(message);
+      setShowError(true);
+      setError(message);
     }
   }
 
@@ -67,7 +78,7 @@ const RateMyCoop = () => {
 
   return (
     <>
-      <h1 className="m-2 p-2">Rate My Co-op</h1>
+      <h1 className="mb-2 pb-2">Rate My Co-op</h1>
       <Container
         fluid
         className="m-0">
@@ -88,6 +99,7 @@ const RateMyCoop = () => {
             </Button>
           </Col>
         </Row>
+        <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
       </Container>
 
       <CompaniesDisplay

@@ -24,6 +24,12 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
   const [deletingReview, setdeletingReview] = useState(false);
   const [error, setError] = useState(false);
 
+  const errorMappings = {
+    UNAUTHORIZED: "You've been logged out. Log in and try again.",
+    INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
+    COMPANY_NOT_FOUND: 'This company no longer exists.',
+  };
+
   const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
 
   useEffect(() => {
@@ -32,8 +38,8 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
         try {
           await getReviewsCallback(company.companyId);
         } catch (error) {
-          const message = getErrorMessage(error);
-          console.log(message);
+          const message = getErrorMessage(error, errorMappings);
+          setError(message);
         }
       }
     }
