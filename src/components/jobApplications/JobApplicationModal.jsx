@@ -192,6 +192,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onJobTitleChange}
                     isInvalid={showError && !isJobTitleValid}
                     value={formData.jobTitle}
+                    disabled={isLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a job title.
@@ -205,6 +206,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onNumPositionsChange}
                     isInvalid={showError && !isNumPositionsValid}
                     value={formData.numPositions}
+                    disabled={isLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a positive number.
@@ -217,7 +219,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 type="text"
                 value={company}
                 onChange={handleSearchCompany}
-                isInvalid={showError && !isCompanyValid}></Form.Control>
+                isInvalid={showError && !isCompanyValid}
+                disabled={isLoading}></Form.Control>
               <Form.Control.Feedback type="invalid">
                 Please provide the company.
               </Form.Control.Feedback>
@@ -231,7 +234,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                       <Dropdown.Item
                         className={styles['dropdown-item']}
                         key={index}
-                        onClick={() => handleSelectedCompany(company.companyName)}>
+                        onClick={() => handleSelectedCompany(company.companyName)}
+                        disabled={isLoading}>
                         {company.companyName}
                       </Dropdown.Item>
                     </div>
@@ -244,7 +248,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   <Form.Label>Status</Form.Label>
                   <Form.Select
                     value={formData.status}
-                    onChange={onStatusChange}>
+                    onChange={onStatusChange}
+                    disabled={isLoading}>
                     {Object.entries(statusMappings).map(([key, label]) => (
                       <option
                         key={key}
@@ -264,6 +269,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 onChange={onDeadlineDateChange}
                 isInvalid={showError && !isApplicationDeadlineValid}
                 value={formData.applicationDeadline}
+                disabled={isLoading}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide the application deadline.
@@ -276,6 +282,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   type="url"
                   onChange={onSourceLinkChange}
                   value={formData.sourceLink}
+                  disabled={isLoading}
                 />
               </InputGroup>
 
@@ -286,6 +293,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 className={styles['text-field']}
                 onChange={onJobDescriptionChange}
                 value={formData.jobDescription}
+                disabled={isLoading}
               />
             </Form.Group>
           </Form>
@@ -294,12 +302,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         <Modal.Footer>
           <Button
             variant="info"
-            onClick={onHide}>
+            onClick={onHide}
+            disabled={isLoading}>
             Cancel
           </Button>
           <Button
             variant="primary"
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+            disabled={isLoading}>
             {isLoading && <Spinner size="sm" />} Submit
           </Button>
         </Modal.Footer>
