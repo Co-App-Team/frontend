@@ -40,3 +40,199 @@
 .read-the-docs {
   color: #888;
 }
+
+/* ChatGPT Stylng for scrollbars 
+    Below is the conversation with Chat regarding the vibecoding of the scrollbars
+
+global style scroll bars to look more pleasing
+
+You can style scrollbars globally with CSS — but it works differently for:
+
+✅ Chrome / Edge / Safari (WebKit)
+
+✅ Firefox (separate syntax)
+
+Put this in your global CSS (e.g. App.css).
+
+🔥 Modern Clean Scrollbar (Subtle + Minimal)
+Chrome, Edge, Safari
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 120, 0.7);
+}
+
+
+Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+}
+🎨 If You Want It Even Cleaner (Very Subtle)
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+* {
+  scrollbar-width: thin;
+}
+⚠️ Important Notes
+
+This affects the entire app globally
+
+Doesn’t work on iOS Safari (Apple locks scrollbar styling)
+
+Won’t affect OS-level overlay scrollbars (Mac sometimes hides them)
+
+🎯 Pro Tip (Only Style App Content, Not Everything)
+
+If you only want scrollbars styled inside your app wrapper:
+
+.app-wrapper::-webkit-scrollbar { ... }
+
+Then wrap your app:
+
+<div className="app-wrapper">
+  <Routes />
+</div>
+
+If you tell me your theme (light/dark + Bootstrap variant), I can give you a scrollbar that matches it perfectly.
+
+Chrome, Edge, Safari
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 120, 0.7);
+}
+
+
+Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+}
+
+where do i put this in a react bootstrap app?
+
+Put it in a global CSS file that is imported once at the root of your app.
+
+In your case, that’s most likely:
+
+import './App.css';
+
+inside App.jsx.
+
+✅ Best Place
+👉 src/App.css
+
+Just paste the scrollbar CSS at the bottom of that file.
+
+Since App.css is already imported in App.jsx, the styles will apply globally.
+
+✅ Alternative (Cleaner Structure)
+
+If you want better organization:
+
+Create:
+
+src/styles/global.css
+
+Paste the scrollbar styles there.
+
+Import it once in main.jsx or index.jsx (recommended):
+
+import './styles/global.css';
+
+Importing it at the entry file ensures:
+
+It loads once
+
+It applies app-wide
+
+It doesn’t depend on route mounting
+
+❗ Do NOT Put It In:
+
+A CSS module (*.module.css) → won’t work because scrollbar selectors must be global
+
+A component-level CSS file unless it's global and imported once
+
+Inline styles → scrollbar pseudo-elements can’t be styled inline
+
+🎯 Ideal Structure (Professional Setup)
+src/
+  styles/
+    global.css
+    variables.css
+  App.jsx
+  main.jsx
+
+Import global styles in main.jsx.
+
+If you'd like, I can also give you a scrollbar style that matches Bootstrap’s bg-body-tertiary look more closely.    
+*/
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.4);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 120, 0.7);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 120, 0.4) transparent;
+}

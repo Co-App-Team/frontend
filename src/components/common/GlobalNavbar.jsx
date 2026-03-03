@@ -8,15 +8,36 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { useRef, useState, useEffect } from 'react';
 
 const GlobalNavbar = () => {
   const { user } = useAuthContext();
+
+  const navRef = useRef(null);
+  const [navHeight, setNavHeight] = useState(0);
+
+  useEffect(() => {
+    if (navRef.current) {
+      setNavHeight(navRef.current.offsetHeight);
+    }
+
+    const handleResize = () => {
+      if (navRef.current) {
+        setNavHeight(navRef.current.offsetHeight);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <>
       <Navbar
         expand="lg"
-        className="bg-body-tertiary fixed-top">
+        className="bg-body-tertiary"
+        ref={navRef}
+        fixed="top">
         <Container fluid>
           <Row className="d-flex align-items-center me-2 border-end">
             <Col className="pe-0">
@@ -71,7 +92,9 @@ const GlobalNavbar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Outlet />
+      <div style={{ paddingTop: navHeight }}>
+        <Outlet />
+      </div>
     </>
   );
 };

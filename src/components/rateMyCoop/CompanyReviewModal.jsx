@@ -28,12 +28,15 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
 
   useEffect(() => {
     async function checkIfCompanyHasReviews() {
+      const errorMappings = {
+        COMPANY_NOT_FOUND: 'This company no longer exists.',
+      };
       if (company) {
         try {
           await getReviewsCallback(company.companyId);
         } catch (error) {
-          const message = getErrorMessage(error);
-          console.log(message);
+          const message = getErrorMessage(error, errorMappings);
+          setError(message);
         }
       }
     }
@@ -65,40 +68,53 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
         <div className="d-flex flex-column justify-content-start align-items-start">
           <Modal.Title
             as="h2"
-            id="contained-modal-title-vcenter">
-            {company.companyName}
+            id="contained-modal-title-vcenter"
+            className="m-2">
+            <div style={{ overflowX: 'auto', maxWidth: '80vw' }}>{company.companyName}</div>
           </Modal.Title>
-          <div className="d-flex">
-            <div className="mx-4 ms-0">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faStar}
-              />
-              {reviews && reviews.reviewsPagination.totalItems > 0 ? (
-                <>Average Rating: {company.avgRating}/5</>
-              ) : (
-                <>No Reviews Yet!</>
-              )}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faMapPin}
-              />
-              Location: {company.location}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faLink}
-              />
-              <i>
-                <a href={company.website}>{company.website}</a>
-              </i>
-            </div>
-          </div>
+          <Container className="text-center">
+            <Row>
+              <Col
+                className="border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faStar}
+                  />
+                  {reviews && reviews.reviewsPagination.totalItems > 0 ? (
+                    <>Average Rating: {company.avgRating}/5</>
+                  ) : (
+                    <>No Reviews Yet!</>
+                  )}
+                </div>
+              </Col>
+              <Col
+                className="border-start border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faMapPin}
+                  />
+                  Location: {company.location}
+                </div>
+              </Col>
+              <Col
+                className="border-start"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faLink}
+                  />
+                  <i>
+                    <a href={company.website}>{company.website}</a>
+                  </i>
+                </div>
+              </Col>
+            </Row>
+          </Container>
         </div>
       </Modal.Header>
       <Modal.Body className="overflow-x-hidden">
