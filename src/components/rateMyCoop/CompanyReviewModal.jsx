@@ -24,14 +24,13 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
   const [deletingReview, setdeletingReview] = useState(false);
   const [error, setError] = useState(false);
 
-  const errorMappings = {
-    COMPANY_NOT_FOUND: 'This company no longer exists.',
-  };
-
   const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
 
   useEffect(() => {
     async function checkIfCompanyHasReviews() {
+      const errorMappings = {
+        COMPANY_NOT_FOUND: 'This company no longer exists.',
+      };
       if (company) {
         try {
           await getReviewsCallback(company.companyId);
@@ -42,7 +41,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       }
     }
     checkIfCompanyHasReviews();
-  }, [company, showModal, errorMappings, getReviewsCallback]);
+  }, [company, showModal, getReviewsCallback]);
 
   function navigateOut() {
     setWritingReview(false);
