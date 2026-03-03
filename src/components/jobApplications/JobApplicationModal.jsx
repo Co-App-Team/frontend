@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { addNewJobApplication, editExistingJobApplication } from '../../api/jobApplications';
+import { editExistingJobApplication } from '../../api/jobApplications';
+import useApi from '../../hooks/useApi';
+import { addApplication } from '../../api/jobApplicationsApi';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -10,7 +12,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [filteredCompanies, setFilteredCompanies] = useState([]);
 
   const [showError, setShowError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const statusMappings = {
     NOT_APPLIED: 'Not Applied',
@@ -123,9 +124,11 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     });
 
     setShowError(false);
-    setIsLoading(false);
+    // setIsLoading(false);
     setCompany('');
   };
+
+  const { request: addJobApplicationCallback, loading: isLoading } = useApi(addApplication);
 
   const submit = async () => {
     if (
@@ -139,8 +142,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       return;
     }
 
-    setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
@@ -152,7 +153,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         await onSaved();
         onHide();
       } else {
-        await addNewJobApplication(formData);
+        await addJobApplicationCallback(formData);
+        await onSaved();
       }
     } catch (error) {
       console.log('Something wrong happened.', error);

@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { getJobApplications, getCompanies } from '../api/jobApplications';
+import { getJobApplications } from '../api/jobApplications';
 import JobApplicationCard from '../components/jobApplications/JobApplicationCard';
 import styles from '../components/styling/jobApplications/JobApplications.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
 import NewApplicationModal from '../components/jobApplications/JobApplicationModal';
+import { getCompanies } from '../api/rateMyCoopApi';
+import useApi from '../hooks/useApi';
+import { getErrorMessage } from '../utils/errorUtils';
 
 const JobApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
+
+  const { request: getCompaniesCallback } = useApi(getCompanies);
 
   useEffect(() => {
     async function loadApplications() {
@@ -22,11 +27,16 @@ const JobApplicationsPage = () => {
 
   useEffect(() => {
     async function loadCompanies() {
-      const data = await getCompanies();
-      setCompanies(data);
+      try {
+        const data = await getCompaniesCallback();
+        setCompanies(data.companies);
+      } catch (error) {
+        const message = getErrorMessage(error, {});
+        console.log(message);
+      }
     }
     loadCompanies();
-  }, []);
+  }, [getCompaniesCallback]);
 
   async function refreshApplicationsList() {
     const data = await getJobApplications();
