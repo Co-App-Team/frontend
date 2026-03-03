@@ -42,7 +42,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       }
     }
     checkIfCompanyHasReviews();
-  }, [company, showModal, getReviewsCallback]);
+  }, [company, showModal, errorMappings, getReviewsCallback]);
 
   function navigateOut() {
     setWritingReview(false);
