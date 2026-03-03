@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { editExistingJobApplication } from '../../api/jobApplications';
 import useApi from '../../hooks/useApi';
-import { addApplication } from '../../api/jobApplicationsApi';
+import { addApplication, editApplication } from '../../api/jobApplicationsApi';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -128,7 +127,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     setCompany('');
   };
 
-  const { request: addJobApplicationCallback, loading: isLoading } = useApi(addApplication);
+  const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
+  const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
   const submit = async () => {
     if (
@@ -149,12 +149,11 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
           ...formData,
           applicationId: data.applicationId,
         };
-        await editExistingJobApplication(finalFormData);
+        await editJobApplicationCallback(finalFormData);
         await onSaved();
-        onHide();
+        // onHide();
       } else {
         await addJobApplicationCallback(formData);
-        await onSaved();
       }
     } catch (error) {
       console.log('Something wrong happened.', error);
@@ -194,7 +193,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onJobTitleChange}
                     isInvalid={showError && !isJobTitleValid}
                     value={formData.jobTitle}
-                    disabled={isLoading}
+                    disabled={isAddLoading || isEditLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a job title.
@@ -208,7 +207,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onNumPositionsChange}
                     isInvalid={showError && !isNumPositionsValid}
                     value={formData.numPositions}
-                    disabled={isLoading}
+                    disabled={isAddLoading || isEditLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a positive number.
@@ -222,7 +221,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 value={company}
                 onChange={handleSearchCompany}
                 isInvalid={showError && !isCompanyValid}
-                disabled={isLoading}></Form.Control>
+                disabled={isAddLoading || isEditLoading}></Form.Control>
               <Form.Control.Feedback type="invalid">
                 Please provide the company.
               </Form.Control.Feedback>
@@ -237,7 +236,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                         className={styles['dropdown-item']}
                         key={index}
                         onClick={() => handleSelectedCompany(company.companyName)}
-                        disabled={isLoading}>
+                        disabled={isAddLoading || isEditLoading}>
                         {company.companyName}
                       </Dropdown.Item>
                     </div>
@@ -251,7 +250,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   <Form.Select
                     value={formData.status}
                     onChange={onStatusChange}
-                    disabled={isLoading}>
+                    disabled={isAddLoading || isEditLoading}>
                     {Object.entries(statusMappings).map(([key, label]) => (
                       <option
                         key={key}
@@ -271,7 +270,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 onChange={onDeadlineDateChange}
                 isInvalid={showError && !isApplicationDeadlineValid}
                 value={formData.applicationDeadline}
-                disabled={isLoading}
+                disabled={isAddLoading || isEditLoading}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide the application deadline.
@@ -284,7 +283,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   type="url"
                   onChange={onSourceLinkChange}
                   value={formData.sourceLink}
-                  disabled={isLoading}
+                  disabled={isAddLoading || isEditLoading}
                 />
               </InputGroup>
 
@@ -295,7 +294,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 className={styles['text-field']}
                 onChange={onJobDescriptionChange}
                 value={formData.jobDescription}
-                disabled={isLoading}
+                disabled={isAddLoading || isEditLoading}
               />
             </Form.Group>
           </Form>
@@ -305,14 +304,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
           <Button
             variant="info"
             onClick={onHide}
-            disabled={isLoading}>
+            disabled={isAddLoading || isEditLoading}>
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isLoading}>
-            {isLoading && <Spinner size="sm" />} Submit
+            disabled={isAddLoading || isEditLoading}>
+            {(isAddLoading || isEditLoading) && <Spinner size="sm" />} Submit
           </Button>
         </Modal.Footer>
       </Modal>

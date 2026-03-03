@@ -1,19 +1,18 @@
-import { useState } from 'react';
 import { Modal, Button, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import { deleteExistingJobApplication } from '../../api/jobApplications';
+import useApi from '../../hooks/useApi';
+import { deleteApplication } from '../../api/jobApplicationsApi';
 
 function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { request: deleteJobApplicationCallback, loading: isDeleteLoading } =
+    useApi(deleteApplication);
 
   const submit = async () => {
-    setIsLoading(true);
-
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
-        await deleteExistingJobApplication(data);
+        await deleteJobApplicationCallback(data);
         await onSaved();
         onHide();
       } else {
@@ -23,8 +22,6 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
       console.log('Something wrong happened.', error);
       onHide();
     }
-
-    setIsLoading(false);
   };
 
   const handleSubmit = (e) => {
@@ -60,14 +57,14 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
           <Button
             variant="info"
             onClick={onHide}
-            disabled={isLoading}>
+            disabled={isDeleteLoading}>
             Cancel
           </Button>
           <Button
             variant="danger"
             onClick={handleSubmit}
-            disabled={isLoading}>
-            {isLoading && <Spinner size="sm" />} Delete
+            disabled={isDeleteLoading}>
+            {isDeleteLoading && <Spinner size="sm" />} Delete
           </Button>
         </Modal.Footer>
       </Modal>
