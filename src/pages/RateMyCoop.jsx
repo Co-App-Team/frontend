@@ -18,21 +18,16 @@ const RateMyCoop = () => {
 
   const { request: getCompaniesCallback, data, loading } = useApi(getCompanies);
 
-  const errorMappings = {
-    UNAUTHORIZED: "You've been logged out. Log in and try again.",
-    INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
-  };
-
   useEffect(() => {
     async function fetchCompanies() {
-      // setShowError(false)
-      // setError('')
+      setShowError(false);
+      setError('');
       try {
         const companies = await getCompaniesCallback();
         setTopFilteredCompanies(companies.companies);
         setOtherFilteredCompanies(companies.companies);
       } catch (error) {
-        const message = getErrorMessage(error, errorMappings);
+        const message = getErrorMessage(error, {});
         setError(message);
         setShowError(true);
       }

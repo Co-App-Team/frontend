@@ -20,8 +20,6 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
   const errorMappings = {
     INVALID_WEBSITE: "The website must start with 'http://' or 'https://' ",
     COMPANY_ALREADY_EXISTS: 'A company with that name already exists. Please choose another',
-    UNAUTHORIZED: 'You are not logged in. Please log in and try again.',
-    INTERNAL_SERVER_ERROR: 'Something unexpected went wrong. Please try again later.',
   };
 
   const validateCompanyName = (companyName) => {
