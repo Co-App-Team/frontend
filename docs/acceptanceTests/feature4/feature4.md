@@ -95,7 +95,7 @@ Given that I've clicked the next page button and a previous page exists, when I 
 Note that on the second page, the previous page button is now clickable. Where previously it was greyed out.
 ![image](test3-7.png)
 
-iven that I click the previous page button, when I look at the reviews section, then I should be able to see a previous set of reviews.
+Given that I click the previous page button, when I look at the reviews section, then I should be able to see a previous set of reviews.
 
 Note that this set is the first page's set of reviews.
 ![image](test3-8.png)
