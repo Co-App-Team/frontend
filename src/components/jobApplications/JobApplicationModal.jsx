@@ -3,6 +3,7 @@ import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 're
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -11,6 +12,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [filteredCompanies, setFilteredCompanies] = useState([]);
 
   const [showError, setShowError] = useState(false);
+
+  const today = new Date().toISOString().split('T')[0];
 
   const statusMappings = {
     NOT_APPLIED: 'Not Applied',
@@ -30,7 +33,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     status: data?.status || 'NOT_APPLIED',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
     jobDescription: data?.jobDescription || '',
-    sourceLink: data?.sourceLink?.replace('https://', '') || '',
+    sourceLink: data?.sourceLink || '',
   });
 
   const filterCompanies = (value) => {
@@ -77,12 +80,25 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return status.trim() != '';
   };
 
+  const validateLink = (link) => {
+    let isValid = true;
+    if (link.trim() === '') return isValid;
+
+    try {
+      new URL(link);
+    } catch {
+      isValid = false;
+    }
+    return isValid;
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
   const isCompanyValid = company != '';
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
   const isStatusValid = validateStatus(formData.status);
+  const isLinkValid = validateLink(formData.sourceLink);
 
   const onJobTitleChange = (e) => {
     setFormData({ ...formData, jobTitle: e.target.value });
@@ -123,7 +139,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     });
 
     setShowError(false);
-    // setIsLoading(false);
     setCompany('');
   };
 
@@ -136,27 +151,32 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isApplicationDeadlineValid ||
       !isCompanyValid ||
       !isNumPositionsValid ||
-      !isStatusValid
+      !isStatusValid ||
+      !isLinkValid
     ) {
       setShowError(true);
       return;
     }
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
         let finalFormData = {
           ...formData,
           applicationId: data.applicationId,
+          dateCreated: today,
         };
-        await editJobApplicationCallback(finalFormData);
+        if (formData.sourceLink == '') {
+          finalFormData.sourceLink = null;
+        }
+
+        await editJobApplicationCallback(finalFormData, finalFormData.applicationId);
         await onSaved();
-        // onHide();
       } else {
         await addJobApplicationCallback(formData);
       }
     } catch (error) {
-      console.log('Something wrong happened.', error);
+      const message = getErrorMessage(error);
+      console.log('Something wrong happened', message);
     }
 
     reset();
@@ -278,13 +298,17 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
               <Form.Label>Job Posting Link</Form.Label>
               <InputGroup hasValidation>
-                <InputGroup.Text id="basic-addon3">https://</InputGroup.Text>
                 <Form.Control
                   type="url"
                   onChange={onSourceLinkChange}
                   value={formData.sourceLink}
+                  isInvalid={showError && !isLinkValid}
                   disabled={isAddLoading || isEditLoading}
                 />
+
+                <Form.Control.Feedback type="invalid">
+                  Please provide a valid website URL. It must start with https://
+                </Form.Control.Feedback>
               </InputGroup>
 
               <Form.Label>Job Description</Form.Label>

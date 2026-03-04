@@ -11,3 +11,7 @@ export const editApplication = async (application, applicationId) => {
 export const deleteApplication = async (applicationId) => {
   return await axiosClient.delete(`/application/${applicationId}`);
 };
+
+export const getApplications = async () => {
+  return await axiosClient.get(`/application`);
+};

@@ -10,9 +10,8 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
 
   const submit = async () => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
-        await deleteJobApplicationCallback(data);
+        await deleteJobApplicationCallback(data.applicationId);
         await onSaved();
         onHide();
       } else {
