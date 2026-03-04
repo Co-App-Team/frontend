@@ -136,93 +136,98 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
           <div className="d-flex align-items-center gap-3">
-            <span>{jobApplication.jobTitle}</span>
-            <Dropdown>
-              <Dropdown.Toggle
-                className={styles['black-text']}
-                variant={statusColor}
-                id="dropdown-basic">
-                {formatStatus[status]}
-              </Dropdown.Toggle>
+            <div style={{ maxWidth: '30vw', overflowX: 'auto' }}>
+              <span>{jobApplication.jobTitle}</span>
+            </div>
 
-              <Dropdown.Menu className={styles['dropdown']}>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('NOT_APPLIED');
-                  }}>
-                  {formatStatus['NOT_APPLIED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('APPLIED');
-                  }}>
-                  {formatStatus['APPLIED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('INTERVIEW_SCHEDULED');
-                  }}>
-                  {formatStatus['INTERVIEW_SCHEDULED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('INTERVIEWING');
-                  }}>
-                  {formatStatus['INTERVIEWING']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('REJECTED');
-                  }}>
-                  {formatStatus['REJECTED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('WITHDRAWN');
-                  }}>
-                  {formatStatus['WITHDRAWN']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('OFFER_RECEIVED');
-                  }}>
-                  {formatStatus['OFFER_RECEIVED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('ACCEPTED');
-                  }}>
-                  {formatStatus['ACCEPTED']}
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <div className="d-flex gap-2 flex-wrap">
+              <Dropdown>
+                <Dropdown.Toggle
+                  className={styles['black-text']}
+                  variant={statusColor}
+                  id="dropdown-basic">
+                  {formatStatus[status]}
+                </Dropdown.Toggle>
 
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => setIsEditing(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPen}
-                size="sm"
-              />
-              Edit
-            </Button>
+                <Dropdown.Menu className={styles['dropdown']}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('NOT_APPLIED');
+                    }}>
+                    {formatStatus['NOT_APPLIED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('APPLIED');
+                    }}>
+                    {formatStatus['APPLIED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('INTERVIEW_SCHEDULED');
+                    }}>
+                    {formatStatus['INTERVIEW_SCHEDULED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('INTERVIEWING');
+                    }}>
+                    {formatStatus['INTERVIEWING']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('REJECTED');
+                    }}>
+                    {formatStatus['REJECTED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('WITHDRAWN');
+                    }}>
+                    {formatStatus['WITHDRAWN']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('OFFER_RECEIVED');
+                    }}>
+                    {formatStatus['OFFER_RECEIVED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('ACCEPTED');
+                    }}>
+                    {formatStatus['ACCEPTED']}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
 
-            <Button
-              variant="danger"
-              size="md"
-              onClick={() => setIsDeleting(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faTrash}
-                size="sm"
-              />
-              Delete
-            </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setIsEditing(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPen}
+                  size="sm"
+                />
+                Edit
+              </Button>
+
+              <Button
+                variant="danger"
+                size="md"
+                onClick={() => setIsDeleting(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faTrash}
+                  size="sm"
+                />
+                Delete
+              </Button>
+            </div>
           </div>
 
-          <div className="d-flex flex-column text-end">
+          <div className="text-end ms-3">
             <span className="text-muted fs-6">
               Due
               <span className="text-dark">{' ' + deadlineDate}</span>
@@ -231,7 +236,9 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Header>
         <Card.Body>
           <div className="d-flex justify-content-around">
-            <div className="mx-4">
+            <div
+              className="mx-4"
+              style={{ maxWidth: '30vw', overflowX: 'auto' }}>
               <FontAwesomeIcon
                 className="me-1"
                 icon={faBuilding}
