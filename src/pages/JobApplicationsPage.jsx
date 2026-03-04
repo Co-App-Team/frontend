@@ -15,6 +15,8 @@ const JobApplicationsPage = () => {
   const [companies, setCompanies] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
 
+  const [error, setError] = useState(false);
+
   const { request: getCompaniesCallback } = useApi(getCompanies);
   const { request: getApplicationsCallback } = useApi(getApplications);
 
@@ -35,6 +37,7 @@ const JobApplicationsPage = () => {
       } catch (error) {
         const message = getErrorMessage(error, {});
         console.log(message);
+        setError(message);
       }
     }
     loadCompanies();
@@ -68,6 +71,7 @@ const JobApplicationsPage = () => {
           </Button>
         </div>
 
+        {error && <span className="text-danger mt-3">{error}</span>}
         <div className={styles['applications-container']}>
           {applications.length > 0 && (
             <Container className="d-flex flex-column p-0 m-0">

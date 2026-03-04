@@ -11,6 +11,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [company, setCompany] = useState(oldCompany?.companyName || '');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
 
+  const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
@@ -171,16 +172,18 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
         await editJobApplicationCallback(finalFormData, finalFormData.applicationId);
         await onSaved();
+        onHide();
       } else {
         await addJobApplicationCallback(formData);
       }
     } catch (error) {
       const message = getErrorMessage(error);
       console.log('Something wrong happened', message);
+
+      setError(message);
     }
 
     reset();
-    onHide();
   };
 
   const handleSubmit = (e) => {
@@ -322,8 +325,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               />
             </Form.Group>
           </Form>
+          {error && <span className="text-danger mt-3">{error}</span>}
         </Modal.Body>
-
         <Modal.Footer>
           <Button
             variant="info"
