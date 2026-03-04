@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useAuthContext } from './contexts/AuthContext.js';
-import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -63,7 +62,7 @@ function App() {
           <Route element={<GlobalNavbar />}>
             <Route
               path="/"
-              element={<HomePage />}
+              element={<JobApplicationsPage />}
             />
             <Route
               element={<AccountPage />}
@@ -72,10 +71,6 @@ function App() {
             <Route
               path="rate-my-co-op"
               element={<RateMyCoop />}
-            />
-            <Route
-              path="/job-applications"
-              element={<JobApplicationsPage />}
             />
           </Route>
         </Route>
