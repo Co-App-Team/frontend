@@ -40,10 +40,6 @@ const JobApplicationsPage = () => {
     loadCompanies();
   }, [getCompaniesCallback]);
 
-  // useEffect(() => {
-  //   console.log("these are companies in page", companies);
-  // }, [companies])
-
   async function refreshApplicationsList() {
     const data = await getApplicationsCallback();
     console.log('this is data in refresh', data);
