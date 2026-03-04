@@ -1,4 +1,4 @@
-import { Card } from 'react-bootstrap';
+import { Card, Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
@@ -36,39 +36,55 @@ const CompanyCard = ({ company, refreshCompanies }) => {
         onClick={() => {
           setModalShow(true);
         }}>
-        <Card.Header as={'h5'}>{company.companyName}</Card.Header>
+        <Card.Header
+          as={'h5'}
+          style={{ overflowX: 'auto' }}>
+          {company.companyName}
+        </Card.Header>
         <Card.Body>
-          <div className="d-flex justify-content-around">
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faStar}
-              />
-              {reviews && reviews.reviewsPagination.totalItems > 0 ? (
-                <>Average Rating: {company.avgRating}/5</>
-              ) : (
-                <>No Reviews Yet!</>
-              )}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faMapPin}
-              />
-              Location: {company.location}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faLink}
-              />
-              <i>
-                <a href={company.website}>{company.website}</a>
-              </i>
-            </div>
-          </div>
+          <Container className="text-center">
+            <Row>
+              <Col
+                className="border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faStar}
+                  />
+                  {reviews && reviews.reviewsPagination.totalItems > 0 ? (
+                    <>Average Rating: {company.avgRating}/5</>
+                  ) : (
+                    <>No Reviews Yet!</>
+                  )}
+                </div>
+              </Col>
+              <Col
+                className="border-start border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faMapPin}
+                  />
+                  Location: {company.location}
+                </div>
+              </Col>
+              <Col
+                className="border-start"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faLink}
+                  />
+                  <i>
+                    <a href={company.website}>{company.website}</a>
+                  </i>
+                </div>
+              </Col>
+            </Row>
+          </Container>
         </Card.Body>
       </Card>
       <CompanyReviewModal

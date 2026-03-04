@@ -13,8 +13,6 @@ function DeleteReviews({ company, hideModal, refreshCompanies, navigateOut }) {
   const errorMappings = {
     REVIEW_ALREADY_EXISTS:
       "You've already submitted a review for this company! Please edit your review instead.",
-    UNAUTHORIZED: "You've been logged out. Log in and try again.",
-    INTERNAL_SERVER_ERROR: 'Something went wrong on our end. Please try again later.',
   };
 
   const { request: deleteReviewCallback, loading: deleteIsLoading } = useApi(deleteReview);
