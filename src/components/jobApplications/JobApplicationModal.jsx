@@ -178,8 +178,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       }
     } catch (error) {
       const message = getErrorMessage(error);
-      console.log('Something wrong happened', message);
-
       setError(message);
     }
 

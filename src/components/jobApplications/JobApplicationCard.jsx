@@ -96,7 +96,8 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
 
       await onUpdated();
     } catch (error) {
-      console.log('something wrong happened', error);
+      const message = getErrorMessage(error);
+      console.log(message);
     }
   };
 
@@ -106,7 +107,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         const data = await getCompaniesCallback();
         setCompanies(data.companies);
       } catch (error) {
-        const message = getErrorMessage(error, {});
+        const message = getErrorMessage(error);
         console.log(message);
       }
     }
@@ -283,14 +284,16 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           onHide={hideEditApplicationModal}
           companies={companies}
           data={jobApplication}
-          onSaved={onUpdated}></EditApplicationModal>
+          onSaved={onUpdated}
+        />
       )}
 
       <DeleteApplicationModal
         onShow={isDeleting}
         onHide={hideDeleteApplicationModal}
         data={jobApplication}
-        onSaved={onUpdated}></DeleteApplicationModal>
+        onSaved={onUpdated}
+      />
     </>
   );
 };

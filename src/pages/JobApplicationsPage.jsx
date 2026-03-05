@@ -22,9 +22,13 @@ const JobApplicationsPage = () => {
 
   useEffect(() => {
     async function loadApplications() {
-      const data = await getApplicationsCallback();
-      console.log('this is data', data);
-      setApplications(data);
+      try {
+        const data = await getApplicationsCallback();
+        setApplications(data);
+      } catch (error) {
+        const message = getErrorMessage(error);
+        setError(message);
+      }
     }
     loadApplications();
   }, [getApplicationsCallback]);
@@ -35,8 +39,7 @@ const JobApplicationsPage = () => {
         const data = await getCompaniesCallback();
         setCompanies(data.companies);
       } catch (error) {
-        const message = getErrorMessage(error, {});
-        console.log(message);
+        const message = getErrorMessage(error);
         setError(message);
       }
     }
@@ -44,9 +47,13 @@ const JobApplicationsPage = () => {
   }, [getCompaniesCallback]);
 
   async function refreshApplicationsList() {
-    const data = await getApplicationsCallback();
-    console.log('this is data in refresh', data);
-    setApplications(data);
+    try {
+      const data = await getApplicationsCallback();
+      setApplications(data);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setError(message);
+    }
   }
 
   async function hideApplicationModal() {
@@ -56,7 +63,7 @@ const JobApplicationsPage = () => {
 
   return (
     <>
-      <h1 className="m-2 p-2">Job Applications Page</h1>
+      <h1 className="m-2 p-2">Job Applications</h1>
 
       <div className={styles['applications-wrapper']}>
         <div className={styles['top-right-button']}>

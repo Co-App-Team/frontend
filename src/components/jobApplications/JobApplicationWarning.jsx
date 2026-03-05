@@ -1,10 +1,14 @@
+import { useState } from 'react';
 import { Modal, Button, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
 import useApi from '../../hooks/useApi';
 import { deleteApplication } from '../../api/jobApplicationsApi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
+  const [error, setError] = useState(false);
+
   const { request: deleteJobApplicationCallback, loading: isDeleteLoading } =
     useApi(deleteApplication);
 
@@ -18,8 +22,8 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
         console.log('data does not exist');
       }
     } catch (error) {
-      console.log('Something wrong happened.', error);
-      onHide();
+      const message = getErrorMessage(error);
+      setError(message);
     }
   };
 
@@ -50,6 +54,7 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
             <br />
             This process cannot be undone.
           </p>
+          {error && <span className="text-danger mt-3">{error}</span>}
         </Modal.Body>
 
         <Modal.Footer className="border-0">
