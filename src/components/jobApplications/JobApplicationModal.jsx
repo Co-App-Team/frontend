@@ -175,6 +175,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         onHide();
       } else {
         await addJobApplicationCallback(formData);
+        onHide();
       }
     } catch (error) {
       const message = getErrorMessage(error);
