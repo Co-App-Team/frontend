@@ -1,0 +1,22 @@
+.reviews-container {
+  width: 100%;
+  min-height: 80%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  text-align: left;
+
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: lightgray;
+}
+
+.review-card {
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0;
+  transition: filter 0.2s ease;
+}

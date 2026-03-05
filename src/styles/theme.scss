@@ -1,0 +1,37 @@
+// Bootstrap variables
+$primary: #163c5b;
+$primary-hover: #21679b;
+$secondary: #3490c7;
+$success: #76b854;
+$danger: #c84c37;
+$warning: #c8ad37;
+$info: #dddada;
+
+$link-color: $secondary;
+$link-hover-color: $primary;
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Button overrides
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: shade-color($primary, 50%);
+  border-color: shade-color($primary, 50%);
+}
+
+// Card accent colours
+.companyAccentCardColour {
+  background-color: $primary;
+  min-height: 100%;
+  max-height: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+:root {
+  --primary: #{$primary};
+  --primary-hover: #{$primary-hover};
+  --secondary: #{$secondary};
+  --success: #{$success};
+}
