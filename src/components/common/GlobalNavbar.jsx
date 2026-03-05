@@ -61,18 +61,13 @@ const GlobalNavbar = () => {
             <Nav className="me-auto">
               <Nav.Link
                 as={NavLink}
-                to="/login">
-                Login
+                to="/">
+                Job Applications
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
                 to="/rate-my-co-op">
                 Rate My Co-op
-              </Nav.Link>
-              <Nav.Link
-                as={NavLink}
-                to="/job-applications">
-                Job Applications
               </Nav.Link>
             </Nav>
 
