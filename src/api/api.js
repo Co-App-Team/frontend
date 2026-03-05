@@ -43,14 +43,14 @@ axiosClient.interceptors.response.use(
     // {
     // "error":"SERVER_CODE",
     // "message":"Some detailed message"
-    //}
+    // }
     // If the server has no endpoint defined we'll get something like:
-    //{
+    // {
     // "timestamp":"xyz",
     // "status":404,
     // "error":"Not Found",
     // "path":"/api/path/to/endpoint"
-    //}
+    // }
     // When we can't connect to the server, we get error.message = "Network error"
     const fallbackMessage =
       responseData.message || responseData.error || error.message || 'Unknown Error';
