@@ -10,26 +10,30 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { getCompanies, getCompany, editExistingJobApplication } from '../../api/jobApplications';
+import { getErrorMessage } from '../../utils/errorUtils';
+
+import useApi from '../../hooks/useApi';
+import { getCompanies } from '../../api/rateMyCoopApi';
+import { editApplication } from '../../api/jobApplicationsApi';
+
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const status = jobApplication.status;
-  const [company, setCompany] = useState(null);
 
-  const companyName = company?.companyName;
-  const location = company ? `${company.city}, ${company.country}` : '';
+  const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
 
-  const sourceLink = jobApplication.sourceLink ? `https://${jobApplication.sourceLink}` : '';
-
-  const [editApplication, setEditApplication] = useState(false);
-  const [deleteApplication, setDeleteApplication] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [companies, setCompanies] = useState([]);
 
+  const { request: getCompaniesCallback } = useApi(getCompanies);
+  const { request: editJobApplicationCallback } = useApi(editApplication);
+
   function formatDate(date) {
-    const [year, month, day] = date.split('T')[0].split('-');
+    const [year, month, day] = date.split('-');
 
     return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
       day: '2-digit',
@@ -37,15 +41,17 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
       year: 'numeric',
     });
   }
-
-  useEffect(() => {
-    console.log('this is application', jobApplication);
-  });
-
-  const dateCreated = formatDate(jobApplication.dateCreated);
   const deadlineDate = formatDate(jobApplication.applicationDeadline);
 
-  const isLoading = !company || !status || !dateCreated || !deadlineDate;
+  function getCompany() {
+    return companies.find((c) => c.companyId === jobApplication.companyId);
+  }
+
+  const company = getCompany();
+  const companyName = company?.companyName;
+  const location = company ? `${company.location}` : '';
+
+  const isLoading = !status || !deadlineDate || !company;
 
   const formatStatus = {
     NOT_APPLIED: 'Not Applied',
@@ -72,41 +78,41 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const [statusColor, borderColor] = status != null ? (statusColorMap[status] ?? []) : [];
 
   const hideEditApplicationModal = () => {
-    setEditApplication(false);
+    setIsEditing(false);
   };
 
   const hideDeleteApplicationModal = () => {
-    setDeleteApplication(false);
+    setIsDeleting(false);
   };
 
   const updateStatus = async (newStatus) => {
     try {
-      await editExistingJobApplication({
+      let finalFormData = {
         ...jobApplication,
         status: newStatus,
-      });
+      };
+
+      await editJobApplicationCallback(finalFormData, jobApplication.applicationId);
 
       await onUpdated();
     } catch (error) {
-      console.log('something wrong happened', error);
+      const message = getErrorMessage(error);
+      console.log(message);
     }
   };
 
   useEffect(() => {
-    async function loadCompany() {
-      const data = await getCompany(jobApplication.companyId);
-      setCompany(data);
-    }
-    loadCompany();
-  }, [jobApplication.companyId]);
-
-  useEffect(() => {
     async function loadCompanies() {
-      const data = await getCompanies();
-      setCompanies(data);
+      try {
+        const data = await getCompaniesCallback();
+        setCompanies(data.companies);
+      } catch (error) {
+        const message = getErrorMessage(error);
+        console.log(message);
+      }
     }
     loadCompanies();
-  }, []);
+  }, [getCompaniesCallback]);
 
   if (isLoading) {
     return (
@@ -131,97 +137,98 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
           <div className="d-flex align-items-center gap-3">
-            <span>{jobApplication.jobTitle}</span>
-            <Dropdown>
-              <Dropdown.Toggle
-                className={styles['black-text']}
-                variant={statusColor}
-                id="dropdown-basic">
-                {formatStatus[status]}
-              </Dropdown.Toggle>
+            <div style={{ maxWidth: '30vw', overflowX: 'auto' }}>
+              <span>{jobApplication.jobTitle}</span>
+            </div>
 
-              <Dropdown.Menu className={styles['dropdown']}>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('NOT_APPLIED');
-                  }}>
-                  {formatStatus['NOT_APPLIED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('APPLIED');
-                  }}>
-                  {formatStatus['APPLIED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('INTERVIEW_SCHEDULED');
-                  }}>
-                  {formatStatus['INTERVIEW_SCHEDULED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('INTERVIEWING');
-                  }}>
-                  {formatStatus['INTERVIEWING']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('REJECTED');
-                  }}>
-                  {formatStatus['REJECTED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('WITHDRAWN');
-                  }}>
-                  {formatStatus['WITHDRAWN']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('OFFER_RECEIVED');
-                  }}>
-                  {formatStatus['OFFER_RECEIVED']}
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    updateStatus('ACCEPTED');
-                  }}>
-                  {formatStatus['ACCEPTED']}
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <div className="d-flex gap-2 flex-wrap">
+              <Dropdown>
+                <Dropdown.Toggle
+                  className={styles['black-text']}
+                  variant={statusColor}
+                  id="dropdown-basic">
+                  {formatStatus[status]}
+                </Dropdown.Toggle>
 
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => setEditApplication(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPen}
-                size="sm"
-              />
-              Edit
-            </Button>
+                <Dropdown.Menu className={styles['dropdown']}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('NOT_APPLIED');
+                    }}>
+                    {formatStatus['NOT_APPLIED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('APPLIED');
+                    }}>
+                    {formatStatus['APPLIED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('INTERVIEW_SCHEDULED');
+                    }}>
+                    {formatStatus['INTERVIEW_SCHEDULED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('INTERVIEWING');
+                    }}>
+                    {formatStatus['INTERVIEWING']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('REJECTED');
+                    }}>
+                    {formatStatus['REJECTED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('WITHDRAWN');
+                    }}>
+                    {formatStatus['WITHDRAWN']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('OFFER_RECEIVED');
+                    }}>
+                    {formatStatus['OFFER_RECEIVED']}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      updateStatus('ACCEPTED');
+                    }}>
+                    {formatStatus['ACCEPTED']}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
 
-            <Button
-              variant="danger"
-              size="md"
-              onClick={() => setDeleteApplication(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faTrash}
-                size="sm"
-              />
-              Delete
-            </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => setIsEditing(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPen}
+                  size="sm"
+                />
+                Edit
+              </Button>
+
+              <Button
+                variant="danger"
+                size="md"
+                onClick={() => setIsDeleting(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faTrash}
+                  size="sm"
+                />
+                Delete
+              </Button>
+            </div>
           </div>
 
-          <div className="d-flex flex-column text-end">
-            <span className="text-muted fs-6">
-              Added
-              <span className="text-dark">{' ' + dateCreated}</span>
-            </span>
+          <div className="text-end ms-3">
             <span className="text-muted fs-6">
               Due
               <span className="text-dark">{' ' + deadlineDate}</span>
@@ -230,7 +237,9 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Header>
         <Card.Body>
           <div className="d-flex justify-content-around">
-            <div className="mx-4">
+            <div
+              className="mx-4"
+              style={{ maxWidth: '30vw', overflowX: 'auto' }}>
               <FontAwesomeIcon
                 className="me-1"
                 icon={faBuilding}
@@ -269,20 +278,22 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
         </Card.Body>
       </Card>
 
-      {editApplication && (
+      {isEditing && (
         <EditApplicationModal
-          onShow={editApplication}
+          onShow={isEditing}
           onHide={hideEditApplicationModal}
           companies={companies}
           data={jobApplication}
-          onSaved={onUpdated}></EditApplicationModal>
+          onSaved={onUpdated}
+        />
       )}
 
       <DeleteApplicationModal
-        onShow={deleteApplication}
+        onShow={isDeleting}
         onHide={hideDeleteApplicationModal}
         data={jobApplication}
-        onSaved={onUpdated}></DeleteApplicationModal>
+        onSaved={onUpdated}
+      />
     </>
   );
 };

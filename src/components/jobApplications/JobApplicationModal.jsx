@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import { addNewJobApplication, editExistingJobApplication } from '../../api/jobApplications';
+import useApi from '../../hooks/useApi';
+import { addApplication, editApplication } from '../../api/jobApplicationsApi';
+import { getErrorMessage } from '../../utils/errorUtils';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -9,8 +11,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [company, setCompany] = useState(oldCompany?.companyName || '');
   const [filteredCompanies, setFilteredCompanies] = useState([]);
 
+  const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const today = new Date().toISOString().split('T')[0];
 
   const statusMappings = {
     NOT_APPLIED: 'Not Applied',
@@ -30,7 +34,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     status: data?.status || 'NOT_APPLIED',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
     jobDescription: data?.jobDescription || '',
-    sourceLink: data?.sourceLink?.replace('https://', '') || '',
+    sourceLink: data?.sourceLink || '',
   });
 
   const filterCompanies = (value) => {
@@ -77,12 +81,25 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return status.trim() != '';
   };
 
+  const validateLink = (link) => {
+    let isValid = true;
+    if (link.trim() === '') return isValid;
+
+    try {
+      new URL(link);
+    } catch {
+      isValid = false;
+    }
+    return isValid;
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
   const isCompanyValid = company != '';
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
   const isStatusValid = validateStatus(formData.status);
+  const isLinkValid = validateLink(formData.sourceLink);
 
   const onJobTitleChange = (e) => {
     setFormData({ ...formData, jobTitle: e.target.value });
@@ -123,9 +140,11 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     });
 
     setShowError(false);
-    setIsLoading(false);
     setCompany('');
   };
+
+  const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
+  const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
   const submit = async () => {
     if (
@@ -133,33 +152,36 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isApplicationDeadlineValid ||
       !isCompanyValid ||
       !isNumPositionsValid ||
-      !isStatusValid
+      !isStatusValid ||
+      !isLinkValid
     ) {
       setShowError(true);
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (data) {
         let finalFormData = {
           ...formData,
           applicationId: data.applicationId,
+          dateCreated: today,
         };
-        await editExistingJobApplication(finalFormData);
+        if (formData.sourceLink == '') {
+          finalFormData.sourceLink = null;
+        }
+
+        await editJobApplicationCallback(finalFormData, finalFormData.applicationId);
         await onSaved();
         onHide();
       } else {
-        await addNewJobApplication(formData);
+        await addJobApplicationCallback(formData);
       }
     } catch (error) {
-      console.log('Something wrong happened.', error);
+      const message = getErrorMessage(error);
+      setError(message);
     }
 
     reset();
-    onHide();
   };
 
   const handleSubmit = (e) => {
@@ -192,7 +214,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onJobTitleChange}
                     isInvalid={showError && !isJobTitleValid}
                     value={formData.jobTitle}
-                    disabled={isLoading}
+                    disabled={isAddLoading || isEditLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a job title.
@@ -206,7 +228,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                     onChange={onNumPositionsChange}
                     isInvalid={showError && !isNumPositionsValid}
                     value={formData.numPositions}
-                    disabled={isLoading}
+                    disabled={isAddLoading || isEditLoading}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a positive number.
@@ -220,7 +242,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 value={company}
                 onChange={handleSearchCompany}
                 isInvalid={showError && !isCompanyValid}
-                disabled={isLoading}></Form.Control>
+                disabled={isAddLoading || isEditLoading}></Form.Control>
               <Form.Control.Feedback type="invalid">
                 Please provide the company.
               </Form.Control.Feedback>
@@ -235,7 +257,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                         className={styles['dropdown-item']}
                         key={index}
                         onClick={() => handleSelectedCompany(company.companyName)}
-                        disabled={isLoading}>
+                        disabled={isAddLoading || isEditLoading}>
                         {company.companyName}
                       </Dropdown.Item>
                     </div>
@@ -249,7 +271,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   <Form.Select
                     value={formData.status}
                     onChange={onStatusChange}
-                    disabled={isLoading}>
+                    disabled={isAddLoading || isEditLoading}>
                     {Object.entries(statusMappings).map(([key, label]) => (
                       <option
                         key={key}
@@ -269,7 +291,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 onChange={onDeadlineDateChange}
                 isInvalid={showError && !isApplicationDeadlineValid}
                 value={formData.applicationDeadline}
-                disabled={isLoading}
+                disabled={isAddLoading || isEditLoading}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide the application deadline.
@@ -277,13 +299,17 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
               <Form.Label>Job Posting Link</Form.Label>
               <InputGroup hasValidation>
-                <InputGroup.Text id="basic-addon3">https://</InputGroup.Text>
                 <Form.Control
                   type="url"
                   onChange={onSourceLinkChange}
                   value={formData.sourceLink}
-                  disabled={isLoading}
+                  isInvalid={showError && !isLinkValid}
+                  disabled={isAddLoading || isEditLoading}
                 />
+
+                <Form.Control.Feedback type="invalid">
+                  Please provide a valid website URL. It must start with https://
+                </Form.Control.Feedback>
               </InputGroup>
 
               <Form.Label>Job Description</Form.Label>
@@ -293,24 +319,24 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 className={styles['text-field']}
                 onChange={onJobDescriptionChange}
                 value={formData.jobDescription}
-                disabled={isLoading}
+                disabled={isAddLoading || isEditLoading}
               />
             </Form.Group>
           </Form>
+          {error && <span className="text-danger mt-3">{error}</span>}
         </Modal.Body>
-
         <Modal.Footer>
           <Button
             variant="info"
             onClick={onHide}
-            disabled={isLoading}>
+            disabled={isAddLoading || isEditLoading}>
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isLoading}>
-            {isLoading && <Spinner size="sm" />} Submit
+            disabled={isAddLoading || isEditLoading}>
+            {(isAddLoading || isEditLoading) && <Spinner size="sm" />} Submit
           </Button>
         </Modal.Footer>
       </Modal>
