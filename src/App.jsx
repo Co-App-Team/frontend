@@ -14,6 +14,7 @@ import AccountPage from './pages/AccountPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
+import ChatbotPage from './pages/ChatbotPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -71,6 +72,11 @@ function App() {
             <Route
               path="rate-my-co-op"
               element={<RateMyCoop />}
+            />
+            <Route
+              //  TODO: What to call this
+              path="chatbot"
+              element={<ChatbotPage />}
             />
           </Route>
         </Route>
