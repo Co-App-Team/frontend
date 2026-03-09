@@ -77,10 +77,10 @@ const RateMyCoop = () => {
         fluid
         className="m-0">
         <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
-          <Col>
-            <h2 className="mb-2 pb-2">Rate My Co-op</h2>
+          <Col className="p-0">
+            <h2 className="m-0 p-0">Rate My Co-op</h2>
           </Col>
-          <Col className="d-flex justify-content-end">
+          <Col className="d-flex justify-content-end p-0">
             <Button
               className="m-1"
               onClick={() => setShowAddCompanyModal(true)}>
@@ -93,7 +93,7 @@ const RateMyCoop = () => {
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col className="px-0 mx-0">
             <Searchbar
               handleSearch={updateSearch}
               className="m-2 p-2"
