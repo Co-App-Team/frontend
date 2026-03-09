@@ -1,32 +1,10 @@
-.applications-container {
-  height: 70vh;
-  width: 80vw;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  text-align: center;
-
-  border: 0.2rem;
-  border-style: solid;
-  border-radius: 5px;
-  border-color: lightgray;
-}
-
 .applications-wrapper {
   width: 80vw;
-}
-
-.top-right-button {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0.5rem;
 }
 
 .application-card {
   border-left: 0.5rem;
   border-style: solid;
-  width: 78vw;
   padding: 0;
   transition: filter 0.2s ease;
 }

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
 
-const RateMyCoop = () => {
+const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
   const [otherFilteredCompanies, setOtherFilteredCompanies] = useState([]);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
@@ -72,8 +72,8 @@ const RateMyCoop = () => {
   };
 
   return (
-    <>
-      <h1 className="mb-2 pb-2">Rate My Co-op</h1>
+    <div className="container d-flex flex-column justify-content-center">
+      <h1 className="m-2 p-2">Rate My Co-op</h1>
       <Container
         fluid
         className="m-0">
@@ -110,8 +110,8 @@ const RateMyCoop = () => {
         hideModal={handleCreateCompanyModalClose}
         refreshCompanies={refreshCompanyList}
       />
-    </>
+    </div>
   );
 };
 
-export default RateMyCoop;
+export default RateMyCoopPage;
