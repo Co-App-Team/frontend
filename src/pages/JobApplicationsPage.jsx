@@ -137,7 +137,13 @@ const JobApplicationsPage = () => {
                 icon={faFilter}
               />
               Filters:
-              <FilterBadges filters={filters} />
+              <div className="mx-1">
+                {filters.length != 0 ? (
+                  <FilterBadges filters={filters} />
+                ) : (
+                  <i>No Active Filters</i>
+                )}
+              </div>
             </Col>
             <Col
               md="auto"
