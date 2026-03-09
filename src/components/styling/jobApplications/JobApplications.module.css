@@ -58,3 +58,7 @@
 .black-text {
   color: black !important;
 }
+
+.no-caret::after {
+  display: none;
+}

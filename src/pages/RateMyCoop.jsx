@@ -85,7 +85,9 @@ const RateMyCoop = () => {
             />
           </Col>
           <Col md="auto">
-            <Button onClick={() => setShowAddCompanyModal(true)}>
+            <Button
+              className="m-1"
+              onClick={() => setShowAddCompanyModal(true)}>
               <FontAwesomeIcon
                 className="me-1"
                 icon={faPlus}
