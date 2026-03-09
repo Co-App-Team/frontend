@@ -35,7 +35,7 @@ const FilterSelection = ({ filters, setFilters }) => {
         onClick={resetFilters}>
         Reset
       </Button>
-      <DropdownDivider></DropdownDivider>
+      <DropdownDivider/>
       {statusOptions.map((filter) => (
         <Form.Check
           key={filter.value}
