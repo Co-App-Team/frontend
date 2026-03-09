@@ -1,4 +1,4 @@
-name: Build and Push to Docker Hub
+name: CD Pipeline
 
 on:
   workflow_dispatch:
