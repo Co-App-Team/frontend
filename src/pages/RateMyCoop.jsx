@@ -73,25 +73,31 @@ const RateMyCoop = () => {
 
   return (
     <>
-      <h1 className="mb-2 pb-2">Rate My Co-op</h1>
       <Container
         fluid
         className="m-0">
-        <Row>
-          <Col>
-            <Searchbar
-              handleSearch={updateSearch}
-              className="m-2 p-2"
-            />
+        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
+          <Col className="p-0">
+            <h2 className="m-0 p-0">Rate My Co-op</h2>
           </Col>
-          <Col md="auto">
-            <Button onClick={() => setShowAddCompanyModal(true)}>
+          <Col className="d-flex justify-content-end p-0">
+            <Button
+              className="m-1"
+              onClick={() => setShowAddCompanyModal(true)}>
               <FontAwesomeIcon
                 className="me-1"
                 icon={faPlus}
               />
               Add Company
             </Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="px-0 mx-0">
+            <Searchbar
+              handleSearch={updateSearch}
+              className="m-2 p-2"
+            />
           </Col>
         </Row>
         <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>

@@ -128,21 +128,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     setFormData({ ...formData, jobDescription: e.target.value });
   };
 
-  const reset = () => {
-    setFormData({
-      companyId: '',
-      jobTitle: '',
-      numPositions: '',
-      status: 'NOT_APPLIED',
-      applicationDeadline: '',
-      jobDescription: '',
-      sourceLink: '',
-    });
-
-    setShowError(false);
-    setCompany('');
-  };
-
   const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
   const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
@@ -181,8 +166,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       const message = getErrorMessage(error);
       setError(message);
     }
-
-    reset();
   };
 
   const handleSubmit = (e) => {

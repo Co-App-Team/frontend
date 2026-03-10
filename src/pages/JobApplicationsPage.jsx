@@ -9,6 +9,7 @@ import useApi from '../hooks/useApi';
 import { getCompanies } from '../api/rateMyCoopApi';
 import { getApplications } from '../api/jobApplicationsApi';
 import { getErrorMessage } from '../utils/errorUtils';
+import FilteringBar from '../components/jobApplications/FilteringBar';
 
 const JobApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
@@ -63,20 +64,32 @@ const JobApplicationsPage = () => {
 
   return (
     <>
-      <h1 className="m-2 p-2">Job Applications</h1>
-
       <div className={styles['applications-wrapper']}>
-        <div className={styles['top-right-button']}>
-          <Button
-            className="btn btn-primary"
-            onClick={() => setShowApplicationModal(true)}>
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faAdd}
-            />
-            New Job Application
-          </Button>
-        </div>
+        <Container
+          fluid
+          className="m-0">
+          <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
+            <Col className="p-0">
+              <h2 className="p-0 m-0">Job Applications</h2>
+            </Col>
+            <Col className="p-0">
+              <div className={styles['top-right-button']}>
+                <Button
+                  className="btn btn-primary m-1"
+                  onClick={() => setShowApplicationModal(true)}>
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faAdd}
+                  />
+                  New Job Application
+                </Button>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <FilteringBar />
+          </Row>
+        </Container>
 
         {error && <span className="text-danger mt-3">{error}</span>}
         <div className={styles['applications-container']}>

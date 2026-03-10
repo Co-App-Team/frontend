@@ -20,7 +20,6 @@
 .top-right-button {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0.5rem;
 }
 
 .application-card {
@@ -57,4 +56,8 @@
 
 .black-text {
   color: black !important;
+}
+
+.no-caret::after {
+  display: none;
 }
