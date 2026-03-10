@@ -1,17 +1,6 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
 
-const FilterSelection = ({ filters, setFilters }) => {
-  const formatStatus = {
-    NOT_APPLIED: 'Not Applied',
-    APPLIED: 'Applied',
-    INTERVIEW_SCHEDULED: 'Interview Scheduled',
-    INTERVIEWING: 'Interviewing',
-    OFFER_RECEIVED: 'Offer Received',
-    REJECTED: 'Rejected',
-    WITHDRAWN: 'Withdrawn',
-    ACCEPTED: 'Accepted',
-  };
-
+const FilterSelection = ({ filters, setFilters, formatStatus }) => {
   const statusOptions = Object.entries(formatStatus).map(([key, value]) => ({
     value: key,
     label: value,
@@ -35,7 +24,7 @@ const FilterSelection = ({ filters, setFilters }) => {
         onClick={resetFilters}>
         Reset
       </Button>
-      <DropdownDivider/>
+      <DropdownDivider />
       {statusOptions.map((filter) => (
         <Form.Check
           key={filter.value}

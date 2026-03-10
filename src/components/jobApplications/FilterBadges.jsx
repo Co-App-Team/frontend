@@ -1,17 +1,6 @@
 import { Badge } from 'react-bootstrap';
 
-const FilterBadges = ({ filters }) => {
-  const formatStatus = {
-    NOT_APPLIED: 'Not Applied',
-    APPLIED: 'Applied',
-    INTERVIEW_SCHEDULED: 'Interview Scheduled',
-    INTERVIEWING: 'Interviewing',
-    OFFER_RECEIVED: 'Offer Received',
-    REJECTED: 'Rejected',
-    WITHDRAWN: 'Withdrawn',
-    ACCEPTED: 'Accepted',
-  };
-
+const FilterBadges = ({ filters, formatStatus }) => {
   const statusColorMap = {
     NOT_APPLIED: 'info',
     APPLIED: 'secondary',

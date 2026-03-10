@@ -19,7 +19,7 @@ import { editApplication } from '../../api/jobApplicationsApi';
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 
-const JobApplicationCard = ({ jobApplication, onUpdated }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, formatStatus }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -52,17 +52,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const location = company ? `${company.location}` : '';
 
   const isLoading = !status || !deadlineDate || !company;
-
-  const formatStatus = {
-    NOT_APPLIED: 'Not Applied',
-    APPLIED: 'Applied',
-    INTERVIEW_SCHEDULED: 'Interview Scheduled',
-    INTERVIEWING: 'Interviewing',
-    OFFER_RECEIVED: 'Offer Received',
-    REJECTED: 'Rejected',
-    WITHDRAWN: 'Withdrawn',
-    ACCEPTED: 'Accepted',
-  };
 
   const statusColorMap = {
     NOT_APPLIED: ['info', 'var(--bs-info)'],
