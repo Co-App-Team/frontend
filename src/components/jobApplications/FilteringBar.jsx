@@ -85,6 +85,7 @@ const FilteringBar = () => {
               />
             </Dropdown.Menu>
           </Dropdown>
+
           <Button
             className="m-1"
             onClick={toggleCalendarSortAsc}>
