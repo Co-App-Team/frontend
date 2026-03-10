@@ -1,7 +1,8 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
+import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
 
-const FilterSelection = ({ filters, setFilters, formatStatus }) => {
-  const statusOptions = Object.entries(formatStatus).map(([key, value]) => ({
+const FilterSelection = ({ filters, setFilters }) => {
+  const statusOptions = Object.entries(FORMAT_STATUS).map(([key, value]) => ({
     value: key,
     label: value,
   }));

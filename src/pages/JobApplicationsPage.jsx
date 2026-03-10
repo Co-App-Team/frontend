@@ -62,17 +62,6 @@ const JobApplicationsPage = () => {
     await refreshApplicationsList();
   }
 
-  const formatStatus = {
-    NOT_APPLIED: 'Not Applied',
-    APPLIED: 'Applied',
-    INTERVIEW_SCHEDULED: 'Interview Scheduled',
-    INTERVIEWING: 'Interviewing',
-    OFFER_RECEIVED: 'Offer Received',
-    REJECTED: 'Rejected',
-    WITHDRAWN: 'Withdrawn',
-    ACCEPTED: 'Accepted',
-  };
-
   return (
     <>
       <div className={styles['applications-wrapper']}>
@@ -98,7 +87,7 @@ const JobApplicationsPage = () => {
             </Col>
           </Row>
           <Row>
-            <FilteringBar formatStatus={formatStatus} />
+            <FilteringBar />
           </Row>
         </Container>
 
@@ -113,7 +102,6 @@ const JobApplicationsPage = () => {
                   <Col key={index}>
                     <JobApplicationCard
                       jobApplication={application}
-                      formatStatus={formatStatus}
                       onUpdated={refreshApplicationsList}
                     />
                   </Col>

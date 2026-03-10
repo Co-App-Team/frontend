@@ -13,7 +13,7 @@ import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 
-const FilteringBar = ({ formatStatus }) => {
+const FilteringBar = () => {
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
@@ -55,14 +55,7 @@ const FilteringBar = ({ formatStatus }) => {
         />
         Filters:
         <div className="mx-1">
-          {filters.length != 0 ? (
-            <FilterBadges
-              formatStatus={formatStatus}
-              filters={filters}
-            />
-          ) : (
-            <i>No Active Filters</i>
-          )}
+          {filters.length != 0 ? <FilterBadges filters={filters} /> : <i>No Active Filters</i>}
         </div>
       </Col>
       <Col
@@ -89,7 +82,6 @@ const FilteringBar = ({ formatStatus }) => {
               <FilterSelection
                 filters={filters}
                 setFilters={setFilters}
-                formatStatus={formatStatus}
               />
             </Dropdown.Menu>
           </Dropdown>

@@ -1,25 +1,16 @@
-import { Badge } from 'react-bootstrap';
+import { Badge, Col, Container, Row } from 'react-bootstrap';
+import { FORMAT_STATUS, STATUS_COLOUR_MAP } from '../../constants/jobApplicationColourMappings';
 
-const FilterBadges = ({ filters, formatStatus }) => {
-  const statusColorMap = {
-    NOT_APPLIED: 'info',
-    APPLIED: 'secondary',
-    INTERVIEW_SCHEDULED: 'warning',
-    INTERVIEWING: 'warning',
-    OFFER_RECEIVED: 'success',
-    REJECTED: 'danger',
-    WITHDRAWN: 'danger',
-    ACCEPTED: 'success',
-  };
-
+const FilterBadges = ({ filters }) => {
   return (
     <>
       {filters.map((filter) => (
         <Badge
+          style={{ display: 'inline' }}
           className="m-1"
           key={filter}
-          bg={statusColorMap[filter]}>
-          {formatStatus[filter]}
+          bg={STATUS_COLOUR_MAP[filter]}>
+          {FORMAT_STATUS[filter]}
         </Badge>
       ))}
     </>

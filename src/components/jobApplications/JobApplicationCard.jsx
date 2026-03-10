@@ -18,8 +18,9 @@ import { editApplication } from '../../api/jobApplicationsApi';
 
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
+import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
 
-const JobApplicationCard = ({ jobApplication, onUpdated, formatStatus }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -136,7 +137,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, formatStatus }) => {
                   className={styles['black-text']}
                   variant={statusColor}
                   id="dropdown-basic">
-                  {formatStatus[status]}
+                  {FORMAT_STATUS[status]}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className={styles['dropdown']}>
@@ -144,49 +145,49 @@ const JobApplicationCard = ({ jobApplication, onUpdated, formatStatus }) => {
                     onClick={() => {
                       updateStatus('NOT_APPLIED');
                     }}>
-                    {formatStatus['NOT_APPLIED']}
+                    {FORMAT_STATUS['NOT_APPLIED']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('APPLIED');
                     }}>
-                    {formatStatus['APPLIED']}
+                    {FORMAT_STATUS['APPLIED']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('INTERVIEW_SCHEDULED');
                     }}>
-                    {formatStatus['INTERVIEW_SCHEDULED']}
+                    {FORMAT_STATUS['INTERVIEW_SCHEDULED']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('INTERVIEWING');
                     }}>
-                    {formatStatus['INTERVIEWING']}
+                    {FORMAT_STATUS['INTERVIEWING']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('REJECTED');
                     }}>
-                    {formatStatus['REJECTED']}
+                    {FORMAT_STATUS['REJECTED']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('WITHDRAWN');
                     }}>
-                    {formatStatus['WITHDRAWN']}
+                    {FORMAT_STATUS['WITHDRAWN']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('OFFER_RECEIVED');
                     }}>
-                    {formatStatus['OFFER_RECEIVED']}
+                    {FORMAT_STATUS['OFFER_RECEIVED']}
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       updateStatus('ACCEPTED');
                     }}>
-                    {formatStatus['ACCEPTED']}
+                    {FORMAT_STATUS['ACCEPTED']}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
