@@ -1,7 +1,3 @@
-.applications-wrapper {
-  width: 80vw;
-}
-
 .application-card {
   border-left: 0.5rem;
   border-style: solid;
@@ -35,4 +31,8 @@
 
 .black-text {
   color: black !important;
+}
+
+.no-caret::after {
+  display: none;
 }
