@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
 
-const RateMyCoop = () => {
+const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
   const [otherFilteredCompanies, setOtherFilteredCompanies] = useState([]);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
@@ -72,20 +72,16 @@ const RateMyCoop = () => {
   };
 
   return (
-    <>
-      <h1 className="mb-2 pb-2">Rate My Co-op</h1>
-      <Container
-        fluid
-        className="m-0">
-        <Row>
+    <Container className="mt-3">
+      <div>
+        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
           <Col>
-            <Searchbar
-              handleSearch={updateSearch}
-              className="m-2 p-2"
-            />
+            <h2 className="m-0 p-0">Rate My Co-op</h2>
           </Col>
-          <Col md="auto">
-            <Button onClick={() => setShowAddCompanyModal(true)}>
+          <Col className="d-flex justify-content-end">
+            <Button
+              className="m-1"
+              onClick={() => setShowAddCompanyModal(true)}>
               <FontAwesomeIcon
                 className="me-1"
                 icon={faPlus}
@@ -94,8 +90,16 @@ const RateMyCoop = () => {
             </Button>
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <Searchbar
+              handleSearch={updateSearch}
+              className="m-2 p-2"
+            />
+          </Col>
+        </Row>
         <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
-      </Container>
+      </div>
 
       <CompaniesDisplay
         companies={data ? data.companies : []}
@@ -110,8 +114,8 @@ const RateMyCoop = () => {
         hideModal={handleCreateCompanyModalClose}
         refreshCompanies={refreshCompanyList}
       />
-    </>
+    </Container>
   );
 };
 
-export default RateMyCoop;
+export default RateMyCoopPage;

@@ -71,28 +71,30 @@ const ResetPasswordPage = () => {
 
   return (
     <PageTransition>
-      <div
-        className="p-4 border rounded d-flex flex-column align-items-center"
-        style={{ maxWidth: '19rem' }}>
-        <img
-          src={LogoImage}
-          width={220}
-        />
-        <h2 className="mt-0 mb-0 text-primary fw-bold">Password Reset</h2>
-        <ResetPasswordForm
-          isLoading={isLoading}
-          handleUpdatePassword={handleUpdatePassword}
-          defaultEmail={email}
-        />
-        {requestError && <p className="text-danger mt-3">{requestError}</p>}
-        {showResentMessage && <p className="mt-3 text-success">Confirmation code resent ✓</p>}
-        <p className={'mb-0 ' + (requestError || showResentMessage ? 'mt-0' : 'mt-4')}>
-          Don't see an email? Check your spam folder or{' '}
-          <Link to="/forgot-password">resend the code</Link>.
-        </p>
-        <p className="mt-3 mb-0">
-          <Link to="/login">Back to sign in</Link>
-        </p>
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div
+          className="p-4 border rounded d-flex flex-column align-items-center"
+          style={{ maxWidth: '19rem' }}>
+          <img
+            src={LogoImage}
+            width={220}
+          />
+          <h2 className="mt-0 mb-0 text-primary fw-bold">Password Reset</h2>
+          <ResetPasswordForm
+            isLoading={isLoading}
+            handleUpdatePassword={handleUpdatePassword}
+            defaultEmail={email}
+          />
+          {requestError && <p className="text-danger mt-3">{requestError}</p>}
+          {showResentMessage && <p className="mt-3 text-success">Confirmation code resent ✓</p>}
+          <p className={'mb-0 ' + (requestError || showResentMessage ? 'mt-0' : 'mt-4')}>
+            Don't see an email? Check your spam folder or{' '}
+            <Link to="/forgot-password">resend the code</Link>.
+          </p>
+          <p className="mt-3 mb-0">
+            <Link to="/login">Back to sign in</Link>
+          </p>
+        </div>
       </div>
     </PageTransition>
   );
