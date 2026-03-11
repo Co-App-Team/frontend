@@ -42,7 +42,7 @@ const FilteringBar = () => {
 
   return (
     <>
-      <Col className="d-flex align-items-center justify-content-start ps-0">
+      <Col className="d-flex align-items-center justify-content-start">
         <Searchbar
           handleSearch={updateSearch}
           className="m-2"
@@ -62,11 +62,11 @@ const FilteringBar = () => {
         md="auto"
         sm="auto"
         lg="auto"
-        className="pe-0 justify-content-end">
+        className="justify-content-end">
         <div className="d-flex justify-content-end">
           <Dropdown
             align="end"
-            className="m-1">
+            className="me-1 mt-1">
             <Dropdown.Toggle
               as={Button}
               id="dropdown-basic"
@@ -87,7 +87,7 @@ const FilteringBar = () => {
           </Dropdown>
 
           <Button
-            className="m-1"
+            className="ms-1 mt-1"
             onClick={toggleCalendarSortAsc}>
             <FontAwesomeIcon
               className="me-1"

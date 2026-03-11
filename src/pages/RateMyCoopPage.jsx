@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
 
-const RateMyCoop = () => {
+const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
   const [otherFilteredCompanies, setOtherFilteredCompanies] = useState([]);
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
@@ -72,15 +72,13 @@ const RateMyCoop = () => {
   };
 
   return (
-    <>
-      <Container
-        fluid
-        className="m-0">
+    <Container className="mt-3">
+      <div>
         <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
-          <Col className="p-0">
+          <Col>
             <h2 className="m-0 p-0">Rate My Co-op</h2>
           </Col>
-          <Col className="d-flex justify-content-end p-0">
+          <Col className="d-flex justify-content-end">
             <Button
               className="m-1"
               onClick={() => setShowAddCompanyModal(true)}>
@@ -93,7 +91,7 @@ const RateMyCoop = () => {
           </Col>
         </Row>
         <Row>
-          <Col className="px-0 mx-0">
+          <Col>
             <Searchbar
               handleSearch={updateSearch}
               className="m-2 p-2"
@@ -101,7 +99,7 @@ const RateMyCoop = () => {
           </Col>
         </Row>
         <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
-      </Container>
+      </div>
 
       <CompaniesDisplay
         companies={data ? data.companies : []}
@@ -116,8 +114,8 @@ const RateMyCoop = () => {
         hideModal={handleCreateCompanyModalClose}
         refreshCompanies={refreshCompanyList}
       />
-    </>
+    </Container>
   );
 };
 
-export default RateMyCoop;
+export default RateMyCoopPage;

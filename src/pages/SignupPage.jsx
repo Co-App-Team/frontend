@@ -107,119 +107,121 @@ const SignupPage = () => {
 
   return (
     <PageTransition>
-      <div
-        className="p-4 border rounded d-flex flex-column align-items-center"
-        style={{ maxWidth: '30rem' }}>
-        <img
-          src={LogoImage}
-          width={220}
-        />
-        <h2 className="mt-0 mb-0 text-primary fw-bold">Get Started with CoApp</h2>
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div
+          className="p-4 border rounded d-flex flex-column align-items-center"
+          style={{ maxWidth: '30rem' }}>
+          <img
+            src={LogoImage}
+            width={220}
+          />
+          <h2 className="mt-0 mb-0 text-primary fw-bold">Get Started with CoApp</h2>
 
-        <Form>
-          <Row>
+          <Form>
+            <Row>
+              <Form.Group
+                as={Col}
+                controlId="formBasicFirstName"
+                className={'text-start mt-4 ' + (showError && isFirstNameValid ? 'mb-4' : 'mb-3')}>
+                <div className="text-start">
+                  <Form.Label>First name</Form.Label>
+                </div>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your first name"
+                  onChange={onFirstNameChange}
+                  isInvalid={showError && !isFirstNameValid}
+                  disabled={isLoading}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a first name.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group
+                controlId="formBasicLastName"
+                as={Col}
+                className={'text-start mt-4 ' + (showError && isLastNameValid ? 'mb-4' : 'mb-3')}>
+                <div className="text-start">
+                  <Form.Label>Last name</Form.Label>
+                </div>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your last name"
+                  onChange={onLastNameChange}
+                  isInvalid={showError && !isLastNameValid}
+                  disabled={isLoading}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide a last name.
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+
             <Form.Group
-              as={Col}
-              controlId="formBasicFirstName"
-              className={'text-start mt-4 ' + (showError && isFirstNameValid ? 'mb-4' : 'mb-3')}>
-              <div className="text-start">
-                <Form.Label>First name</Form.Label>
+              controlId="formBasicEmail"
+              className={'text-start ' + (showError && !isEmailValid ? 'mb-1' : 'mb-3')}>
+              <div>
+                <Form.Label>Email</Form.Label>
               </div>
 
               <Form.Control
-                type="text"
-                placeholder="Enter your first name"
-                onChange={onFirstNameChange}
-                isInvalid={showError && !isFirstNameValid}
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="Enter your email"
+                onChange={onEmailChange}
+                isInvalid={showError && !isEmailValid}
                 disabled={isLoading}
               />
               <Form.Control.Feedback type="invalid">
-                Please provide a first name.
+                Please provide a valid email.
               </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group
-              controlId="formBasicLastName"
-              as={Col}
-              className={'text-start mt-4 ' + (showError && isLastNameValid ? 'mb-4' : 'mb-3')}>
+              name="Password"
+              className={'text-start ' + (showError && !isPasswordValid ? 'mb-3' : 'mb-4')}
+              controlId="formBasicPassword">
               <div className="text-start">
-                <Form.Label>Last name</Form.Label>
+                <Form.Label>Password</Form.Label>
               </div>
 
-              <Form.Control
-                type="text"
-                placeholder="Enter your last name"
-                onChange={onLastNameChange}
-                isInvalid={showError && !isLastNameValid}
-                disabled={isLoading}
+              <PasswordInput
+                showError={showError}
+                onPasswordChange={onPasswordChange}
+                isLoading={isLoading}
+                value={formData.password}
+                autoComplete="new-password"
+                placeholder="Enter your password"
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a last name.
-              </Form.Control.Feedback>
             </Form.Group>
-          </Row>
-
-          <Form.Group
-            controlId="formBasicEmail"
-            className={'text-start ' + (showError && !isEmailValid ? 'mb-1' : 'mb-3')}>
-            <div>
-              <Form.Label>Email</Form.Label>
+            <div className="d-grid">
+              <Button
+                variant="primary"
+                type="submit"
+                onClick={handleSubmit}
+                size="lg"
+                disabled={isLoading}>
+                {isLoading ? (
+                  <Spinner
+                    animation="border"
+                    role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                ) : (
+                  'Create Account'
+                )}
+              </Button>
             </div>
-
-            <Form.Control
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="Enter your email"
-              onChange={onEmailChange}
-              isInvalid={showError && !isEmailValid}
-              disabled={isLoading}
-            />
-            <Form.Control.Feedback type="invalid">
-              Please provide a valid email.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group
-            name="Password"
-            className={'text-start ' + (showError && !isPasswordValid ? 'mb-3' : 'mb-4')}
-            controlId="formBasicPassword">
-            <div className="text-start">
-              <Form.Label>Password</Form.Label>
-            </div>
-
-            <PasswordInput
-              showError={showError}
-              onPasswordChange={onPasswordChange}
-              isLoading={isLoading}
-              value={formData.password}
-              autoComplete="new-password"
-              placeholder="Enter your password"
-            />
-          </Form.Group>
-          <div className="d-grid">
-            <Button
-              variant="primary"
-              type="submit"
-              onClick={handleSubmit}
-              size="lg"
-              disabled={isLoading}>
-              {isLoading ? (
-                <Spinner
-                  animation="border"
-                  role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              ) : (
-                'Create Account'
-              )}
-            </Button>
-          </div>
-        </Form>
-        {error && <span className="text-danger mt-3">{error}</span>}
-        <p className="mt-3 mb-0">
-          <Link to="/login">Back to sign in</Link>
-        </p>
+          </Form>
+          {error && <span className="text-danger mt-3">{error}</span>}
+          <p className="mt-3 mb-0">
+            <Link to="/login">Back to sign in</Link>
+          </p>
+        </div>
       </div>
     </PageTransition>
   );

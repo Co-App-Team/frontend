@@ -56,13 +56,15 @@ const AccountPage = () => {
   };
 
   return (
-    <Container className="py-5">
+    <Container className="py-4">
       <Row className="justify-content-center">
         <Col
-          xs={12}
-          md={12}
-          lg={12}
-          xl={12}>
+          xs={11}
+          sm={10}
+          md={8}
+          lg={6}
+          xl={5}
+          xxl={4}>
           <div className="mb-4">
             <h2>Account Settings</h2>
             <p className="text-muted">Manage your profile and security preferences.</p>

@@ -1,0 +1,13 @@
+.card-container {
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  text-align: center;
+
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 5px;
+  border-color: lightgray;
+}
