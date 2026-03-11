@@ -71,9 +71,8 @@ const GlobalNavbar = () => {
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
-                to="/chatbot">
-                {/* TODO: What to call this */}
-                Resume improver
+                to="/resume-workshop">
+                Resume Workshop
               </Nav.Link>
             </Nav>
 

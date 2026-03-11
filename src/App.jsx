@@ -13,7 +13,7 @@ import AccountPage from './pages/AccountPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
-import ChatbotPage from './pages/ChatbotPage.jsx';
+import ResumeWorkshopPage from './pages/ResumeWorkshopPage.jsx';
 import RateMyCoopPage from './pages/RateMyCoopPage.jsx';
 
 function App() {
@@ -74,9 +74,8 @@ function App() {
               element={<RateMyCoopPage />}
             />
             <Route
-              //  TODO: What to call this
-              path="chatbot"
-              element={<ChatbotPage />}
+              path="resume-workshop"
+              element={<ResumeWorkshopPage />}
             />
           </Route>
         </Route>
