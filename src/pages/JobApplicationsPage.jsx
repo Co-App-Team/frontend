@@ -52,9 +52,9 @@ const JobApplicationsPage = () => {
     loadCompanies();
   }, [getCompaniesCallback]);
 
-  async function refreshApplicationsList() {
+  async function refreshApplicationsList(sortOrder, status) {
     try {
-      const applications = await getApplicationsCallback();
+      const applications = await getApplicationsCallback(sortOrder, status);
       setTopFilteredApplications(applications.applications);
       setOtherFilteredApplications(applications.applications);
     } catch (error) {
@@ -107,7 +107,10 @@ const JobApplicationsPage = () => {
           </Col>
         </Row>
         <Row>
-          <FilteringBar handleSearch={updateSearch} />
+          <FilteringBar
+            handleSearch={updateSearch}
+            handleCalendarSortOrder={refreshApplicationsList}
+          />
         </Row>
       </div>
 

@@ -13,12 +13,21 @@ import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 
-const FilteringBar = ({ handleSearch }) => {
+const FilteringBar = ({ handleSearch, handleCalendarSortOrder }) => {
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
   const toggleCalendarSortAsc = () => {
     setCalendarSortAsc((prev) => !prev);
+
+    // useState's setter is asynchronous updates,
+    // so use the value that it would
+    const nextSortVal = !calendarSortAsc;
+    if (nextSortVal) {
+      handleCalendarSortOrder('asc', filters);
+    } else {
+      handleCalendarSortOrder('desc', filters);
+    }
   };
 
   return (
