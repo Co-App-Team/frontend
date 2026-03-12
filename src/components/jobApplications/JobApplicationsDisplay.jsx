@@ -12,7 +12,7 @@ const JobApplicationsDisplay = ({
   return (
     <>
       <CardContainer>
-        {applications.length == 0 && loading ? (
+        {applications.length == 0 || loading ? (
           <Spinner />
         ) : (
           <>

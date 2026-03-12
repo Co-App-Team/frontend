@@ -29,9 +29,8 @@ const JobApplicationsPage = () => {
     async function loadApplications() {
       try {
         const applications = await getApplicationsCallback();
-        console.log(applications);
-        setTopFilteredApplications(applications);
-        setOtherFilteredApplications(applications);
+        setTopFilteredApplications(applications.applications);
+        setOtherFilteredApplications(applications.applications);
       } catch (error) {
         const message = getErrorMessage(error);
         setError(message);
@@ -56,8 +55,8 @@ const JobApplicationsPage = () => {
   async function refreshApplicationsList() {
     try {
       const applications = await getApplicationsCallback();
-      setTopFilteredApplications(applications);
-      setOtherFilteredApplications(applications);
+      setTopFilteredApplications(applications.applications);
+      setOtherFilteredApplications(applications.applications);
     } catch (error) {
       const message = getErrorMessage(error);
       setError(message);
@@ -65,15 +64,12 @@ const JobApplicationsPage = () => {
   }
 
   const updateSearch = (value) => {
-    if (!applications) return;
+    if (!applications?.applications) return;
 
-    console.log('update search array: ');
-    console.log(applications);
+    const apps = applications.applications;
 
-    const topFilter = applications.filter((c) =>
-      c.jobTitle.toLowerCase().startsWith(value.toLowerCase()),
-    );
-    const otherFilters = applications.filter(
+    const topFilter = apps.filter((c) => c.jobTitle.toLowerCase().startsWith(value.toLowerCase()));
+    const otherFilters = apps.filter(
       (c) => c.jobTitle.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
@@ -117,7 +113,7 @@ const JobApplicationsPage = () => {
 
       {error && <span className="text-danger mt-3">{error}</span>}
       <JobApplicationsDisplay
-        applications={applications ? applications : []}
+        applications={applications?.applications ? applications.applications : []}
         topFilteredApplications={topFilteredApplications}
         otherFilteredApplications={otherFilteredApplications}
         refreshApplicationsList={refreshApplicationsList}
