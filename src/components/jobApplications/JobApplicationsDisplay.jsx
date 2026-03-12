@@ -12,7 +12,7 @@ const JobApplicationsDisplay = ({
   return (
     <>
       <CardContainer>
-        {applications.length == 0 || loading ? (
+        {applications.length == 0 && loading ? (
           <Spinner />
         ) : (
           <>
@@ -36,10 +36,13 @@ const JobApplicationsDisplay = ({
             )}
 
             {/* Case 1: No top filters, no other filters */}
-            {topFilteredApplications.length != applications.length &&
+            {((topFilteredApplications.length != applications.length &&
               topFilteredApplications.length == 0 &&
               otherFilteredApplications.length != applications.length &&
-              otherFilteredApplications.length == 0 && <h3 className="text-start">No Results</h3>}
+              otherFilteredApplications.length == 0) ||
+              (topFilteredApplications.length == 0 && !loading)) && (
+              <h3 className="text-start">No Results</h3>
+            )}
 
             {/* Case 2: Yes top filters, no other filters */}
             {topFilteredApplications.length !== applications.length &&

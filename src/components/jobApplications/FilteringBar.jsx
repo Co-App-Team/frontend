@@ -13,21 +13,51 @@ import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 
-const FilteringBar = ({ handleSearch, handleCalendarSortOrder }) => {
+const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) => {
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
+
+  const normalizeFilters = (filtersToNormalize) => {
+    // Result: String that is -> 'filter1','filter2',...
+    return filtersToNormalize.join(',');
+  };
+
   const toggleCalendarSortAsc = () => {
     setCalendarSortAsc((prev) => !prev);
 
     // useState's setter is asynchronous updates,
-    // so use the value that it would
+    // so use the value that it would be
     const nextSortVal = !calendarSortAsc;
     if (nextSortVal) {
-      handleCalendarSortOrder('asc', filters);
+      handleCalendarSortOrder('asc', normalizeFilters(filters));
     } else {
-      handleCalendarSortOrder('desc', filters);
+      handleCalendarSortOrder('desc', normalizeFilters(filters));
     }
+  };
+
+  const handleFilterChange = (value) => {
+    const newFilters = filters.includes(value)
+      ? filters.filter((v) => v !== value)
+      : [...filters, value];
+
+    setFilters(newFilters);
+
+    // Result: String that is -> 'filter1','filter2',...
+    let normalizedFilters = normalizeFilters(newFilters);
+    if (normalizedFilters == '') {
+      normalizedFilters = null;
+    }
+
+    if (calendarSortAsc) {
+      handleFilters('asc', normalizedFilters);
+    } else {
+      handleFilters('desc', normalizedFilters);
+    }
+  };
+
+  const resetFilters = () => {
+    (setFilters([]), handleFilters());
   };
 
   return (
@@ -71,7 +101,8 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder }) => {
             <Dropdown.Menu style={{ padding: '0.5rem', width: 'max-content' }}>
               <FilterSelection
                 filters={filters}
-                setFilters={setFilters}
+                setFilters={handleFilterChange}
+                resetFilters={resetFilters}
               />
             </Dropdown.Menu>
           </Dropdown>

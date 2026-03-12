@@ -1,20 +1,14 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
 import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
 
-const FilterSelection = ({ filters, setFilters }) => {
+const FilterSelection = ({ filters, setFilters, resetFilters }) => {
   const statusOptions = Object.entries(FORMAT_STATUS).map(([key, value]) => ({
     value: key,
     label: value,
   }));
 
-  const resetFilters = () => {
-    setFilters([]);
-  };
-
   const toggleItem = (value) => {
-    setFilters((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
-    );
+    setFilters(value);
   };
 
   return (

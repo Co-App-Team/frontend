@@ -110,6 +110,7 @@ const JobApplicationsPage = () => {
           <FilteringBar
             handleSearch={updateSearch}
             handleCalendarSortOrder={refreshApplicationsList}
+            handleFilters={refreshApplicationsList}
           />
         </Row>
       </div>
