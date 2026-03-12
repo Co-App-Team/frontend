@@ -2,9 +2,13 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Badge, Button, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import ReactMarkdown from 'react-markdown';
 
 const ResumeWorkshopPage = () => {
   const [message, setMessage] = useState('');
+
+  const AI_RESPONSE =
+    'Hello **Aidan**\n\n# Header test \n\n*italics!*\n\nMore md\n\n\nFlow off the page...\n\n\nBro\n\nBro\n\nBro';
 
   return (
     // TODO: When sm or smaller no right margin
@@ -15,10 +19,15 @@ const ResumeWorkshopPage = () => {
         <Col>
           <h2 className="m-0 p-0">Resume Workshop</h2>
         </Col>
-        <Col className="d-flex justify-content-end align-items-center">
+        <Col className="d-flex justify-content-end align-items-center pe-0">
+          <Badge
+            pill
+            bg="secondary">
+            ?
+          </Badge>
           <Dropdown
             align="end"
-            className="me-1 mt-1">
+            className="ms-2">
             <Dropdown.Toggle
               as={Button}
               id="dropdown-basic">
@@ -33,11 +42,6 @@ const ResumeWorkshopPage = () => {
               Options
             </Dropdown.Menu>
           </Dropdown>
-          <Badge
-            pill
-            bg="secondary">
-            ?
-          </Badge>
         </Col>
       </Row>
       <Row className="mt-4">
@@ -56,7 +60,9 @@ const ResumeWorkshopPage = () => {
             </Form.Group>
           </Form>
         </Col>
-        <Col className="border rounded">Render .md here</Col>
+        <Col className="border rounded">
+          <ReactMarkdown>{AI_RESPONSE && AI_RESPONSE}</ReactMarkdown>
+        </Col>
       </Row>
     </Container>
   );
