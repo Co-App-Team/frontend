@@ -19,11 +19,11 @@ const CompaniesDisplay = ({
           {topFilteredCompanies.length == companies.length && (
             <>
               <Container className="d-flex flex-column p-0 m-0">
-                {companies.map((company, index) => (
+                {companies.map((company) => (
                   <Row
                     className="py-2 px-0"
-                    key={index}>
-                    <Col key={index}>
+                    key={company}>
+                    <Col key={company}>
                       <CompanyCard
                         company={company}
                         refreshCompanies={refreshCompanies}
@@ -48,11 +48,11 @@ const CompaniesDisplay = ({
             otherFilteredCompanies.length == 0 && (
               <>
                 <Container className="m-0 p-0">
-                  {topFilteredCompanies.map((company, index) => (
+                  {topFilteredCompanies.map((company) => (
                     <Row
                       className="py-2 px-0"
-                      key={index}>
-                      <Col key={index}>
+                      key={company}>
+                      <Col key={company}>
                         <CompanyCard company={company} />
                       </Col>
                     </Row>
@@ -71,11 +71,11 @@ const CompaniesDisplay = ({
                   <i>Did you mean?</i>
                 </h3>
                 <Container className="m-0 p-0">
-                  {otherFilteredCompanies.map((company, index) => (
+                  {otherFilteredCompanies.map((company) => (
                     <Row
                       className="py-2 px-0"
-                      key={index}>
-                      <Col key={index}>
+                      key={company}>
+                      <Col key={company}>
                         <CompanyCard company={company} />
                       </Col>
                     </Row>
@@ -92,11 +92,11 @@ const CompaniesDisplay = ({
               <>
                 <h3>Top Results:</h3>
                 <Container className="m-0 p-0">
-                  {topFilteredCompanies.map((company, index) => (
+                  {topFilteredCompanies.map((company) => (
                     <Row
                       className="py-2 px-0"
-                      key={index}>
-                      <Col key={index}>
+                      key={company}>
+                      <Col key={company}>
                         <CompanyCard company={company} />
                       </Col>
                     </Row>
@@ -104,11 +104,11 @@ const CompaniesDisplay = ({
                 </Container>
                 <h3>Other Results:</h3>
                 <Container className="m-0 p-0">
-                  {otherFilteredCompanies.map((company, index) => (
+                  {otherFilteredCompanies.map((company) => (
                     <Row
                       className="py-2 px-0"
-                      key={index}>
-                      <Col key={index}>
+                      key={company}>
+                      <Col key={company}>
                         <CompanyCard company={company} />
                       </Col>
                     </Row>

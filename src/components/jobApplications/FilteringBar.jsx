@@ -12,39 +12,61 @@ import {
 import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
+import PropTypes from 'prop-types';
 
-const FilteringBar = () => {
+const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) => {
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
+
+  const normalizeFilters = (filtersToNormalize) => {
+    // Result: String that is -> 'filter1','filter2',...
+    return filtersToNormalize.join(',');
+  };
+
   const toggleCalendarSortAsc = () => {
     setCalendarSortAsc((prev) => !prev);
+
+    // useState's setter is asynchronous updates,
+    // so use the value that it would be
+    const nextSortVal = !calendarSortAsc;
+    if (nextSortVal) {
+      handleCalendarSortOrder('asc', normalizeFilters(filters));
+    } else {
+      handleCalendarSortOrder('desc', normalizeFilters(filters));
+    }
   };
-  const updateSearch = (value) => {
-    console.log(value);
-    // if (!data?.companies) return;
 
-    // const companies = data.companies;
+  const handleFilterChange = (value) => {
+    const newFilters = filters.includes(value)
+      ? filters.filter((v) => v !== value)
+      : [...filters, value];
 
-    // const topFilter = companies.filter((c) =>
-    //   c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-    // );
-    // const otherFilters = companies.filter(
-    //   (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
-    // );
+    setFilters(newFilters);
 
-    // setOtherFilteredCompanies(otherFilters);
-    // if (value === '') {
-    //   setOtherFilteredCompanies([]);
-    // }
-    // setTopFilteredCompanies(topFilter);
+    // Result: String that is -> 'filter1','filter2',...
+    let normalizedFilters = normalizeFilters(newFilters);
+    if (normalizedFilters == '') {
+      normalizedFilters = null;
+    }
+
+    if (calendarSortAsc) {
+      handleFilters('asc', normalizedFilters);
+    } else {
+      handleFilters('desc', normalizedFilters);
+    }
+  };
+
+  const resetFilters = () => {
+    setFilters([]);
+    handleFilters();
   };
 
   return (
     <>
       <Col className="d-flex align-items-center justify-content-start">
         <Searchbar
-          handleSearch={updateSearch}
+          handleSearch={handleSearch}
           className="m-2"
         />
       </Col>
@@ -81,7 +103,8 @@ const FilteringBar = () => {
             <Dropdown.Menu style={{ padding: '0.5rem', width: 'max-content' }}>
               <FilterSelection
                 filters={filters}
-                setFilters={setFilters}
+                setFilters={handleFilterChange}
+                resetFilters={resetFilters}
               />
             </Dropdown.Menu>
           </Dropdown>
@@ -103,6 +126,12 @@ const FilteringBar = () => {
       </Col>
     </>
   );
+};
+
+FilteringBar.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  handleCalendarSortOrder: PropTypes.func.isRequired,
+  handleFilters: PropTypes.func.isRequired,
 };
 
 export default FilteringBar;
