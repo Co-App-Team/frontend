@@ -20,11 +20,11 @@ const JobApplicationsDisplay = ({
             {topFilteredApplications.length == applications.length && (
               <>
                 <Container className="d-flex flex-column p-0 m-0">
-                  {applications.map((application, index) => (
+                  {applications.map((application) => (
                     <Row
                       className="py-2 px-0"
-                      key={index}>
-                      <Col key={index}>
+                      key={application}>
+                      <Col key={application}>
                         <JobApplicationCard
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
@@ -52,11 +52,11 @@ const JobApplicationsDisplay = ({
               otherFilteredApplications.length == 0 && (
                 <>
                   <Container className="m-0 p-0">
-                    {topFilteredApplications.map((application, index) => (
+                    {topFilteredApplications.map((application) => (
                       <Row
                         className="py-2 px-0"
-                        key={index}>
-                        <Col key={index}>
+                        key={application}>
+                        <Col key={application}>
                           <JobApplicationCard
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
@@ -78,11 +78,11 @@ const JobApplicationsDisplay = ({
                     <i>Did you mean?</i>
                   </h3>
                   <Container className="m-0 p-0">
-                    {otherFilteredApplications.map((application, index) => (
+                    {otherFilteredApplications.map((application) => (
                       <Row
                         className="py-2 px-0"
-                        key={index}>
-                        <Col key={index}>
+                        key={application}>
+                        <Col key={application}>
                           <JobApplicationCard
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
@@ -102,11 +102,11 @@ const JobApplicationsDisplay = ({
                 <>
                   <h3 className="text-start">Top Results:</h3>
                   <Container className="m-0 p-0">
-                    {topFilteredApplications.map((application, index) => (
+                    {topFilteredApplications.map((application) => (
                       <Row
                         className="py-2 px-0"
-                        key={index}>
-                        <Col key={index}>
+                        key={application}>
+                        <Col key={application}>
                           <JobApplicationCard
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
@@ -117,11 +117,11 @@ const JobApplicationsDisplay = ({
                   </Container>
                   <h3 className="text-start">Other Results:</h3>
                   <Container className="m-0 p-0">
-                    {otherFilteredApplications.map((application, index) => (
+                    {otherFilteredApplications.map((application) => (
                       <Row
                         className="py-2 px-0"
-                        key={index}>
-                        <Col key={index}>
+                        key={application}>
+                        <Col key={application}>
                           <JobApplicationCard
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
