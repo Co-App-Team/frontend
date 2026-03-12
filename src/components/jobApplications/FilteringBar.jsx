@@ -13,38 +13,19 @@ import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 
-const FilteringBar = () => {
+const FilteringBar = ({ handleSearch }) => {
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
   const toggleCalendarSortAsc = () => {
     setCalendarSortAsc((prev) => !prev);
   };
-  const updateSearch = (value) => {
-    console.log(value);
-    // if (!data?.companies) return;
-
-    // const companies = data.companies;
-
-    // const topFilter = companies.filter((c) =>
-    //   c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-    // );
-    // const otherFilters = companies.filter(
-    //   (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
-    // );
-
-    // setOtherFilteredCompanies(otherFilters);
-    // if (value === '') {
-    //   setOtherFilteredCompanies([]);
-    // }
-    // setTopFilteredCompanies(topFilter);
-  };
 
   return (
     <>
       <Col className="d-flex align-items-center justify-content-start">
         <Searchbar
-          handleSearch={updateSearch}
+          handleSearch={handleSearch}
           className="m-2"
         />
       </Col>
