@@ -58,7 +58,8 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
   };
 
   const resetFilters = () => {
-    (setFilters([]), handleFilters());
+    setFilters([]);
+    handleFilters();
   };
 
   return (
