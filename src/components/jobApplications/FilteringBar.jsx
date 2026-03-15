@@ -91,7 +91,14 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
         />
         Filters:
         <div className="mx-1">
-          {filters.length != 0 ? <FilterBadges filters={filters} /> : <i>No Active Filters</i>}
+          {filters.length != 0 ? (
+            <FilterBadges
+              filters={filters}
+              onRemove={handleFilterChange}
+            />
+          ) : (
+            <i>No Active Filters</i>
+          )}
         </div>
       </Col>
       <Col
