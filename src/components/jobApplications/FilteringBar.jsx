@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Button, Dropdown } from 'react-bootstrap';
+import { Col, Button, Dropdown, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -18,6 +18,7 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
   const [filters, setFilters] = useState([]);
 
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
+  const [sortByDateAppliedActive, setSortByDateAppliedActive] = useState(false);
 
   const normalizeFilters = (filtersToNormalize) => {
     // Result: String that is -> 'filter1','filter2',...
@@ -34,6 +35,19 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
       handleCalendarSortOrder('asc', normalizeFilters(filters));
     } else {
       handleCalendarSortOrder('desc', normalizeFilters(filters));
+    }
+  };
+
+  const toggleSortByDateApplied = () => {
+    setSortByDateAppliedActive((prev) => !prev);
+
+    // useState's setter is asynchronous updates,
+    // so use the value that it would be
+    const nextVal = !sortByDateAppliedActive;
+    if (!nextVal) {
+      handleFilters(calendarSortAsc ? 'asc' : 'desc', normalizeFilters(filters));
+    } else {
+      handleCalendarSortOrder(calendarSortAsc ? 'asc' : 'desc', normalizeFilters(filters));
     }
   };
 
@@ -109,19 +123,31 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
             </Dropdown.Menu>
           </Dropdown>
 
-          <Button
-            className="ms-1 mt-1"
-            onClick={toggleCalendarSortAsc}>
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faCalendar}
-            />
-            <FontAwesomeIcon
-              className="me-1"
-              icon={calendarSortAsc ? faArrowUp : faArrowDown}
-            />
-            Date Sort
-          </Button>
+          <ButtonGroup>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>Sort by date applied</Tooltip>}>
+              <Button
+                className="ms-1 mt-1 p-1"
+                onClick={toggleSortByDateApplied}
+                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}>
+                <FontAwesomeIcon icon={faCalendar} />
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>{calendarSortAsc ? 'Ascending order' : 'Descending order'}</Tooltip>
+              }>
+              <Button
+                className="mt-1 p-1"
+                onClick={toggleCalendarSortAsc}
+                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}>
+                <FontAwesomeIcon icon={calendarSortAsc ? faArrowUp : faArrowDown} />
+              </Button>
+            </OverlayTrigger>
+          </ButtonGroup>
         </div>
       </Col>
     </>

@@ -63,6 +63,22 @@ const JobApplicationsPage = () => {
     }
   }
 
+  async function useAppliedOnSort(sortOrder, status) {
+    try {
+      const applications = await getApplicationsCallback(sortOrder, status);
+
+      const filterOutDateApplied = applications.applications.filter(
+        (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
+      );
+
+      setTopFilteredApplications(filterOutDateApplied);
+      setOtherFilteredApplications(filterOutDateApplied);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setError(message);
+    }
+  }
+
   const updateSearch = (value) => {
     if (!applications?.applications) return;
 
@@ -109,7 +125,7 @@ const JobApplicationsPage = () => {
         <Row>
           <FilteringBar
             handleSearch={updateSearch}
-            handleCalendarSortOrder={refreshApplicationsList}
+            handleCalendarSortOrder={useAppliedOnSort}
             handleFilters={refreshApplicationsList}
           />
         </Row>

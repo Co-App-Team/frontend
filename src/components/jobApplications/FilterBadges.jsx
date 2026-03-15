@@ -1,5 +1,5 @@
 import { Badge } from 'react-bootstrap';
-import { FORMAT_STATUS, STATUS_COLOUR_MAP } from '../../constants/jobApplicationColourMappings';
+import { FORMAT_STATUS, STATUS_COLOUR_MAP } from '../../constants/jobApplications';
 
 const FilterBadges = ({ filters }) => {
   return (

@@ -1,5 +1,5 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
-import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
+import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
 const FilterSelection = ({ filters, setFilters, resetFilters }) => {

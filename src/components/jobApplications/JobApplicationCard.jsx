@@ -18,7 +18,7 @@ import { editApplication } from '../../api/jobApplicationsApi';
 
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
-import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
+import { FORMAT_STATUS } from '../../constants/jobApplications';
 
 const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   const status = jobApplication.status;
@@ -219,10 +219,17 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           </div>
 
           <div className="text-end ms-3">
-            <span className="text-muted fs-6">
-              Due
-              <span className="text-dark">{' ' + deadlineDate}</span>
-            </span>
+            {!jobApplication.dateApplied ? (
+              <span className="text-muted fs-6">
+                Due
+                <span className="text-dark">{' ' + deadlineDate}</span>
+              </span>
+            ) : (
+              <span className="text-muted fs-6">
+                Applied to on
+                <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
+              </span>
+            )}
           </div>
         </Card.Header>
         <Card.Body>
