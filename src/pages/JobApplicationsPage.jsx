@@ -11,6 +11,7 @@ import FilteringBar from '../components/jobApplications/FilteringBar';
 import JobApplicationsDisplay from '../components/jobApplications/JobApplicationsDisplay';
 
 const JobApplicationsPage = () => {
+  const [filters, setFilters] = useState([]);
   const [topFilteredApplications, setTopFilteredApplications] = useState([]);
   const [otherFilteredApplications, setOtherFilteredApplications] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -52,15 +53,22 @@ const JobApplicationsPage = () => {
     loadCompanies();
   }, [getCompaniesCallback]);
 
-  async function refreshApplicationsList(sortOrder, status) {
+  async function refreshApplicationsList(sortOrder, status, resetFilters) {
     try {
       const applications = await getApplicationsCallback(sortOrder, status);
       setTopFilteredApplications(applications.applications);
       setOtherFilteredApplications(applications.applications);
+      if (resetFilters) {
+        setFilters([]);
+      }
     } catch (error) {
       const message = getErrorMessage(error);
       setError(message);
     }
+  }
+
+  async function handleFilterChange(sortOrder, status) {
+    await refreshApplicationsList(sortOrder, status, false);
   }
 
   async function useAppliedOnSort(sortOrder, status) {
@@ -98,7 +106,8 @@ const JobApplicationsPage = () => {
 
   async function hideApplicationModal() {
     setShowApplicationModal(false);
-    await refreshApplicationsList();
+    // Re-fetch the data and reset the filters
+    await refreshApplicationsList(null, null, true);
   }
 
   return (
@@ -126,7 +135,9 @@ const JobApplicationsPage = () => {
           <FilteringBar
             handleSearch={updateSearch}
             handleCalendarSortOrder={useAppliedOnSort}
-            handleFilters={refreshApplicationsList}
+            handleFilters={handleFilterChange}
+            filters={filters}
+            setFilters={setFilters}
           />
         </Row>
       </div>

@@ -14,9 +14,13 @@ import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 import PropTypes from 'prop-types';
 
-const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) => {
-  const [filters, setFilters] = useState([]);
-
+const FilteringBar = ({
+  handleSearch,
+  handleCalendarSortOrder,
+  handleFilters,
+  filters,
+  setFilters,
+}) => {
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
   const [sortByDateAppliedActive, setSortByDateAppliedActive] = useState(false);
 
@@ -166,6 +170,8 @@ FilteringBar.propTypes = {
   handleSearch: PropTypes.func.isRequired,
   handleCalendarSortOrder: PropTypes.func.isRequired,
   handleFilters: PropTypes.func.isRequired,
+  filters: PropTypes.array.isRequired,
+  setFilters: PropTypes.func.isRequired,
 };
 
 export default FilteringBar;
