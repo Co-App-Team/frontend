@@ -143,7 +143,8 @@ const FilteringBar = ({ handleSearch, handleCalendarSortOrder, handleFilters }) 
               <Button
                 className="mt-1 p-1"
                 onClick={toggleCalendarSortAsc}
-                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}>
+                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}
+                disabled={!sortByDateAppliedActive}>
                 <FontAwesomeIcon icon={calendarSortAsc ? faArrowUp : faArrowDown} />
               </Button>
             </OverlayTrigger>
