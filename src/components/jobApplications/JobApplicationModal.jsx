@@ -56,6 +56,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     } else {
       setFilteredCompanies(filterCompanies(value));
     }
+
+    if (validateCompany(value)) {
+      setShowError(false);
+    }
   };
 
   const handleSelectedCompany = (selected) => {
@@ -63,6 +67,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     const company = companies.find((c) => c.companyName.toLowerCase() === selected.toLowerCase());
     setFormData({ ...formData, companyId: company.companyId });
     setFilteredCompanies([]);
+
+    setShowError(false);
   };
 
   const validateJobTitle = (jobTitle) => {
@@ -70,7 +76,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const validateDeadlineDate = (date) => {
-    return date.trim() != '';
+    return date && date.trim() != '';
   };
 
   const validateNumPositions = (num) => {
@@ -93,9 +99,25 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return isValid;
   };
 
+  const validateCompany = (companyName) => {
+    let isValid = false;
+
+    if (
+      companyName != '' &&
+      companies.find((c) => c.companyName?.toLowerCase() === companyName?.toLowerCase())
+    ) {
+      isValid = true;
+      console.log('company name is valid: ', companyName);
+    } else {
+      console.log('company name is not valid: ', companyName);
+    }
+
+    return isValid;
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
-  const isCompanyValid = company != '';
+  const isCompanyValid = validateCompany(company);
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
   const isStatusValid = validateStatus(formData.status);
@@ -117,7 +139,15 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const onDeadlineDateChange = (e) => {
-    setFormData({ ...formData, applicationDeadline: e.target.value });
+    const value = e.target.value;
+    setFormData({ ...formData, applicationDeadline: value });
+
+    if (value) {
+      console.log('deadline date is valid');
+      setShowError(false);
+    } else {
+      console.log('deadline date is not valid: ', value);
+    }
   };
 
   const onSourceLinkChange = (e) => {
@@ -141,6 +171,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isLinkValid
     ) {
       setShowError(true);
+
+      if (!isApplicationDeadlineValid) {
+        console.log('deadline date is not valid');
+      } else {
+        console.log('deadline date is valid!!!');
+      }
+
+      setFilteredCompanies([]);
       return;
     }
 
@@ -228,7 +266,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 isInvalid={showError && !isCompanyValid}
                 disabled={isAddLoading || isEditLoading}></Form.Control>
               <Form.Control.Feedback type="invalid">
-                Please provide the company.
+                Please enter a valid company name.
               </Form.Control.Feedback>
 
               <div className={styles['dropdown-container']}>
