@@ -36,7 +36,7 @@ const ChangePasswordCard = ({ isLoading, onSubmit, error, success }) => {
   };
 
   return (
-    <Card className="shadow-sm border-0">
+    <Card className="shadow-sm border-0 flex-fill">
       <Card.Header className="bg-white border-bottom-0 pt-4 pb-0 px-4">
         <h5 className="mb-0">
           <FontAwesomeIcon
