@@ -9,6 +9,7 @@ const JobApplicationsDisplay = ({
   otherFilteredApplications,
   refreshApplicationsList,
   loading,
+  setError,
 }) => {
   return (
     <>
@@ -23,9 +24,10 @@ const JobApplicationsDisplay = ({
                   {applications.map((application) => (
                     <Row
                       className="py-2 px-0"
-                      key={application}>
-                      <Col key={application}>
+                      key={application.applicationId}>
+                      <Col>
                         <JobApplicationCard
+                          setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
                         />
@@ -58,6 +60,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
@@ -84,6 +87,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
@@ -105,9 +109,10 @@ const JobApplicationsDisplay = ({
                     {topFilteredApplications.map((application) => (
                       <Row
                         className="py-2 px-0"
-                        key={application}>
+                        key={application.applicationId}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
@@ -123,6 +128,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />

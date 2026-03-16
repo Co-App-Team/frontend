@@ -149,6 +149,7 @@ const JobApplicationsPage = () => {
         otherFilteredApplications={otherFilteredApplications}
         refreshApplicationsList={refreshApplicationsList}
         loading={applicationRequestLoading}
+        setError={setError}
       />
 
       <NewApplicationModal
@@ -156,7 +157,9 @@ const JobApplicationsPage = () => {
         onHide={hideApplicationModal}
         companies={companies}
         data={null}
-        onSaved={null}
+        onSaved={() => {
+          refreshApplicationsList(null, null, true);
+        }}
       />
     </Container>
   );

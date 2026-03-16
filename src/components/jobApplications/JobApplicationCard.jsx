@@ -20,7 +20,7 @@ import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 
-const JobApplicationCard = ({ jobApplication, onUpdated }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -87,7 +87,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
       await onUpdated();
     } catch (error) {
       const message = getErrorMessage(error);
-      console.log(message);
+      setError(message);
     }
   };
 
