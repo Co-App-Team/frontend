@@ -27,6 +27,11 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     ACCEPTED: 'Accepted',
   };
 
+  const errorMappings = {
+    DUPLICATE_APPLICATION:
+      'A job application with the same job title for the same company already exists. Please try again!',
+  };
+
   const [formData, setFormData] = useState({
     companyId: data?.companyId || '',
     jobTitle: data?.jobTitle || '',
@@ -163,7 +168,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         onHide();
       }
     } catch (error) {
-      const message = getErrorMessage(error);
+      const message = getErrorMessage(error, errorMappings);
       setError(message);
     }
   };
