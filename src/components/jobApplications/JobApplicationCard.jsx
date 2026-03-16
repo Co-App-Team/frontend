@@ -127,7 +127,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
           <div className="d-flex align-items-center gap-3">
-            <div style={{ maxWidth: '30vw', overflowX: 'auto' }}>
+            <div style={{ maxWidth: '30vw', overflowX: 'auto', overflowY: 'hidden' }}>
               <span>{jobApplication.jobTitle}</span>
             </div>
 
