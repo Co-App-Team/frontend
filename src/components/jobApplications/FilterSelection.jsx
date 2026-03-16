@@ -1,20 +1,15 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
-import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
+import { FORMAT_STATUS } from '../../constants/jobApplications';
+import PropTypes from 'prop-types';
 
-const FilterSelection = ({ filters, setFilters }) => {
+const FilterSelection = ({ filters, setFilters, resetFilters }) => {
   const statusOptions = Object.entries(FORMAT_STATUS).map(([key, value]) => ({
     value: key,
     label: value,
   }));
 
-  const resetFilters = () => {
-    setFilters([]);
-  };
-
   const toggleItem = (value) => {
-    setFilters((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value],
-    );
+    setFilters(value);
   };
 
   return (
@@ -37,6 +32,12 @@ const FilterSelection = ({ filters, setFilters }) => {
       ))}
     </>
   );
+};
+
+FilterSelection.propTypes = {
+  filters: PropTypes.array.isRequired,
+  setFilters: PropTypes.func.isRequired,
+  resetFilters: PropTypes.func.isRequired,
 };
 
 export default FilterSelection;

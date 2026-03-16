@@ -232,14 +232,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               </Form.Control.Feedback>
 
               <div className={styles['dropdown-container']}>
-                {filteredCompanies.map((company, index) => {
+                {filteredCompanies.map((company) => {
                   return (
                     <div
-                      key={index}
+                      key={company.companyId}
                       className={styles['dropdown']}>
                       <Dropdown.Item
                         className={styles['dropdown-item']}
-                        key={index}
+                        key={company.companyId}
                         onClick={() => handleSelectedCompany(company.companyName)}
                         disabled={isAddLoading || isEditLoading}>
                         {company.companyName}
