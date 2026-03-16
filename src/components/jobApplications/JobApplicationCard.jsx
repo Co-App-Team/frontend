@@ -227,7 +227,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
               </span>
             ) : (
               <span className="text-muted fs-6">
-                Applied to on
+                Applied on
                 <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
               </span>
             )}
