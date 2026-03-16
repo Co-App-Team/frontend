@@ -1,0 +1,151 @@
+import { Row, Col, Container, Spinner } from 'react-bootstrap';
+import JobApplicationCard from './JobApplicationCard';
+import CardContainer from '../common/CardContainer';
+import PropTypes from 'prop-types';
+
+const JobApplicationsDisplay = ({
+  applications,
+  topFilteredApplications,
+  otherFilteredApplications,
+  refreshApplicationsList,
+  loading,
+  setError,
+}) => {
+  return (
+    <CardContainer>
+      {applications.length == 0 && loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {topFilteredApplications.length == applications.length && (
+            <Container className="d-flex flex-column p-0 m-0">
+              {applications.map((application) => (
+                <Row
+                  className="py-2 px-0"
+                  key={application.applicationId}>
+                  <Col>
+                    <JobApplicationCard
+                      setError={setError}
+                      jobApplication={application}
+                      onUpdated={refreshApplicationsList}
+                    />
+                  </Col>
+                </Row>
+              ))}
+            </Container>
+          )}
+
+          {/* Case 1: No top filters, no other filters */}
+          {((topFilteredApplications.length != applications.length &&
+            topFilteredApplications.length == 0 &&
+            otherFilteredApplications.length != applications.length &&
+            otherFilteredApplications.length == 0) ||
+            (topFilteredApplications.length == 0 && !loading)) && (
+            <h3 className="text-start">No Results</h3>
+          )}
+
+          {/* Case 2: Yes top filters, no other filters */}
+          {topFilteredApplications.length !== applications.length &&
+            topFilteredApplications.length != 0 &&
+            otherFilteredApplications.length !== applications.length &&
+            otherFilteredApplications.length == 0 && (
+              <Container className="m-0 p-0">
+                {topFilteredApplications.map((application) => (
+                  <Row
+                    className="py-2 px-0"
+                    key={application}>
+                    <Col key={application}>
+                      <JobApplicationCard
+                        setError={setError}
+                        jobApplication={application}
+                        onUpdated={refreshApplicationsList}
+                      />
+                    </Col>
+                  </Row>
+                ))}
+              </Container>
+            )}
+
+          {/* Case 3: Yes other filters, no top filters */}
+          {topFilteredApplications.length !== applications.length &&
+            topFilteredApplications.length == 0 &&
+            otherFilteredApplications.length !== applications.length &&
+            otherFilteredApplications.length != 0 && (
+              <>
+                <h3 className="text-start">
+                  <i>Did you mean?</i>
+                </h3>
+                <Container className="m-0 p-0">
+                  {otherFilteredApplications.map((application) => (
+                    <Row
+                      className="py-2 px-0"
+                      key={application}>
+                      <Col key={application}>
+                        <JobApplicationCard
+                          setError={setError}
+                          jobApplication={application}
+                          onUpdated={refreshApplicationsList}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+                </Container>
+              </>
+            )}
+
+          {/* Case 4: Yes to both filters */}
+          {topFilteredApplications.length !== applications.length &&
+            topFilteredApplications.length != 0 &&
+            otherFilteredApplications.length !== applications.length &&
+            otherFilteredApplications.length != 0 && (
+              <>
+                <h3 className="text-start">Top Results:</h3>
+                <Container className="m-0 p-0">
+                  {topFilteredApplications.map((application) => (
+                    <Row
+                      className="py-2 px-0"
+                      key={application.applicationId}>
+                      <Col key={application}>
+                        <JobApplicationCard
+                          setError={setError}
+                          jobApplication={application}
+                          onUpdated={refreshApplicationsList}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+                </Container>
+                <h3 className="text-start">Other Results:</h3>
+                <Container className="m-0 p-0">
+                  {otherFilteredApplications.map((application) => (
+                    <Row
+                      className="py-2 px-0"
+                      key={application}>
+                      <Col key={application}>
+                        <JobApplicationCard
+                          setError={setError}
+                          jobApplication={application}
+                          onUpdated={refreshApplicationsList}
+                        />
+                      </Col>
+                    </Row>
+                  ))}
+                </Container>
+              </>
+            )}
+        </>
+      )}
+    </CardContainer>
+  );
+};
+
+JobApplicationsDisplay.propTypes = {
+  refreshApplicationsList: PropTypes.func.isRequired,
+  applications: PropTypes.array.isRequired,
+  topFilteredApplications: PropTypes.array.isRequired,
+  otherFilteredApplications: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  setError: PropTypes.func.isRequired,
+};
+
+export default JobApplicationsDisplay;
