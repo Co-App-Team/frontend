@@ -107,9 +107,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       companies.find((c) => c.companyName?.toLowerCase() === companyName?.toLowerCase())
     ) {
       isValid = true;
-      console.log('company name is valid: ', companyName);
-    } else {
-      console.log('company name is not valid: ', companyName);
     }
 
     return isValid;
@@ -143,10 +140,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     setFormData({ ...formData, applicationDeadline: value });
 
     if (value) {
-      console.log('deadline date is valid');
       setShowError(false);
-    } else {
-      console.log('deadline date is not valid: ', value);
     }
   };
 
@@ -171,13 +165,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isLinkValid
     ) {
       setShowError(true);
-
-      if (!isApplicationDeadlineValid) {
-        console.log('deadline date is not valid');
-      } else {
-        console.log('deadline date is valid!!!');
-      }
-
       setFilteredCompanies([]);
       return;
     }
