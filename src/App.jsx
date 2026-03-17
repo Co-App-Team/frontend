@@ -14,6 +14,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
 import RateMyCoopPage from './pages/RateMyCoopPage.jsx';
+import Calendar from './pages/Calendar.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -71,6 +72,10 @@ function App() {
             <Route
               path="rate-my-co-op"
               element={<RateMyCoopPage />}
+            />
+            <Route
+              path="interviews"
+              element={<Calendar />}
             />
           </Route>
         </Route>
