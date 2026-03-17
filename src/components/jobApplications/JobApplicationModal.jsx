@@ -4,6 +4,7 @@ import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
 import { getErrorMessage } from '../../utils/errorUtils';
+import PropTypes from 'prop-types';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -272,14 +273,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               </Form.Control.Feedback>
 
               <div className={styles['dropdown-container']}>
-                {filteredCompanies.map((company, index) => {
+                {filteredCompanies.map((company) => {
                   return (
                     <div
-                      key={index}
+                      key={company.companyId}
                       className={styles['dropdown']}>
                       <Dropdown.Item
                         className={styles['dropdown-item']}
-                        key={index}
+                        key={company.companyId}
                         onClick={() => handleSelectedCompany(company.companyName)}
                         disabled={isAddLoading || isEditLoading}>
                         {company.companyName}
@@ -367,5 +368,13 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     </>
   );
 }
+
+JobApplicationModal.propTypes = {
+  companies: PropTypes.arrayOf(
+    PropTypes.shape({
+      companyName: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default JobApplicationModal;
