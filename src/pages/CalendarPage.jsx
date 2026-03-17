@@ -56,71 +56,69 @@ const Calendar = () => {
   };
 
   return (
-    <>
-      <Container className="mt-3">
-        <div className="d-flex flex-column justify-content-center">
-          <Row className="text-start align-bottom d-flex align-items-end my-1">
-            <Col>
-              <Button
-                size="sm"
-                className="btn btn-primary m-1"
-                onClick={prevMonth}>
-                <FontAwesomeIcon
-                  // style={{ display: 'flex', alignItems: 'center'}}
-                  className="d-flex justify-content-center m-1"
-                  icon={faAngleLeft}
-                />
-              </Button>
+    <Container className="mt-3">
+      <div className="d-flex flex-column justify-content-center">
+        <Row className="text-start align-bottom d-flex align-items-end my-1">
+          <Col>
+            <Button
+              size="sm"
+              className="btn btn-primary m-1"
+              onClick={prevMonth}>
+              <FontAwesomeIcon
+                // style={{ display: 'flex', alignItems: 'center'}}
+                className="d-flex justify-content-center m-1"
+                icon={faAngleLeft}
+              />
+            </Button>
 
-              <Button
-                size="sm"
-                className="btn btn-primary m-1"
-                onClick={currMonth}>
-                Today
-              </Button>
+            <Button
+              size="sm"
+              className="btn btn-primary m-1"
+              onClick={currMonth}>
+              Today
+            </Button>
 
-              <Button
-                size="sm"
-                className="btn btn-primary m-1"
-                onClick={nextMonth}>
-                <FontAwesomeIcon
-                  className="d-flex justify-content-center m-1"
-                  icon={faAngleRight}
-                />
-              </Button>
-            </Col>
+            <Button
+              size="sm"
+              className="btn btn-primary m-1"
+              onClick={nextMonth}>
+              <FontAwesomeIcon
+                className="d-flex justify-content-center m-1"
+                icon={faAngleRight}
+              />
+            </Button>
+          </Col>
 
-            <Col className="text-center">
-              <h2 className="m-0">
-                {currentDate.toLocaleString('en-GB', { month: 'long' }) +
-                  ' ' +
-                  currentDate.getFullYear()}
-              </h2>
-            </Col>
-            <Col></Col>
-          </Row>
+          <Col className="text-center">
+            <h2 className="m-0">
+              {currentDate.toLocaleString('en-GB', { month: 'long' }) +
+                ' ' +
+                currentDate.getFullYear()}
+            </h2>
+          </Col>
+          <Col></Col>
+        </Row>
 
-          <Row>
-            <div className={styles['calendar-weekdays']}>
-              {daysOfTheWeek.map((day) => (
-                <div
-                  key={day}
-                  className={styles['weekday-cell']}>
-                  {day}
-                </div>
-              ))}
-            </div>
-          </Row>
+        <Row>
+          <div className={styles['calendar-weekdays']}>
+            {daysOfTheWeek.map((day) => (
+              <div
+                key={day}
+                className={styles['weekday-cell']}>
+                {day}
+              </div>
+            ))}
+          </div>
+        </Row>
 
-          <Row>
-            <CalendarGrid
-              weeks={weeks}
-              today={today}
-              currentDate={currentDate}></CalendarGrid>
-          </Row>
-        </div>
-      </Container>
-    </>
+        <Row>
+          <CalendarGrid
+            weeks={weeks}
+            today={today}
+            currentDate={currentDate}></CalendarGrid>
+        </Row>
+      </div>
+    </Container>
   );
 };
 
