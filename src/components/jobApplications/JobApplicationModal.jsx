@@ -30,6 +30,9 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const errorMappings = {
     DUPLICATE_APPLICATION:
       'A job application with the same job title for the same company already exists. Please try again!',
+    BAD_REQUEST:
+      'Please ensure all of the mandatory fields (job title, company name, and deadline date) are filled in.',
+    COMPANY_NOT_FOUND: 'The provided company name does not exist. Please try again!',
   };
 
   const [formData, setFormData] = useState({
