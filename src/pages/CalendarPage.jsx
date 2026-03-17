@@ -65,7 +65,6 @@ const Calendar = () => {
               className="btn btn-primary m-1"
               onClick={prevMonth}>
               <FontAwesomeIcon
-                // style={{ display: 'flex', alignItems: 'center'}}
                 className="d-flex justify-content-center m-1"
                 icon={faAngleLeft}
               />
