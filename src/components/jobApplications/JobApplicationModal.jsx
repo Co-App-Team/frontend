@@ -62,9 +62,13 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     }
   };
 
+  const findCompany = (companyName) => {
+    return companies.find((c) => c.companyName.toLowerCase() === companyName.toLowerCase());
+  };
+
   const handleSelectedCompany = (selected) => {
     setCompany(selected);
-    const company = companies.find((c) => c.companyName.toLowerCase() === selected.toLowerCase());
+    const company = findCompany(selected);
     setFormData({ ...formData, companyId: company.companyId });
     setFilteredCompanies([]);
 
@@ -184,7 +188,18 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         await onSaved();
         onHide();
       } else {
-        await addJobApplicationCallback(formData);
+        // Allow users to not have to select from the dropdown
+        // if their input already matches one of the company names
+        if (formData.companyId == '') {
+          const foundCompany = findCompany(company);
+          const finalFormData = {
+            ...formData,
+            companyId: foundCompany.companyId,
+          };
+          await addJobApplicationCallback(finalFormData);
+        } else {
+          await addJobApplicationCallback(formData);
+        }
         onHide();
       }
     } catch (error) {
