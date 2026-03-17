@@ -1,20 +1,16 @@
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPencil,
-  faPlus,
-  faSave,
-  faTimes,
-  faTools,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faPlus, faTools, faTrash } from '@fortawesome/free-solid-svg-icons';
 import useApi from '../../hooks/useApi';
-import { getExperience } from '../../api/userApi';
-import { useEffect } from 'react';
+import { addExperience, getExperience } from '../../api/userApi';
+import { useEffect, useState } from 'react';
 import { getErrorMessage } from '../../utils/errorUtils';
+import ExperienceModal from './ExperienceModal';
 
 const ExperienceCard = () => {
   const { data, request: loadExperienceCallback } = useApi(getExperience);
+
+  const [showModal, setShowModal] = useState(true);
 
   useEffect(() => {
     const request = async () => {
@@ -34,6 +30,14 @@ const ExperienceCard = () => {
 
   return (
     <Card className="shadow-sm border-0">
+      <ExperienceModal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+        }}
+        defaultValues={{}}
+        submitCallback={addExperience}
+      />
       <Card.Header className="bg-white border-bottom-0 pt-4 pb-0 px-4">
         <h5 className="mb-0">
           <FontAwesomeIcon
@@ -47,57 +51,48 @@ const ExperienceCard = () => {
         {data?.experience &&
           data.experience.map((experience, index) => {
             return (
-              <>
-                {index == 0 && (
-                  <ExperienceEditor
-                    experience={experience}
-                    index={index}
-                  />
-                )}
-
-                <Row
-                  key={index}
-                  className="mb-3">
-                  <Col
-                    xs={12}
-                    md={8}
-                    lg={9}>
-                    <div className="text-start">
-                      <h4>{experience.companyId}</h4>
-                      <h5 className="text-muted">{experience.roleTitle}</h5>
-                      <div>{experience.roleDescription}</div>
-                      <div className="text-muted">
-                        {experience.startDate} to{' '}
-                        {experience.endDate ? experience.endDate : 'Present'}
-                      </div>
+              <Row
+                key={index}
+                className="mb-3">
+                <Col
+                  xs={12}
+                  md={8}
+                  lg={9}>
+                  <div className="text-start">
+                    <h4>{experience.companyId}</h4>
+                    <h5 className="text-muted">{experience.roleTitle}</h5>
+                    <div>{experience.roleDescription}</div>
+                    <div className="text-muted">
+                      {experience.startDate} to{' '}
+                      {experience.endDate ? experience.endDate : 'Present'}
                     </div>
-                  </Col>
-                  <Col
-                    xs={12}
-                    md={4}
-                    lg={3}
-                    className="d-flex justify-content-end align-items-center">
-                    <div className="d-flex">
-                      <Button className="me-2 d-flex align-items-center">
-                        Edit
-                        <FontAwesomeIcon
-                          icon={faPencil}
-                          className="ms-2"
-                        />
-                      </Button>
-                      <Button
-                        variant="danger"
-                        className="d-flex align-items-center">
-                        Delete
-                        <FontAwesomeIcon
-                          icon={faTrash}
-                          className="ms-2"
-                        />
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </>
+                  </div>
+                </Col>
+                <Col
+                  xs={12}
+                  md={4}
+                  lg={3}
+                  className="d-flex justify-content-end align-items-center">
+                  <div className="d-flex">
+                    <Button className="me-2 d-flex align-items-center">
+                      Edit
+                      <FontAwesomeIcon
+                        icon={faPencil}
+                        className="ms-2"
+                      />
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="d-flex align-items-center">
+                      Delete
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        className="ms-2"
+                      />
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             );
           })}
 
@@ -117,101 +112,101 @@ const ExperienceCard = () => {
 };
 
 // TODO: Move into a component
-const ExperienceEditor = ({ experience, index }) => {
-  return (
-    <Row
-      key={index}
-      className="mb-3 text-start">
-      <Col
-        xs={12}
-        md={8}
-        lg={9}>
-        <Form>
-          <Form.Group
-            className="mb-2"
-            controlId={`company-${index}`}>
-            <Form.Label>Company</Form.Label>
-            <Form.Control
-              type="text"
-              defaultValue={experience.companyId}
-              placeholder="Enter company"
-            />
-          </Form.Group>
+// const ExperienceEditor = ({ experience, index }) => {
+//   return (
+//     <Row
+//       key={index}
+//       className="mb-3 text-start">
+//       <Col
+//         xs={12}
+//         md={8}
+//         lg={9}>
+//         <Form>
+//           <Form.Group
+//             className="mb-2"
+//             controlId={`company-${index}`}>
+//             <Form.Label>Company</Form.Label>
+//             <Form.Control
+//               type="text"
+//               defaultValue={experience.companyId}
+//               placeholder="Enter company"
+//             />
+//           </Form.Group>
 
-          <Form.Group
-            className="mb-2"
-            controlId={`role-${index}`}>
-            <Form.Label>Role Title</Form.Label>
-            <Form.Control
-              type="text"
-              defaultValue={experience.roleTitle}
-              placeholder="Enter role title"
-            />
-          </Form.Group>
+//           <Form.Group
+//             className="mb-2"
+//             controlId={`role-${index}`}>
+//             <Form.Label>Role Title</Form.Label>
+//             <Form.Control
+//               type="text"
+//               defaultValue={experience.roleTitle}
+//               placeholder="Enter role title"
+//             />
+//           </Form.Group>
 
-          <Form.Group
-            className="mb-2"
-            controlId={`description-${index}`}>
-            <Form.Label>Role Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              defaultValue={experience.roleDescription}
-              placeholder="Enter role description"
-            />
-          </Form.Group>
+//           <Form.Group
+//             className="mb-2"
+//             controlId={`description-${index}`}>
+//             <Form.Label>Role Description</Form.Label>
+//             <Form.Control
+//               as="textarea"
+//               rows={3}
+//               defaultValue={experience.roleDescription}
+//               placeholder="Enter role description"
+//             />
+//           </Form.Group>
 
-          <Row className="mb-2">
-            <Col xs={6}>
-              <Form.Group controlId={`startDate-${index}`}>
-                <Form.Label>Start Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  defaultValue={experience.startDate}
-                />
-              </Form.Group>
-            </Col>
-            <Col xs={6}>
-              <Form.Group controlId={`endDate-${index}`}>
-                <Form.Label>End Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  defaultValue={experience.endDate || ''}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-        </Form>
-      </Col>
+//           <Row className="mb-2">
+//             <Col xs={6}>
+//               <Form.Group controlId={`startDate-${index}`}>
+//                 <Form.Label>Start Date</Form.Label>
+//                 <Form.Control
+//                   type="date"
+//                   defaultValue={experience.startDate}
+//                 />
+//               </Form.Group>
+//             </Col>
+//             <Col xs={6}>
+//               <Form.Group controlId={`endDate-${index}`}>
+//                 <Form.Label>End Date</Form.Label>
+//                 <Form.Control
+//                   type="date"
+//                   defaultValue={experience.endDate || ''}
+//                 />
+//               </Form.Group>
+//             </Col>
+//           </Row>
+//         </Form>
+//       </Col>
 
-      <Col
-        xs={12}
-        md={4}
-        lg={3}
-        className="d-flex justify-content-end align-items-center mt-2 mt-md-0">
-        <div className="d-flex">
-          <Button
-            className="me-2 d-flex align-items-center"
-            variant="success">
-            Save
-            <FontAwesomeIcon
-              icon={faSave}
-              className="ms-2"
-            />
-          </Button>
-          <Button
-            className="d-flex align-items-center"
-            variant="secondary">
-            Cancel
-            <FontAwesomeIcon
-              icon={faTimes}
-              className="ms-2"
-            />
-          </Button>
-        </div>
-      </Col>
-    </Row>
-  );
-};
+//       <Col
+//         xs={12}
+//         md={4}
+//         lg={3}
+//         className="d-flex justify-content-end align-items-center mt-2 mt-md-0">
+//         <div className="">
+//           <Button
+//             className="me-2 d-flex align-items-center"
+//             variant="success">
+//             Save
+//             <FontAwesomeIcon
+//               icon={faSave}
+//               className="ms-2"
+//             />
+//           </Button>
+//           <Button
+//             className="d-flex align-items-center"
+//             variant="secondary">
+//             Cancel
+//             <FontAwesomeIcon
+//               icon={faTimes}
+//               className="ms-2"
+//             />
+//           </Button>
+//         </div>
+//       </Col>
+//     </Row>
+//   );
+// };
 
 export default ExperienceCard;
