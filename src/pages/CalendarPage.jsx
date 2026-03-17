@@ -66,7 +66,8 @@ const Calendar = () => {
                 className="btn btn-primary m-1"
                 onClick={prevMonth}>
                 <FontAwesomeIcon
-                  className="me-1"
+                  // style={{ display: 'flex', alignItems: 'center'}}
+                  className="d-flex justify-content-center m-1"
                   icon={faAngleLeft}
                 />
               </Button>
@@ -83,7 +84,7 @@ const Calendar = () => {
                 className="btn btn-primary m-1"
                 onClick={nextMonth}>
                 <FontAwesomeIcon
-                  className="me-1"
+                  className="d-flex justify-content-center m-1"
                   icon={faAngleRight}
                 />
               </Button>

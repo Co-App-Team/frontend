@@ -14,7 +14,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
 import RateMyCoopPage from './pages/RateMyCoopPage.jsx';
-import Calendar from './pages/Calendar.jsx';
+import Calendar from './pages/CalendarPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
