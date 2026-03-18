@@ -20,7 +20,7 @@ import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 
-const JobApplicationCard = ({ jobApplication, onUpdated }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -76,6 +76,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   };
 
   const updateStatus = async (newStatus) => {
+    setError('');
+    const errorMappings = {
+      REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'You cannot apply to this. The due date has already passed!',
+    };
     try {
       let finalFormData = {
         ...jobApplication,
@@ -86,8 +90,9 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
 
       await onUpdated();
     } catch (error) {
-      const message = getErrorMessage(error);
-      console.log(message);
+      const message = getErrorMessage(error, errorMappings);
+      console.log(error);
+      setError(message);
     }
   };
 

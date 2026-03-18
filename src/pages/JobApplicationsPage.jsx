@@ -149,6 +149,7 @@ const JobApplicationsPage = () => {
         otherFilteredApplications={otherFilteredApplications}
         refreshApplicationsList={refreshApplicationsList}
         loading={applicationRequestLoading}
+        setError={setError}
       />
 
       <NewApplicationModal

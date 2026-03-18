@@ -9,6 +9,7 @@ const JobApplicationsDisplay = ({
   otherFilteredApplications,
   refreshApplicationsList,
   loading,
+  setError,
 }) => {
   return (
     <>
@@ -26,6 +27,7 @@ const JobApplicationsDisplay = ({
                       key={application}>
                       <Col key={application}>
                         <JobApplicationCard
+                          setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
                         />
@@ -58,6 +60,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
@@ -84,6 +87,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
@@ -108,6 +112,7 @@ const JobApplicationsDisplay = ({
                         key={application}>
                         <Col key={application}>
                           <JobApplicationCard
+                            setError={setError}
                             jobApplication={application}
                             onUpdated={refreshApplicationsList}
                           />
