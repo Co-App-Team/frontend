@@ -1,74 +1,36 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Form, Row, Col, Modal, Button, Spinner } from 'react-bootstrap';
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
 // TODO: Don't submit changes when no changes done
+// TODO: Description limit of 1k chars
+// TODO: Title limit of 80 chars
 
 const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallback }) => {
+  const hasEdited = useRef(false);
+
   const [formData, setFormData] = useState(defaultValues);
   const [requestError, setRequestError] = useState('');
-
   const [formErrors, setFormErrors] = useState({});
 
   const { loading: isLoading, request: onSubmitCallback } = useApi(submitCallback);
 
-  const validators = {
-    roleTitle: useCallback(
-      (title) => {
-        if (!title) {
-          setFormErrors({ ...formErrors, roleTitle: 'Please provide a job title' });
-          return false;
-        } else {
-          setFormErrors({ ...formErrors, roleTitle: '' });
-          return true;
-        }
-      },
-      [formErrors, setFormErrors],
-    ),
-    company: useCallback(
-      (company) => {
-        if (!company) {
-          setFormErrors({ ...formErrors, company: 'Please select a company' });
-          return false;
-        } else {
-          setFormErrors({ ...formErrors, company: '' });
-          return true;
-        }
-      },
-      [formErrors, setFormErrors],
-    ),
-    startDate: useCallback(
-      (startDate) => {
-        if (!startDate) {
-          setFormErrors({ ...formErrors, startDate: 'Please select a start date' });
-          return false;
-        } else {
-          setFormErrors({ ...formErrors, startDate: '' });
-          return true;
-        }
-      },
-      [formErrors, setFormErrors],
-    ),
-    endDate: () => {
-      return true;
-    },
-    roleDescription: useCallback(
-      (description) => {
-        if (!description) {
-          setFormErrors({ ...formErrors, roleDescription: 'Please enter a job description' });
-          return false;
-        } else {
-          setFormErrors({ ...formErrors, roleDescription: '' });
-          return true;
-        }
-      },
-      [formErrors, setFormErrors],
-    ),
+  const getValidationError = (name, value) => {
+    switch (name) {
+      case 'roleTitle':
+        return !value ? 'Please provide a job title' : '';
+      case 'company':
+        return !value ? 'Please select a company' : '';
+      case 'startDate':
+        return !value ? 'Please select a start date' : '';
+      case 'roleDescription':
+        return !value ? 'Please enter a job description' : '';
+      default:
+        return '';
+    }
   };
-
-  // console.log("Errors:", JSON.stringify(formErrors))
 
   useEffect(() => {
     console.log('Temp');
@@ -85,32 +47,43 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    validators[name](value);
+    setFormErrors({ ...formErrors, [name]: getValidationError(name, value) });
+    hasEdited.current = true;
   };
 
   const onSubmit = async () => {
-    // TODO: This isn't working for some reason when validating a form that doesn't have the fields defined in formData yet
-    let passedValidation = true;
-    for (const [name, validator] of Object.entries(validators)) {
-      console.log('Validating: ', name, formData[name]);
-      if (!validator(formData[name])) {
-        passedValidation = false;
-      }
-    }
+    const newErrors = {};
+    let hasErrors = false;
 
-    if (passedValidation) {
-      try {
-        await onSubmitCallback({
-          experienceId: formData?.experienceId,
-          companyId: formData?.company?.companyId,
-          roleTitle: formData?.roleTitle,
-          roleDescription: formData?.roleDescription,
-          startDate: formData?.startDate,
-          endDate: formData?.endDate,
-        });
-      } catch (requestError) {
-        const message = getErrorMessage(requestError);
-        setRequestError(message);
+    ['roleTitle', 'company', 'startDate', 'roleDescription'].forEach((name) => {
+      const value = formData[name] || '';
+      const error = getValidationError(name, value);
+
+      if (error) {
+        newErrors[name] = error;
+        hasErrors = true;
+      }
+    });
+
+    setFormErrors(newErrors);
+
+    if (!hasErrors) {
+      if (hasEdited.current) {
+        try {
+          await onSubmitCallback({
+            experienceId: formData?.experienceId,
+            companyId: formData?.company?.companyId,
+            roleTitle: formData?.roleTitle,
+            roleDescription: formData?.roleDescription,
+            startDate: formData?.startDate,
+            endDate: formData?.endDate,
+          });
+        } catch (requestError) {
+          const message = getErrorMessage(requestError);
+          setRequestError(message);
+        }
+      } else {
+        onHide();
       }
     }
   };
@@ -143,14 +116,13 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
             <Form.Control.Feedback type="invalid">{formErrors?.roleTitle}</Form.Control.Feedback>
 
             <Form.Label>Company</Form.Label>
-            {/* TODO: Apply this change to the JobApllicationModal? */}
-            {/* TODO: Validation */}
+            {/* TODO: Apply this change to the JobApplicationModal? */}
             <ReactSelectBootstrap
               isLoading={!companies}
               options={companies?.map((company) => {
                 return { value: company, label: company.companyName };
               })}
-              className="mb-2"
+              className={formErrors?.company ? 'is-invalid' : 'mb-2 '}
               onChange={onCompanyChange}
               value={
                 formData?.company
@@ -158,7 +130,11 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
                   : null
               }
               disabled={isLoading}
+              isInvalid={formErrors?.company}
             />
+            {formErrors?.company && (
+              <div className="invalid-feedback d-block">{formErrors.company}</div>
+            )}
 
             <Row>
               <Col>
