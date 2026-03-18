@@ -12,7 +12,6 @@ import {
 import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
-import PropTypes from 'prop-types';
 
 const FilteringBar = ({
   handleSearch,
@@ -164,14 +163,6 @@ const FilteringBar = ({
       </Col>
     </>
   );
-};
-
-FilteringBar.propTypes = {
-  handleSearch: PropTypes.func.isRequired,
-  handleCalendarSortOrder: PropTypes.func.isRequired,
-  handleFilters: PropTypes.func.isRequired,
-  filters: PropTypes.array.isRequired,
-  setFilters: PropTypes.func.isRequired,
 };
 
 export default FilteringBar;

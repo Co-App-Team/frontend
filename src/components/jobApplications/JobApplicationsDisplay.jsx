@@ -1,7 +1,6 @@
 import { Row, Col, Container, Spinner } from 'react-bootstrap';
 import JobApplicationCard from './JobApplicationCard';
 import CardContainer from '../common/CardContainer';
-import PropTypes from 'prop-types';
 
 const JobApplicationsDisplay = ({
   applications,
@@ -142,14 +141,6 @@ const JobApplicationsDisplay = ({
       </CardContainer>
     </>
   );
-};
-
-JobApplicationsDisplay.propTypes = {
-  refreshApplicationsList: PropTypes.func.isRequired,
-  applications: PropTypes.array.isRequired,
-  topFilteredApplications: PropTypes.array.isRequired,
-  otherFilteredApplications: PropTypes.array.isRequired,
-  loading: PropTypes.bool.isRequired,
 };
 
 export default JobApplicationsDisplay;
