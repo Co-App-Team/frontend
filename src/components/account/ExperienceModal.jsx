@@ -4,10 +4,6 @@ import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
-// TODO: Don't submit changes when no changes done
-// TODO: Description limit of 1k chars
-// TODO: Title limit of 80 chars
-
 const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallback }) => {
   const hasEdited = useRef(false);
 
@@ -20,13 +16,27 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
   const getValidationError = (name, value) => {
     switch (name) {
       case 'roleTitle':
-        return !value ? 'Please provide a job title' : '';
+        if (!value) {
+          return 'Please provide a job title';
+        } else if (value.length > 80) {
+          return 'Job title too long. Please use 80 or fewer characters.';
+        }
+        return '';
+
       case 'company':
         return !value ? 'Please select a company' : '';
+
       case 'startDate':
         return !value ? 'Please select a start date' : '';
+
       case 'roleDescription':
-        return !value ? 'Please enter a job description' : '';
+        if (!value) {
+          return 'Please enter a job description';
+        } else if (value.length > 1000) {
+          return 'Job title too long. Please use 1000 or fewer characters.';
+        }
+        return '';
+
       default:
         return '';
     }
