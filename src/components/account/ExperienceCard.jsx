@@ -96,13 +96,13 @@ const ExperienceCard = () => {
         submitCallback={handleModalSubmit}
       />
       <Card.Header className="bg-white border-bottom-0 pt-4 pb-0 px-4">
-        <h5 className="mb-0">
+        <h4 className="mb-0">
           <FontAwesomeIcon
             icon={faTools}
             className="me-2 text-primary"
           />
           Manage my experiences
-        </h5>
+        </h4>
       </Card.Header>
       <Card.Body className="p-4">
         {data ? (
