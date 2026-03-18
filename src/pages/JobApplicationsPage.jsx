@@ -92,9 +92,11 @@ const JobApplicationsPage = () => {
 
     const apps = applications.applications;
 
-    const topFilter = apps.filter((c) => c.jobTitle.toLowerCase().startsWith(value.toLowerCase()));
+    const topFilter = apps.filter((c) =>
+      c.companyName.toLowerCase().startsWith(value.toLowerCase()),
+    );
     const otherFilters = apps.filter(
-      (c) => c.jobTitle.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+      (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
     setOtherFilteredApplications(otherFilters);
@@ -157,7 +159,9 @@ const JobApplicationsPage = () => {
         onHide={hideApplicationModal}
         companies={companies}
         data={null}
-        onSaved={null}
+        onSaved={() => {
+          refreshApplicationsList(null, null, true);
+        }}
       />
     </Container>
   );

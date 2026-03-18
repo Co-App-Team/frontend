@@ -19,6 +19,7 @@ import { editApplication } from '../../api/jobApplicationsApi';
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
+import PropTypes from 'prop-types';
 
 const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const status = jobApplication.status;
@@ -91,7 +92,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
       await onUpdated();
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
-      console.log(error);
       setError(message);
     }
   };
@@ -132,7 +132,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
           <div className="d-flex align-items-center gap-3">
-            <div style={{ maxWidth: '30vw', overflowX: 'auto' }}>
+            <div style={{ maxWidth: '30vw', overflowX: 'auto', overflowY: 'hidden' }}>
               <span>{jobApplication.jobTitle}</span>
             </div>
 
@@ -231,7 +231,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
               </span>
             ) : (
               <span className="text-muted fs-6">
-                Applied to on
+                Applied on
                 <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
               </span>
             )}
@@ -298,6 +298,12 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
       />
     </>
   );
+};
+
+JobApplicationCard.propTypes = {
+  jobApplication: PropTypes.object.isRequired,
+  onUpdated: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
 };
 
 export default JobApplicationCard;
