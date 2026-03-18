@@ -1,8 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Form, Row, Col, Modal, Button, Spinner } from 'react-bootstrap';
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
+
+const errorMappings = {
+  REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please resolve any errors in the form.',
+  COMPANY_NOT_FOUND: "We couldn't find the company you picked. Try refreshing and trying again.",
+};
 
 const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallback }) => {
   const hasEdited = useRef(false);
@@ -42,16 +47,9 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
     }
   };
 
-  useEffect(() => {
-    console.log('Temp');
-
-    // TODO: eslint doesn't like this but I need to reset the state when the modal reopens
-    // setFormData(defaultValues);
-    // setFormErrors({});
-  }, [defaultValues]);
-
   const onCompanyChange = (e) => {
     setFormData({ ...formData, company: e.value });
+    hasEdited.current = true;
   };
 
   const handleChange = (e) => {
@@ -89,7 +87,7 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
             endDate: formData?.endDate,
           });
         } catch (requestError) {
-          const message = getErrorMessage(requestError);
+          const message = getErrorMessage(requestError, errorMappings);
           setRequestError(message);
         }
       } else {
