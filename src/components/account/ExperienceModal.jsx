@@ -3,54 +3,34 @@ import { Form, Row, Col, Modal, Button, Spinner } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
-import { getCompanies } from '../../api/rateMyCoopApi';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
-const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
+// TODO: Form validation
+// TODO: Don't submit changes when no changes done
+
+const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallback }) => {
   const [formData, setFormData] = useState(defaultValues);
   const [error, setError] = useState('');
 
-  const { data, loading: isCompaniesLoading, request: getCompaniesCallback } = useApi(getCompanies);
   const { loading: isLoading, request: onSubmitCallback } = useApi(submitCallback);
 
-  const companies = data?.companies;
-
   useEffect(() => {
-    const callback = async () => {
-      try {
-        await getCompaniesCallback();
-      } catch (error) {
-        const message = getErrorMessage(error);
-        // TODO: Display error
-        console.log('Bonk:', message);
-      }
-    };
-    callback();
-  }, [getCompaniesCallback]);
-
-  const onJobDescriptionChange = (e) => {
-    setFormData({ ...formData, roleDescription: e.target.value });
-  };
-
-  const onJobTitleChange = (e) => {
-    setFormData({ ...formData, roleTitle: e.target.value });
-  };
+    setFormData(defaultValues);
+  }, [defaultValues]);
 
   const onCompanyChange = (e) => {
     setFormData({ ...formData, company: e.value });
   };
 
-  const onStartDateChange = (e) => {
-    setFormData({ ...formData, startDate: e.target.value });
-  };
-
-  const onEndDateChange = (e) => {
-    setFormData({ ...formData, endDate: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const onSubmit = async () => {
     try {
       await onSubmitCallback({
+        experienceId: formData?.experienceId,
         companyId: formData?.company?.companyId,
         roleTitle: formData?.roleTitle,
         roleDescription: formData?.roleDescription,
@@ -82,10 +62,11 @@ const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
             <Form.Label>Job Title</Form.Label>
             <Form.Control
               type="text"
-              onChange={onJobTitleChange}
+              onChange={handleChange}
               // isInvalid={showError && !isJobTitleValid}
-              value={formData?.jobTitle}
+              value={formData?.roleTitle || ''}
               disabled={isLoading}
+              name="roleTitle"
             />
             <Form.Control.Feedback type="invalid">
               Please provide a job title.
@@ -94,12 +75,18 @@ const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
             <Form.Label>Company</Form.Label>
             {/* TODO: Apply this change to the JobApllicationModal? */}
             <ReactSelectBootstrap
-              isLoading={isCompaniesLoading}
+              isLoading={!companies}
               options={companies?.map((company) => {
                 return { value: company, label: company.companyName };
               })}
               className="mb-2"
               onChange={onCompanyChange}
+              value={
+                formData?.company
+                  ? { value: formData.company, label: formData.company.companyName }
+                  : null
+              }
+              disabled={isLoading}
             />
 
             <Row>
@@ -107,12 +94,11 @@ const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
                 {/* TODO: Make this a date picker */}
                 <Form.Label>Start Date</Form.Label>
                 <Form.Control
-                  type="number"
-                  min="0"
-                  onChange={onStartDateChange}
+                  onChange={handleChange}
                   // isInvalid={showError && !isNumPositionsValid}
-                  value={formData?.startDate}
+                  value={formData?.startDate || ''}
                   disabled={isLoading}
+                  name="startDate"
                 />
                 <Form.Control.Feedback type="invalid">
                   Please provide a positive number.
@@ -121,12 +107,11 @@ const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
               <Col>
                 <Form.Label>End Date (Optional)</Form.Label>
                 <Form.Control
-                  type="number"
-                  min="0"
-                  onChange={onEndDateChange}
+                  onChange={handleChange}
                   // isInvalid={showError && !isNumPositionsValid}
-                  value={formData?.endDate}
+                  value={formData?.endDate || ''}
                   disabled={isLoading}
+                  name="endDate"
                 />
                 <Form.Control.Feedback type="invalid">
                   Please provide a positive number.
@@ -139,9 +124,10 @@ const ExperienceModal = ({ show, onHide, defaultValues, submitCallback }) => {
               as="textarea"
               rows={3}
               className={styles['text-field']}
-              onChange={onJobDescriptionChange}
-              value={formData?.jobDescription}
+              onChange={handleChange}
+              value={formData?.roleDescription || ''}
               disabled={isLoading}
+              name="roleDescription"
             />
           </Form.Group>
         </Form>
