@@ -19,6 +19,7 @@ const FilteringBar = ({
   handleFilters,
   filters,
   setFilters,
+  setUseAppliedOnSort,
 }) => {
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
   const [sortByDateAppliedActive, setSortByDateAppliedActive] = useState(false);
@@ -42,7 +43,9 @@ const FilteringBar = ({
   };
 
   const toggleSortByDateApplied = () => {
-    setSortByDateAppliedActive((prev) => !prev);
+    const newUseSortByDateApplied = !sortByDateAppliedActive;
+    setSortByDateAppliedActive(newUseSortByDateApplied);
+    setUseAppliedOnSort(newUseSortByDateApplied);
 
     // useState's setter is asynchronous updates,
     // so use the value that it would be
