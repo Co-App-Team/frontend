@@ -10,7 +10,7 @@ const JobExperience = ({ experience, companies, isLoading, onDeleteClick, onEdit
         md={8}
         lg={9}>
         <div className="text-start">
-          {/* TODO: Inefficient */}
+          {/* Inefficient, but for the max 10 experiences a user can have, it shouldn't matter */}
           <h4>
             {companies ? (
               <>

@@ -121,23 +121,22 @@ const ExperienceCard = () => {
 
         {data ? (
           <>
-            {data?.experience &&
-              data.experience.map((experience, index) => {
-                return (
-                  <JobExperience
-                    key={index}
-                    experience={experience}
-                    companies={companies}
-                    isLoading={isDeleteLoading}
-                    onDeleteClick={() => {
-                      handleDeleteExperience(experience);
-                    }}
-                    onEditClick={() => {
-                      onEditClick(experience);
-                    }}
-                  />
-                );
-              })}
+            {data?.experience?.map((experience) => {
+              return (
+                <JobExperience
+                  key={experience.experienceId}
+                  experience={experience}
+                  companies={companies}
+                  isLoading={isDeleteLoading}
+                  onDeleteClick={() => {
+                    handleDeleteExperience(experience);
+                  }}
+                  onEditClick={() => {
+                    onEditClick(experience);
+                  }}
+                />
+              );
+            })}
           </>
         ) : (
           <>{!companiesError && !experienceError && <Spinner />}</>
