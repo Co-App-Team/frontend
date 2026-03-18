@@ -103,9 +103,9 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
       centered>
       <Modal.Header closeButton>
         {defaultValues != null ? (
-          <Modal.Title className="text-black">Edit Job Application</Modal.Title>
+          <Modal.Title className="text-black">Edit experience</Modal.Title>
         ) : (
-          <Modal.Title className="text-black">New Job Application</Modal.Title>
+          <Modal.Title className="text-black">New experience</Modal.Title>
         )}
       </Modal.Header>
 
