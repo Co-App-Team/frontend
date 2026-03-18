@@ -142,9 +142,8 @@ const ExperienceCard = () => {
                     </Col>
                     <Col
                       xs={12}
-                      md={4}
-                      lg={3}
-                      className="d-flex justify-content-end align-items-center">
+                      md={3}
+                      className="d-flex justify-content-start justify-content-lg-end align-items-center mt-3 mt-lg-0">
                       <div className="d-flex">
                         <Button
                           className="me-2 d-flex align-items-center"
