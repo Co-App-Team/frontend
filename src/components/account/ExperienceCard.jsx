@@ -1,6 +1,6 @@
-import { Alert, Button, Card, Col, Placeholder, Row, Spinner } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil, faPlus, faTools, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTools } from '@fortawesome/free-solid-svg-icons';
 import useApi from '../../hooks/useApi';
 import {
   addExperience,
@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getErrorMessage } from '../../utils/errorUtils';
 import ExperienceModal from './ExperienceModal';
 import { getCompanies } from '../../api/rateMyCoopApi';
+import JobExperience from './JobExperience';
 
 const deleteMappings = {
   EXPERIENCE_NOT_FOUND: "We couldn't find that experience, try refreshing and trying again.",
@@ -123,65 +124,18 @@ const ExperienceCard = () => {
             {data?.experience &&
               data.experience.map((experience, index) => {
                 return (
-                  <Row
+                  <JobExperience
                     key={index}
-                    className="mb-3">
-                    <Col
-                      xs={12}
-                      md={8}
-                      lg={9}>
-                      <div className="text-start">
-                        {/* TODO: Inefficient */}
-                        <h4>
-                          {companies ? (
-                            <>
-                              {
-                                companies?.find(
-                                  (company) => company.companyId === experience.companyId,
-                                ).companyName
-                              }
-                            </>
-                          ) : (
-                            <Placeholder xs={6} />
-                          )}
-                        </h4>
-                        <h5 className="text-muted">{experience.roleTitle}</h5>
-                        <div>{experience.roleDescription}</div>
-                        <div className="text-muted">
-                          {experience.startDate} to{' '}
-                          {experience.endDate ? experience.endDate : 'Present'}
-                        </div>
-                      </div>
-                    </Col>
-                    <Col
-                      xs={12}
-                      md={3}
-                      className="d-flex justify-content-start justify-content-lg-end align-items-center mt-3 mt-lg-0">
-                      <div className="d-flex">
-                        <Button
-                          className="me-2 d-flex align-items-center"
-                          onClick={() => onEditClick(experience)}
-                          disabled={isDeleteLoading}>
-                          Edit
-                          <FontAwesomeIcon
-                            icon={faPencil}
-                            className="ms-2"
-                          />
-                        </Button>
-                        <Button
-                          variant="danger"
-                          className="d-flex align-items-center"
-                          onClick={() => handleDeleteExperience(experience)}
-                          disabled={isDeleteLoading}>
-                          Delete
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            className="ms-2"
-                          />
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
+                    experience={experience}
+                    companies={companies}
+                    isLoading={isDeleteLoading}
+                    onDeleteClick={() => {
+                      handleDeleteExperience(experience);
+                    }}
+                    onEditClick={() => {
+                      onEditClick(experience);
+                    }}
+                  />
                 );
               })}
           </>

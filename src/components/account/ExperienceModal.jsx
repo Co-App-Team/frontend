@@ -124,7 +124,6 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
             <Form.Control.Feedback type="invalid">{formErrors?.roleTitle}</Form.Control.Feedback>
 
             <Form.Label>Company</Form.Label>
-            {/* TODO: Apply this change to the JobApplicationModal? */}
             <ReactSelectBootstrap
               isLoading={!companies}
               options={companies?.map((company) => {
