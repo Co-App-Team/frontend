@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Form, Row, Col, Modal, Button, Spinner } from 'react-bootstrap';
-import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
@@ -91,9 +90,10 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
 
             <Row>
               <Col>
-                {/* TODO: Make this a date picker */}
                 <Form.Label>Start Date</Form.Label>
                 <Form.Control
+                  type="date"
+                  onClick={(e) => e.target.showPicker?.()}
                   onChange={handleChange}
                   // isInvalid={showError && !isNumPositionsValid}
                   value={formData?.startDate || ''}
@@ -107,6 +107,8 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
               <Col>
                 <Form.Label>End Date (Optional)</Form.Label>
                 <Form.Control
+                  type="date"
+                  onClick={(e) => e.target.showPicker?.()}
                   onChange={handleChange}
                   // isInvalid={showError && !isNumPositionsValid}
                   value={formData?.endDate || ''}
@@ -123,11 +125,11 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
             <Form.Control
               as="textarea"
               rows={3}
-              className={styles['text-field']}
               onChange={handleChange}
               value={formData?.roleDescription || ''}
               disabled={isLoading}
               name="roleDescription"
+              style={{ resize: 'none' }}
             />
           </Form.Group>
         </Form>

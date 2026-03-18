@@ -49,14 +49,14 @@ const ExperienceCard = () => {
     request();
   }, [loadExperienceCallback]);
 
-  const onCreate = () => {
-    console.log('Implement me');
+  const onCreateClick = () => {
+    onEditClick();
   };
 
   const onEditClick = (experience) => {
     setExperienceToEdit({
       ...experience,
-      company: companies?.find((c) => c.companyId === experience.companyId),
+      company: companies?.find((c) => c.companyId === experience?.companyId),
     });
     setShowModal(true);
   };
@@ -165,7 +165,7 @@ const ExperienceCard = () => {
         <Row>
           <Col>
             <Button
-              onClick={onCreate}
+              onClick={onCreateClick}
               className="mt-3">
               <FontAwesomeIcon icon={faPlus} />
               Add new experience
