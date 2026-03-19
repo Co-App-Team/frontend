@@ -18,9 +18,10 @@ import { editApplication } from '../../api/jobApplicationsApi';
 
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
-import { FORMAT_STATUS } from '../../constants/jobApplicationColourMappings';
+import { FORMAT_STATUS } from '../../constants/jobApplications';
+import PropTypes from 'prop-types';
 
-const JobApplicationCard = ({ jobApplication, onUpdated }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -76,6 +77,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
   };
 
   const updateStatus = async (newStatus) => {
+    setError('');
+    const errorMappings = {
+      REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'You cannot apply to this. The due date has already passed!',
+    };
     try {
       let finalFormData = {
         ...jobApplication,
@@ -86,8 +91,8 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
 
       await onUpdated();
     } catch (error) {
-      const message = getErrorMessage(error);
-      console.log(message);
+      const message = getErrorMessage(error, errorMappings);
+      setError(message);
     }
   };
 
@@ -127,7 +132,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           className="d-flex justify-content-between align-items-center text-start border-bottom-0"
           as={'h5'}>
           <div className="d-flex align-items-center gap-3">
-            <div style={{ maxWidth: '30vw', overflowX: 'auto' }}>
+            <div style={{ maxWidth: '30vw', overflowX: 'auto', overflowY: 'hidden' }}>
               <span>{jobApplication.jobTitle}</span>
             </div>
 
@@ -219,10 +224,17 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
           </div>
 
           <div className="text-end ms-3">
-            <span className="text-muted fs-6">
-              Due
-              <span className="text-dark">{' ' + deadlineDate}</span>
-            </span>
+            {!jobApplication.dateApplied ? (
+              <span className="text-muted fs-6">
+                Due
+                <span className="text-dark">{' ' + deadlineDate}</span>
+              </span>
+            ) : (
+              <span className="text-muted fs-6">
+                Applied on
+                <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
+              </span>
+            )}
           </div>
         </Card.Header>
         <Card.Body>
@@ -286,6 +298,12 @@ const JobApplicationCard = ({ jobApplication, onUpdated }) => {
       />
     </>
   );
+};
+
+JobApplicationCard.propTypes = {
+  jobApplication: PropTypes.object.isRequired,
+  onUpdated: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
 };
 
 export default JobApplicationCard;

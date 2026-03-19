@@ -95,10 +95,10 @@ function ViewReviews({ company, showModal }) {
                 </h4>
               )}
             </div>
-            {reviews.reviews.map((review, index) => (
+            {reviews.reviews.map((review) => (
               <Card
                 className={styles['review-card']}
-                key={index}>
+                key={review}>
                 <Card.Body>
                   <Container>
                     <Row>

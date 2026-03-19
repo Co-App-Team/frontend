@@ -4,6 +4,7 @@ import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
 import { getErrorMessage } from '../../utils/errorUtils';
+import PropTypes from 'prop-types';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
@@ -25,6 +26,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     REJECTED: 'Rejected',
     WITHDRAWN: 'Withdrawn',
     ACCEPTED: 'Accepted',
+  };
+
+  const errorMappings = {
+    DUPLICATE_APPLICATION:
+      'A job application with the same job title for the same company already exists. Please try again!',
+    BAD_REQUEST:
+      'Please ensure all of the mandatory fields (job title, company name, and deadline date) are filled in.',
+    COMPANY_NOT_FOUND: 'The provided company name does not exist. Please try again!',
   };
 
   const [formData, setFormData] = useState({
@@ -56,13 +65,23 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     } else {
       setFilteredCompanies(filterCompanies(value));
     }
+
+    if (validateCompany(value)) {
+      setShowError(false);
+    }
+  };
+
+  const findCompany = (companyName) => {
+    return companies.find((c) => c.companyName.toLowerCase() === companyName.toLowerCase());
   };
 
   const handleSelectedCompany = (selected) => {
     setCompany(selected);
-    const company = companies.find((c) => c.companyName.toLowerCase() === selected.toLowerCase());
+    const company = findCompany(selected);
     setFormData({ ...formData, companyId: company.companyId });
     setFilteredCompanies([]);
+
+    setShowError(false);
   };
 
   const validateJobTitle = (jobTitle) => {
@@ -70,7 +89,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const validateDeadlineDate = (date) => {
-    return date.trim() != '';
+    return date && date.trim() != '';
   };
 
   const validateNumPositions = (num) => {
@@ -93,9 +112,22 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return isValid;
   };
 
+  const validateCompany = (companyName) => {
+    let isValid = false;
+
+    if (
+      companyName != '' &&
+      companies.find((c) => c.companyName?.toLowerCase() === companyName?.toLowerCase())
+    ) {
+      isValid = true;
+    }
+
+    return isValid;
+  };
+
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
-  const isCompanyValid = company != '';
+  const isCompanyValid = validateCompany(company);
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
   const isStatusValid = validateStatus(formData.status);
@@ -117,7 +149,12 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const onDeadlineDateChange = (e) => {
-    setFormData({ ...formData, applicationDeadline: e.target.value });
+    const value = e.target.value;
+    setFormData({ ...formData, applicationDeadline: value });
+
+    if (value) {
+      setShowError(false);
+    }
   };
 
   const onSourceLinkChange = (e) => {
@@ -141,6 +178,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isLinkValid
     ) {
       setShowError(true);
+      setFilteredCompanies([]);
       return;
     }
 
@@ -159,11 +197,22 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         await onSaved();
         onHide();
       } else {
-        await addJobApplicationCallback(formData);
+        // Allow users to not have to select from the dropdown
+        // if their input already matches one of the company names
+        if (formData.companyId == '') {
+          const foundCompany = findCompany(company);
+          const finalFormData = {
+            ...formData,
+            companyId: foundCompany.companyId,
+          };
+          await addJobApplicationCallback(finalFormData);
+        } else {
+          await addJobApplicationCallback(formData);
+        }
         onHide();
       }
     } catch (error) {
-      const message = getErrorMessage(error);
+      const message = getErrorMessage(error, errorMappings);
       setError(message);
     }
   };
@@ -228,18 +277,18 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 isInvalid={showError && !isCompanyValid}
                 disabled={isAddLoading || isEditLoading}></Form.Control>
               <Form.Control.Feedback type="invalid">
-                Please provide the company.
+                Please enter a valid company name.
               </Form.Control.Feedback>
 
               <div className={styles['dropdown-container']}>
-                {filteredCompanies.map((company, index) => {
+                {filteredCompanies.map((company) => {
                   return (
                     <div
-                      key={index}
+                      key={company.companyId}
                       className={styles['dropdown']}>
                       <Dropdown.Item
                         className={styles['dropdown-item']}
-                        key={index}
+                        key={company.companyId}
                         onClick={() => handleSelectedCompany(company.companyName)}
                         disabled={isAddLoading || isEditLoading}>
                         {company.companyName}
@@ -327,5 +376,13 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     </>
   );
 }
+
+JobApplicationModal.propTypes = {
+  companies: PropTypes.arrayOf(
+    PropTypes.shape({
+      companyName: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default JobApplicationModal;

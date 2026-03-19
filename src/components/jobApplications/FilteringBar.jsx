@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Button, Dropdown } from 'react-bootstrap';
+import { Col, Button, Dropdown, ButtonGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,38 +13,80 @@ import Searchbar from './Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 
-const FilteringBar = () => {
-  const [filters, setFilters] = useState([]);
-
+const FilteringBar = ({
+  handleSearch,
+  handleCalendarSortOrder,
+  handleFilters,
+  filters,
+  setFilters,
+  setUseAppliedOnSort,
+}) => {
   const [calendarSortAsc, setCalendarSortAsc] = useState(false);
+  const [sortByDateAppliedActive, setSortByDateAppliedActive] = useState(false);
+
+  const normalizeFilters = (filtersToNormalize) => {
+    // Result: String that is -> 'filter1','filter2',...
+    return filtersToNormalize.join(',');
+  };
+
   const toggleCalendarSortAsc = () => {
     setCalendarSortAsc((prev) => !prev);
+
+    // useState's setter is asynchronous updates,
+    // so use the value that it would be
+    const nextSortVal = !calendarSortAsc;
+    if (nextSortVal) {
+      handleCalendarSortOrder('asc', normalizeFilters(filters));
+    } else {
+      handleCalendarSortOrder('desc', normalizeFilters(filters));
+    }
   };
-  const updateSearch = (value) => {
-    console.log(value);
-    // if (!data?.companies) return;
 
-    // const companies = data.companies;
+  const toggleSortByDateApplied = () => {
+    const newUseSortByDateApplied = !sortByDateAppliedActive;
+    setSortByDateAppliedActive(newUseSortByDateApplied);
+    setUseAppliedOnSort(newUseSortByDateApplied);
 
-    // const topFilter = companies.filter((c) =>
-    //   c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-    // );
-    // const otherFilters = companies.filter(
-    //   (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
-    // );
+    // useState's setter is asynchronous updates,
+    // so use the value that it would be
+    const nextVal = !sortByDateAppliedActive;
+    if (!nextVal) {
+      handleFilters(calendarSortAsc ? 'asc' : 'desc', normalizeFilters(filters));
+    } else {
+      handleCalendarSortOrder(calendarSortAsc ? 'asc' : 'desc', normalizeFilters(filters));
+    }
+  };
 
-    // setOtherFilteredCompanies(otherFilters);
-    // if (value === '') {
-    //   setOtherFilteredCompanies([]);
-    // }
-    // setTopFilteredCompanies(topFilter);
+  const handleFilterChange = (value) => {
+    const newFilters = filters.includes(value)
+      ? filters.filter((v) => v !== value)
+      : [...filters, value];
+
+    setFilters(newFilters);
+
+    // Result: String that is -> 'filter1','filter2',...
+    let normalizedFilters = normalizeFilters(newFilters);
+    if (normalizedFilters == '') {
+      normalizedFilters = null;
+    }
+
+    if (calendarSortAsc) {
+      handleFilters('asc', normalizedFilters);
+    } else {
+      handleFilters('desc', normalizedFilters);
+    }
+  };
+
+  const resetFilters = () => {
+    setFilters([]);
+    handleFilters();
   };
 
   return (
     <>
       <Col className="d-flex align-items-center justify-content-start">
         <Searchbar
-          handleSearch={updateSearch}
+          handleSearch={handleSearch}
           className="m-2"
         />
       </Col>
@@ -55,7 +97,14 @@ const FilteringBar = () => {
         />
         Filters:
         <div className="mx-1">
-          {filters.length != 0 ? <FilterBadges filters={filters} /> : <i>No Active Filters</i>}
+          {filters.length != 0 ? (
+            <FilterBadges
+              filters={filters}
+              onRemove={handleFilterChange}
+            />
+          ) : (
+            <i>No Active Filters</i>
+          )}
         </div>
       </Col>
       <Col
@@ -81,24 +130,38 @@ const FilteringBar = () => {
             <Dropdown.Menu style={{ padding: '0.5rem', width: 'max-content' }}>
               <FilterSelection
                 filters={filters}
-                setFilters={setFilters}
+                setFilters={handleFilterChange}
+                resetFilters={resetFilters}
               />
             </Dropdown.Menu>
           </Dropdown>
 
-          <Button
-            className="ms-1 mt-1"
-            onClick={toggleCalendarSortAsc}>
-            <FontAwesomeIcon
-              className="me-1"
-              icon={faCalendar}
-            />
-            <FontAwesomeIcon
-              className="me-1"
-              icon={calendarSortAsc ? faArrowUp : faArrowDown}
-            />
-            Date Sort
-          </Button>
+          <ButtonGroup>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>Sort by date applied</Tooltip>}>
+              <Button
+                className="ms-1 mt-1 p-1"
+                onClick={toggleSortByDateApplied}
+                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}>
+                <FontAwesomeIcon icon={faCalendar} />
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>{calendarSortAsc ? 'Ascending order' : 'Descending order'}</Tooltip>
+              }>
+              <Button
+                className="mt-1 p-1"
+                onClick={toggleCalendarSortAsc}
+                variant={sortByDateAppliedActive ? 'primary' : 'outline-primary'}
+                disabled={!sortByDateAppliedActive}>
+                <FontAwesomeIcon icon={calendarSortAsc ? faArrowUp : faArrowDown} />
+              </Button>
+            </OverlayTrigger>
+          </ButtonGroup>
         </div>
       </Col>
     </>

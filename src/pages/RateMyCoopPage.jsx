@@ -74,7 +74,7 @@ const RateMyCoopPage = () => {
   return (
     <Container className="mt-3">
       <div>
-        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
+        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1 mb-3">
           <Col>
             <h2 className="m-0 p-0">Rate My Co-op</h2>
           </Col>
