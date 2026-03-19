@@ -1,6 +1,5 @@
 import { Badge } from 'react-bootstrap';
 import { FORMAT_STATUS, STATUS_COLOUR_MAP } from '../../constants/jobApplications';
-import PropTypes from 'prop-types';
 const FilterBadges = ({ filters, onRemove }) => {
   return (
     <>
@@ -18,11 +17,6 @@ const FilterBadges = ({ filters, onRemove }) => {
       ))}
     </>
   );
-};
-
-FilterBadges.propTypes = {
-  filters: PropTypes.array.isRequired,
-  onRemove: PropTypes.func.isRequired,
 };
 
 export default FilterBadges;

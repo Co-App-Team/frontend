@@ -15,6 +15,7 @@ import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
 import ResumeWorkshopPage from './pages/ResumeWorkshopPage.jsx';
 import RateMyCoopPage from './pages/RateMyCoopPage.jsx';
+import Calendar from './pages/CalendarPage.jsx';
 
 function App() {
   const { isLoggedIn } = useAuthContext();
@@ -76,6 +77,10 @@ function App() {
             <Route
               path="resume-workshop"
               element={<ResumeWorkshopPage />}
+            />
+            <Route
+              path="interviews"
+              element={<Calendar />}
             />
           </Route>
         </Route>
