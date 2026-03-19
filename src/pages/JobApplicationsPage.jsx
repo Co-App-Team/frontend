@@ -93,12 +93,6 @@ const JobApplicationsPage = () => {
 
     let apps = applications.applications;
     if (useAppliedOnSort) {
-      console.log(apps);
-      console.log(
-        applications.applications.filter(
-          (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
-        ),
-      );
       apps = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
       );
