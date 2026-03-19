@@ -11,7 +11,6 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   const [application, setApplication] = useState('');
   const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
-  // const [showDatetimeError, setShowDatetimeError] = useState(false);
 
   const [filteredApplications, setFilteredApplications] = useState([]);
 
@@ -106,83 +105,81 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   };
 
   return (
-    <>
-      <Modal
-        show={onShow}
-        onHide={onHide}
-        centered>
-        <Modal.Header closeButton>
-          <Modal.Title className={styles['black-text']}>New Job Interview</Modal.Title>
-        </Modal.Header>
+    <Modal
+      show={onShow}
+      onHide={onHide}
+      centered>
+      <Modal.Header closeButton>
+        <Modal.Title className={styles['black-text']}>New Job Interview</Modal.Title>
+      </Modal.Header>
 
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-2">
-              <Form.Label>Job Application</Form.Label>
-              <Form.Group>
-                <Form.Control
-                  type="text"
-                  value={application}
-                  onChange={handleSearchApplication}
-                  isInvalid={showError && !isApplicationValid}
-                  disabled={isEditLoading}></Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  Please provide the job application this interview is for.
-                </Form.Control.Feedback>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-2">
+            <Form.Label>Job Application</Form.Label>
+            <Form.Group>
+              <Form.Control
+                type="text"
+                value={application}
+                onChange={handleSearchApplication}
+                isInvalid={showError && !isApplicationValid}
+                disabled={isEditLoading}></Form.Control>
+              <Form.Control.Feedback type="invalid">
+                Please provide the job application this interview is for.
+              </Form.Control.Feedback>
 
-                <div className={dropdownStyles['dropdown-container']}>
-                  {filteredApplications.map((app, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={dropdownStyles['dropdown']}>
-                        <Dropdown.Item
-                          className={dropdownStyles['dropdown-item']}
-                          key={index}
-                          onClick={() => handleSelectedApplication(app)}
-                          disabled={isEditLoading}>
-                          {app.jobTitle}
-                        </Dropdown.Item>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Label>Interview Date and Time</Form.Label>
-                <Form.Control
-                  type="datetime-local"
-                  onClick={(e) => e.target.showPicker?.()}
-                  onChange={onInterviewDateChange}
-                  isInvalid={showError && !isInterviewDatetimeValid}
-                  disabled={isEditLoading}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please provide the interview's date and time.
-                </Form.Control.Feedback>
-              </Form.Group>
+              <div className={dropdownStyles['dropdown-container']}>
+                {filteredApplications.map((app) => {
+                  return (
+                    <div
+                      key={app.applicationId}
+                      className={dropdownStyles['dropdown']}>
+                      <Dropdown.Item
+                        className={dropdownStyles['dropdown-item']}
+                        key={app.applicationId}
+                        onClick={() => handleSelectedApplication(app)}
+                        disabled={isEditLoading}>
+                        {app.jobTitle}
+                      </Dropdown.Item>
+                    </div>
+                  );
+                })}
+              </div>
             </Form.Group>
-          </Form>
-          {error && <span className="text-danger mt-3">{error}</span>}
-        </Modal.Body>
 
-        <Modal.Footer>
-          <Button
-            variant="info"
-            onClick={reset}
-            disabled={isEditLoading}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={isEditLoading}>
-            {isEditLoading && <Spinner size="sm" />} Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+            <Form.Group>
+              <Form.Label>Interview Date and Time</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                onClick={(e) => e.target.showPicker?.()}
+                onChange={onInterviewDateChange}
+                isInvalid={showError && !isInterviewDatetimeValid}
+                disabled={isEditLoading}
+              />
+              <Form.Control.Feedback type="invalid">
+                Please provide the interview's date and time.
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Form.Group>
+        </Form>
+        {error && <span className="text-danger mt-3">{error}</span>}
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button
+          variant="info"
+          onClick={reset}
+          disabled={isEditLoading}>
+          Cancel
+        </Button>
+        <Button
+          variant="primary"
+          onClick={handleSubmit}
+          disabled={isEditLoading}>
+          {isEditLoading && <Spinner size="sm" />} Submit
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
