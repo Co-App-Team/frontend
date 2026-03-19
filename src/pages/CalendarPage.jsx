@@ -82,7 +82,10 @@ const Calendar = () => {
     async function loadApplications() {
       try {
         const data = await getApplicationsCallback();
-        setApplications(data.applications);
+        // only allow users to make interviews with applications
+        // that are not at the "interviewing" stage yet
+        const validApplications = data.applications.filter((app) => app.status !== 'INTERVIEWING');
+        setApplications(validApplications);
       } catch (error) {
         const message = getErrorMessage(error);
         setError(message);
@@ -90,6 +93,20 @@ const Calendar = () => {
     }
     loadApplications();
   }, [getApplicationsCallback]);
+
+  useEffect(() => {
+    async function loadInterviews() {
+      try {
+        const data = await getInterviewsCallback();
+        setInterviews(data);
+        console.log('these are interviews: ', data);
+      } catch (error) {
+        const message = getErrorMessage(error);
+        setError(message);
+      }
+    }
+    loadInterviews();
+  }, [getInterviewsCallback]);
 
   async function hideInterviewModal() {
     setShowInterviewModal(false);

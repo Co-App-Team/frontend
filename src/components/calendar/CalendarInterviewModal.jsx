@@ -45,7 +45,6 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
 
   const handleSelectedApplication = async (selected) => {
     try {
-      console.log('this is selected', selected);
       const result = await getCompanyCallback(selected?.companyId);
       const companyName = result?.company?.companyName;
       setFormData({ ...selected, status: 'INTERVIEWING' });
@@ -69,12 +68,18 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
     return application.trim() != '' && application.includes('@');
   };
 
-  const validateInterviewDate = (date) => {
-    return date?.trim() != '';
+  const validateInterviewDatetime = (date) => {
+    console.log('This is date: ', date);
+    let isValid = true;
+    if (!date) {
+      isValid = false;
+      console.log('interview date is not valid');
+    }
+    return isValid;
   };
 
   const isApplicationValid = validateApplication(application);
-  const isInterviewDateValid = validateInterviewDate(formData.interviewDateTime);
+  const isInterviewDatetimeValid = validateInterviewDatetime(formData.interviewDateTime);
 
   const reset = () => {
     setFormData([]);
@@ -84,7 +89,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   };
 
   const submit = async () => {
-    if (!isApplicationValid || !isInterviewDateValid) {
+    if (!isApplicationValid || !isInterviewDatetimeValid) {
       setShowError(true);
       return;
     }
@@ -97,7 +102,9 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
       onHide();
     } catch (error) {
       const message = getErrorMessage(error);
-      setError(message);
+      if (error.status !== 400 && message !== 'No fields were changed') {
+        setError(message);
+      }
     }
   };
 
@@ -153,8 +160,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
                 type="datetime-local"
                 onClick={(e) => e.target.showPicker?.()}
                 onChange={onInterviewDateChange}
-                // isInvalid={showError && !isApplicationDeadlineValid}
-                // value={formData.applicationDeadline}
+                isInvalid={showError && !isInterviewDatetimeValid}
                 disabled={isEditLoading}
               />
               <Form.Control.Feedback type="invalid">
