@@ -1,6 +1,5 @@
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
 import {
   Badge,
   Button,
@@ -13,85 +12,31 @@ import {
 } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import AIPromptForm from '../components/resumeWorkshop/AIPromptForm';
+import useApi from '../hooks/useApi';
+import { sendPrompt } from '../api/resumeWorkshopApi';
+import { getErrorMessage } from '../utils/errorUtils';
+
+const errorMappings = {};
 
 const ResumeWorkshopPage = () => {
-  const [aiResponse, setAiResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { data: aiResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
 
-  const handleGenerate = ({ goal, content }) => {
-    setLoading(true);
+  const generatePrompt = ({ goal, content }) => {
+    // TODO: Generate formatted prompt
+    return '' + goal + content;
+  };
 
-    console.log(goal, content);
+  const handleSendPrompt = async ({ goal, content }) => {
+    const userPrompt = generatePrompt({ goal, content });
 
-    // placeholder mock response
-    setTimeout(() => {
-      setAiResponse(
-        `Hello **Aidan**
-
-### Suggestions
-
-• Use stronger action verbs  
-• Add measurable results  
-• Reduce filler wording
-
-Example rewrite:
-
-> Developed an internal inventory dashboard used by 5+ departments, improving tracking efficiency by 30%.
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-`,
-      );
-      setLoading(false);
-    }, 800);
+    try {
+      await sendPromptCallback({ userPrompt, applicationId: undefined });
+      return true;
+    } catch (error) {
+      const message = getErrorMessage(error, errorMappings);
+      console.log(message);
+      return false;
+    }
   };
 
   return (
@@ -121,6 +66,7 @@ height test
             </Badge>
           </OverlayTrigger>
 
+          {/* TODO: Dropdown options */}
           <Dropdown
             align="end"
             className="ms-2 mt-2">
@@ -142,11 +88,12 @@ height test
       <Row className="mt-4">
         <Col md={6}>
           <AIPromptForm
-            handleGenerate={handleGenerate}
+            onSubmit={handleSendPrompt}
             loading={loading}
           />
         </Col>
 
+        {/* TODO: Loading spinner? */}
         <Col
           md={6}
           className="border rounded p-3 overflow-auto bg-light"
@@ -160,7 +107,7 @@ height test
 
           {loading && <p className="text-muted">Generating suggestions...</p>}
 
-          {aiResponse && !loading && <ReactMarkdown>{aiResponse}</ReactMarkdown>}
+          {aiResponse && !loading && <ReactMarkdown>{aiResponse?.response}</ReactMarkdown>}
         </Col>
       </Row>
     </Container>

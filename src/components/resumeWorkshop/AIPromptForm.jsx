@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-const AIPromptForm = ({ loading, handleGenerate }) => {
+const AIPromptForm = ({ loading, onSubmit }) => {
   const [goal, setGoal] = useState('');
   const [content, setContent] = useState('');
+
+  const handleSubmit = () => {
+    if (onSubmit({ goal, content })) {
+      setGoal('');
+      setContent('');
+    }
+  };
 
   return (
     <Form>
@@ -59,7 +66,7 @@ const AIPromptForm = ({ loading, handleGenerate }) => {
       <Button
         className="m-3"
         disabled={loading || !content}
-        onClick={() => handleGenerate({ goal, content })}>
+        onClick={handleSubmit}>
         {loading ? 'Generating...' : 'Generate Feedback'}
       </Button>
     </Form>
