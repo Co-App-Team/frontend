@@ -13,6 +13,7 @@ import AccountPage from './pages/AccountPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import PreAuthRoute from './components/PreAuthRoute.jsx';
 import JobApplicationsPage from './pages/JobApplicationsPage.jsx';
+import ResumeWorkshopPage from './pages/ResumeWorkshopPage.jsx';
 import RateMyCoopPage from './pages/RateMyCoopPage.jsx';
 
 function App() {
@@ -71,6 +72,10 @@ function App() {
             <Route
               path="rate-my-co-op"
               element={<RateMyCoopPage />}
+            />
+            <Route
+              path="resume-workshop"
+              element={<ResumeWorkshopPage />}
             />
           </Route>
         </Route>
