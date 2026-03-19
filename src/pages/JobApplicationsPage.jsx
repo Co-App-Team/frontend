@@ -30,7 +30,7 @@ const JobApplicationsPage = () => {
   useEffect(() => {
     async function loadApplications() {
       try {
-        const applications = await getApplicationsCallback();
+        const applications = await getApplicationsCallback({});
         setTopFilteredApplications(applications.applications);
         setOtherFilteredApplications(applications.applications);
       } catch (error) {
@@ -56,7 +56,7 @@ const JobApplicationsPage = () => {
 
   async function refreshApplicationsList(sortOrder, status, resetFilters) {
     try {
-      const applications = await getApplicationsCallback(sortOrder, status);
+      const applications = await getApplicationsCallback({ sortOrder, status });
       setTopFilteredApplications(applications.applications);
       setOtherFilteredApplications(applications.applications);
       if (resetFilters) {
@@ -74,7 +74,7 @@ const JobApplicationsPage = () => {
 
   async function applyAppliedOnSort(sortOrder, status) {
     try {
-      const applications = await getApplicationsCallback(sortOrder, status);
+      const applications = await getApplicationsCallback({ sortOrder, status });
 
       const filterOutDateApplied = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',

@@ -8,6 +8,7 @@ import {
   Dropdown,
   OverlayTrigger,
   Row,
+  Spinner,
   Tooltip,
 } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
@@ -15,11 +16,21 @@ import AIPromptForm from '../components/resumeWorkshop/AIPromptForm';
 import useApi from '../hooks/useApi';
 import { sendPrompt } from '../api/resumeWorkshopApi';
 import { getErrorMessage } from '../utils/errorUtils';
+import { getApplications } from '../api/jobApplicationsApi';
+import { useEffect } from 'react';
 
-const errorMappings = {};
+// TODO: Need to create an application selector, hoping to make a cut down version of the Job Applications page as a modal
+// to select an option. Might be needed because of the paginated nature of the endpoint for applications.
+
+const promptErrorMappings = {};
+
+const applicationsErrorMappings = {};
 
 const ResumeWorkshopPage = () => {
-  const { data: aiResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
+  const { data: promptResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
+  const { data: applicationsResponse, request: getApplicationsCallback } = useApi(getApplications);
+
+  const aiResponse = promptResponse?.reponse;
 
   const generatePrompt = ({ goal, content }) => {
     // TODO: Generate formatted prompt
@@ -33,11 +44,25 @@ const ResumeWorkshopPage = () => {
       await sendPromptCallback({ userPrompt, applicationId: undefined });
       return true;
     } catch (error) {
-      const message = getErrorMessage(error, errorMappings);
+      const message = getErrorMessage(error, promptErrorMappings);
       console.log(message);
       return false;
     }
   };
+
+  useEffect(() => {
+    const request = async () => {
+      try {
+        await getApplicationsCallback({ search: 'niche' });
+      } catch (error) {
+        const message = getErrorMessage(error, applicationsErrorMappings);
+        console.log('TODO', message);
+      }
+    };
+    request();
+  }, [getApplicationsCallback]);
+
+  console.log(JSON.stringify(applicationsResponse));
 
   return (
     <Container
@@ -93,7 +118,6 @@ const ResumeWorkshopPage = () => {
           />
         </Col>
 
-        {/* TODO: Loading spinner? */}
         <Col
           md={6}
           className="border rounded p-3 overflow-auto bg-light"
@@ -105,9 +129,14 @@ const ResumeWorkshopPage = () => {
             </p>
           )}
 
-          {loading && <p className="text-muted">Generating suggestions...</p>}
+          {loading && (
+            <>
+              <p className="text-muted">Generating suggestions...</p>
+              <Spinner />
+            </>
+          )}
 
-          {aiResponse && !loading && <ReactMarkdown>{aiResponse?.response}</ReactMarkdown>}
+          {aiResponse && !loading && <ReactMarkdown>{aiResponse}</ReactMarkdown>}
         </Col>
       </Row>
     </Container>

@@ -12,18 +12,22 @@ export const deleteApplication = async (applicationId) => {
   return await axiosClient.delete(`/application/${applicationId}`);
 };
 
-export const getApplications = async (sortOrder, status) => {
+export const getApplications = async ({ sortOrder, status, search }) => {
   let params = {
     sortBy: 'dateApplied',
     sortOrder: 'desc',
   };
 
-  if (sortOrder != null) {
+  if (sortOrder) {
     params.sortOrder = sortOrder;
   }
 
-  if (status != null) {
+  if (status) {
     params.status = status;
+  }
+
+  if (search) {
+    params.search = search;
   }
 
   return await axiosClient.get(`/application`, { params });
