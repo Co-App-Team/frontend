@@ -70,8 +70,8 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
     return isValid;
   };
 
-  let isApplicationValid = validateApplication(application);
-  let isInterviewDatetimeValid = validateInterviewDatetime(formData?.interviewDateTime);
+  const isApplicationValid = validateApplication(application);
+  const isInterviewDatetimeValid = validateInterviewDatetime(formData?.interviewDateTime);
 
   const reset = () => {
     setFormData([]);
