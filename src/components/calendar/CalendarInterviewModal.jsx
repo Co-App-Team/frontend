@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
+import dropdownStyles from '../styling/common/Dropdown.module.css';
 import useApi from '../../hooks/useApi';
 import { editApplication } from '../../api/jobApplicationsApi';
 import { getCompany } from '../../api/rateMyCoopApi';
@@ -137,14 +138,14 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
                 Please provide the job application this interview is for.
               </Form.Control.Feedback>
 
-              <div className={styles['dropdown-container']}>
+              <div className={dropdownStyles['dropdown-container']}>
                 {filteredApplications.map((app, index) => {
                   return (
                     <div
                       key={index}
-                      className={styles['dropdown']}>
+                      className={dropdownStyles['dropdown']}>
                       <Dropdown.Item
-                        className={styles['dropdown-item']}
+                        className={dropdownStyles['dropdown-item']}
                         key={index}
                         onClick={() => handleSelectedApplication(app)}
                         disabled={isEditLoading}>
