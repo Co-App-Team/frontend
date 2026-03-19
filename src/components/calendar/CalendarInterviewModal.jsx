@@ -11,6 +11,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   const [application, setApplication] = useState('');
   const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
+  // const [showDatetimeError, setShowDatetimeError] = useState(false);
 
   const [filteredApplications, setFilteredApplications] = useState([]);
 
@@ -69,14 +70,15 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
     return isValid;
   };
 
-  const isApplicationValid = validateApplication(application);
-  const isInterviewDatetimeValid = validateInterviewDatetime(formData.interviewDateTime);
+  let isApplicationValid = validateApplication(application);
+  let isInterviewDatetimeValid = validateInterviewDatetime(formData?.interviewDateTime);
 
   const reset = () => {
     setFormData([]);
     setApplication('');
     setShowError(false);
     setError([]);
+    onHide();
   };
 
   const submit = async () => {
@@ -90,7 +92,6 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
       await editJobApplicationCallback(formData, formData.applicationId);
       await onSaved();
       reset();
-      onHide();
     } catch (error) {
       const message = getErrorMessage(error);
       if (error.status !== 400 && message !== 'No fields were changed') {
@@ -118,45 +119,49 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
           <Form>
             <Form.Group className="mb-2">
               <Form.Label>Job Application</Form.Label>
-              <Form.Control
-                type="text"
-                value={application}
-                onChange={handleSearchApplication}
-                isInvalid={showError && !isApplicationValid}
-                disabled={isEditLoading}></Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Please provide the job application this interview is for.
-              </Form.Control.Feedback>
+              <Form.Group>
+                <Form.Control
+                  type="text"
+                  value={application}
+                  onChange={handleSearchApplication}
+                  isInvalid={showError && !isApplicationValid}
+                  disabled={isEditLoading}></Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  Please provide the job application this interview is for.
+                </Form.Control.Feedback>
 
-              <div className={dropdownStyles['dropdown-container']}>
-                {filteredApplications.map((app, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className={dropdownStyles['dropdown']}>
-                      <Dropdown.Item
-                        className={dropdownStyles['dropdown-item']}
+                <div className={dropdownStyles['dropdown-container']}>
+                  {filteredApplications.map((app, index) => {
+                    return (
+                      <div
                         key={index}
-                        onClick={() => handleSelectedApplication(app)}
-                        disabled={isEditLoading}>
-                        {app.jobTitle}
-                      </Dropdown.Item>
-                    </div>
-                  );
-                })}
-              </div>
+                        className={dropdownStyles['dropdown']}>
+                        <Dropdown.Item
+                          className={dropdownStyles['dropdown-item']}
+                          key={index}
+                          onClick={() => handleSelectedApplication(app)}
+                          disabled={isEditLoading}>
+                          {app.jobTitle}
+                        </Dropdown.Item>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Form.Group>
 
-              <Form.Label>Interview Date and Time</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                onClick={(e) => e.target.showPicker?.()}
-                onChange={onInterviewDateChange}
-                isInvalid={showError && !isInterviewDatetimeValid}
-                disabled={isEditLoading}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide the interview's date and time.
-              </Form.Control.Feedback>
+              <Form.Group>
+                <Form.Label>Interview Date and Time</Form.Label>
+                <Form.Control
+                  type="datetime-local"
+                  onClick={(e) => e.target.showPicker?.()}
+                  onChange={onInterviewDateChange}
+                  isInvalid={showError && !isInterviewDatetimeValid}
+                  disabled={isEditLoading}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide the interview's date and time.
+                </Form.Control.Feedback>
+              </Form.Group>
             </Form.Group>
           </Form>
           {error && <span className="text-danger mt-3">{error}</span>}
@@ -165,7 +170,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
         <Modal.Footer>
           <Button
             variant="info"
-            onClick={onHide}
+            onClick={reset}
             disabled={isEditLoading}>
             Cancel
           </Button>
