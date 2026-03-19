@@ -44,7 +44,3 @@
   grid-template-columns: repeat(7, 1fr);
   margin-bottom: 0.5vh;
 }
-
-.weekday-cell {
-  text-align: center;
-}

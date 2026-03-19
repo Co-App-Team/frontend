@@ -103,7 +103,7 @@ const Calendar = () => {
             {daysOfTheWeek.map((day) => (
               <div
                 key={day}
-                className={styles['weekday-cell']}>
+                className={'text-center'}>
                 {day}
               </div>
             ))}

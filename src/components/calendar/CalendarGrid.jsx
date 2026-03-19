@@ -1,5 +1,4 @@
 import styles from '../styling/calendar/Calendar.module.css';
-import PropTypes from 'prop-types';
 
 function CalendarGrid({ weeks, today, currentDate }) {
   const isToday = (date) => {
@@ -33,18 +32,5 @@ function CalendarGrid({ weeks, today, currentDate }) {
     </div>
   );
 }
-
-CalendarGrid.propTypes = {
-  weeks: PropTypes.arrayOf(
-    PropTypes.arrayOf(
-      PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.oneOf([null]), // for blank cells in the calendar
-      ]),
-    ),
-  ).isRequired,
-  today: PropTypes.instanceOf(Date).isRequired,
-  currentDate: PropTypes.instanceOf(Date).isRequired,
-};
 
 export default CalendarGrid;
