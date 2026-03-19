@@ -28,3 +28,7 @@ export const getApplications = async (sortOrder, status) => {
 
   return await axiosClient.get(`/application`, { params });
 };
+
+export const getInterviews = async () => {
+  return await axiosClient.get(`/application/interviews`);
+};

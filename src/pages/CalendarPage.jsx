@@ -1,13 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import styles from '../components/styling/calendar/Calendar.module.css';
 import CalendarGrid from '../components/calendar/CalendarGrid';
+import NewInterviewModal from '../components/calendar/CalendarInterviewModal';
+import useApi from '../hooks/useApi';
+import { getApplications, getInterviews } from '../api/jobApplicationsApi';
+import { getErrorMessage } from '../utils/errorUtils';
 
 const Calendar = () => {
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showInterviewModal, setShowInterviewModal] = useState(false);
+  const [applications, setApplications] = useState([]);
+  const [interviews, setInterviews] = useState([]);
+
+  const [error, setError] = useState(false);
 
   const daysOfTheWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -55,9 +64,47 @@ const Calendar = () => {
     setCurrentDate(new Date(today.getFullYear(), today.getMonth(), 1));
   };
 
+  const { request: getApplicationsCallback } = useApi(getApplications);
+  const { request: getInterviewsCallback } = useApi(getInterviews);
+
+  async function refreshInterviewsList() {
+    try {
+      const data = await getInterviewsCallback();
+      setInterviews(data);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      // setError(message);
+      console.log(message);
+    }
+  }
+
+  useEffect(() => {
+    async function loadApplications() {
+      try {
+        const data = await getApplicationsCallback();
+        setApplications(data.applications);
+      } catch (error) {
+        const message = getErrorMessage(error);
+        setError(message);
+      }
+    }
+    loadApplications();
+  }, [getApplicationsCallback]);
+
+  async function hideInterviewModal() {
+    setShowInterviewModal(false);
+    await refreshInterviewsList();
+  }
+
+  // for now
+  useEffect(() => {
+    console.log('these are the interviews: ', interviews);
+  }, [interviews]);
+
   return (
     <Container className="mt-3">
       <div className="d-flex flex-column justify-content-center">
+        {error && <span className="text-danger mt-3">{error}</span>}
         <Row className="text-start align-bottom d-flex align-items-end my-1">
           <Col>
             <Button
@@ -95,7 +142,21 @@ const Calendar = () => {
                 currentDate.getFullYear()}
             </h2>
           </Col>
-          <Col></Col>
+
+          <Col>
+            <div className="d-flex justify-content-end">
+              <Button
+                size="sm"
+                className="btn btn-primary m-1"
+                onClick={() => setShowInterviewModal(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faAdd}
+                />
+                New Job Interview
+              </Button>
+            </div>
+          </Col>
         </Row>
 
         <Row>
@@ -117,6 +178,13 @@ const Calendar = () => {
             currentDate={currentDate}></CalendarGrid>
         </Row>
       </div>
+
+      <NewInterviewModal
+        onShow={showInterviewModal}
+        onHide={hideInterviewModal}
+        applications={applications}
+        onSaved={refreshInterviewsList}
+      />
     </Container>
   );
 };
