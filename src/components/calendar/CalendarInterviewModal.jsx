@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Form, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import dropdownStyles from '../styling/common/Dropdown.module.css';
@@ -18,10 +18,6 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
 
   const { request: getCompanyCallback } = useApi(getCompany);
   const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
-
-  useEffect(() => {
-    console.log('these are applications', applications);
-  }, [applications]);
 
   const filterApplications = (value) => {
     if (value == '') return [];
@@ -52,14 +48,10 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
       setApplication(selected.jobTitle + ' @ ' + companyName);
     } catch (error) {
       const message = getErrorMessage(error, {});
-      console.log(message);
+      setError(message);
     }
     setFilteredApplications([]);
   };
-
-  useEffect(() => {
-    console.log('form data', formData);
-  }, [formData]);
 
   const onInterviewDateChange = (e) => {
     setFormData({ ...formData, interviewDateTime: e.target.value });
@@ -70,11 +62,9 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   };
 
   const validateInterviewDatetime = (date) => {
-    console.log('This is date: ', date);
     let isValid = true;
     if (!date) {
       isValid = false;
-      console.log('interview date is not valid');
     }
     return isValid;
   };

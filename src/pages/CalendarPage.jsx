@@ -73,8 +73,7 @@ const Calendar = () => {
       setInterviews(data);
     } catch (error) {
       const message = getErrorMessage(error);
-      // setError(message);
-      console.log(message);
+      setError(message);
     }
   }
 
@@ -99,7 +98,6 @@ const Calendar = () => {
       try {
         const data = await getInterviewsCallback();
         setInterviews(data);
-        console.log('these are interviews: ', data);
       } catch (error) {
         const message = getErrorMessage(error);
         setError(message);
