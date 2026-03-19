@@ -146,7 +146,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
                 })}
               </div>
 
-              <Form.Label>Interview Date</Form.Label>
+              <Form.Label>Interview Date and Time</Form.Label>
               <Form.Control
                 type="datetime-local"
                 onClick={(e) => e.target.showPicker?.()}
