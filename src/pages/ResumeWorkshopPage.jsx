@@ -1,47 +1,63 @@
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  Badge,
-  Button,
-  Col,
-  Container,
-  Dropdown,
-  OverlayTrigger,
-  Row,
-  Spinner,
-  Tooltip,
-} from 'react-bootstrap';
+import { Badge, Col, Container, OverlayTrigger, Row, Spinner, Tooltip } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import AIPromptForm from '../components/resumeWorkshop/AIPromptForm';
 import useApi from '../hooks/useApi';
 import { sendPrompt } from '../api/resumeWorkshopApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import { getApplications } from '../api/jobApplicationsApi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
-// TODO: Need to create an application selector, hoping to make a cut down version of the Job Applications page as a modal
-// to select an option. Might be needed because of the paginated nature of the endpoint for applications.
-
+// TODO: Error mappings
 const promptErrorMappings = {};
 
 const applicationsErrorMappings = {};
 
 const ResumeWorkshopPage = () => {
   const { data: promptResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
+  // TODO: Because of pagination this will be max 20 applications
   const { data: applicationsResponse, request: getApplicationsCallback } = useApi(getApplications);
 
-  const aiResponse = promptResponse?.reponse;
+  const aiResponse = promptResponse?.response;
+  const applications = applicationsResponse?.applications;
+
+  console.log(aiResponse);
+
+  const [selectedApplication, setSelectedApplication] = useState({});
 
   const generatePrompt = ({ goal, content }) => {
-    // TODO: Generate formatted prompt
-    return '' + goal + content;
+    const objective = goal?.trim() || 'General professional polish and impact.';
+    return `
+---
+### USER-SPECIFIED PARAMETERS
+**Primary Objective:** ${objective}
+
+### RESUME CONTENT TO REVIEW
+${content}
+
+### FINAL INSTRUCTION
+Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" specifically prioritize the **Primary Objective** and **Student's Specific Focus** listed above.
+---
+`;
+  };
+
+  const validateUserPrompt = ({ goal, content }) => {
+    if (generatePrompt({ goal, content }).length > 5000) {
+      return (
+        'Prompt exceeds limit by ' +
+        (generatePrompt({ goal, content }).length - 5000) +
+        ' characters'
+      );
+    } else {
+      return '';
+    }
   };
 
   const handleSendPrompt = async ({ goal, content }) => {
     const userPrompt = generatePrompt({ goal, content });
 
     try {
-      await sendPromptCallback({ userPrompt, applicationId: undefined });
+      await sendPromptCallback({ userPrompt, applicationId: selectedApplication?.applicationId });
       return true;
     } catch (error) {
       const message = getErrorMessage(error, promptErrorMappings);
@@ -53,7 +69,9 @@ const ResumeWorkshopPage = () => {
   useEffect(() => {
     const request = async () => {
       try {
-        await getApplicationsCallback({ search: 'niche' });
+        await getApplicationsCallback({
+          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED,INTERVIEWING,OFFER_RECEIVED',
+        });
       } catch (error) {
         const message = getErrorMessage(error, applicationsErrorMappings);
         console.log('TODO', message);
@@ -62,7 +80,9 @@ const ResumeWorkshopPage = () => {
     request();
   }, [getApplicationsCallback]);
 
-  console.log(JSON.stringify(applicationsResponse));
+  const onApplicationChange = (e) => {
+    setSelectedApplication(e.value);
+  };
 
   return (
     <Container
@@ -91,22 +111,21 @@ const ResumeWorkshopPage = () => {
             </Badge>
           </OverlayTrigger>
 
-          {/* TODO: Dropdown options */}
-          <Dropdown
-            align="end"
-            className="ms-2 mt-2">
-            <Dropdown.Toggle as={Button}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPen}
-              />
-              Select an application...
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu style={{ padding: '0.5rem', width: 'max-content' }}>
-              Options
-            </Dropdown.Menu>
-          </Dropdown>
+          <ReactSelectBootstrap
+            isLoading={!applications}
+            options={applications?.map((application) => {
+              return { value: application, label: application.jobTitle };
+            })}
+            className="ms-2 mt-2"
+            onChange={onApplicationChange}
+            value={
+              selectedApplication?.applicationId
+                ? { value: selectedApplication, label: selectedApplication.jobTitle }
+                : null
+            }
+            disabled={loading}
+            placeholder="Select an application..."
+          />
         </Col>
       </Row>
 
@@ -115,6 +134,7 @@ const ResumeWorkshopPage = () => {
           <AIPromptForm
             onSubmit={handleSendPrompt}
             loading={loading}
+            validatePrompt={validateUserPrompt}
           />
         </Col>
 
@@ -136,7 +156,11 @@ const ResumeWorkshopPage = () => {
             </>
           )}
 
-          {aiResponse && !loading && <ReactMarkdown>{aiResponse}</ReactMarkdown>}
+          {aiResponse && !loading && (
+            <div className="text-start">
+              <ReactMarkdown>{aiResponse}</ReactMarkdown>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>
