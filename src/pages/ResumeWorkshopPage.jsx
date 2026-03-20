@@ -8,9 +8,14 @@ import { getApplications } from '../api/jobApplicationsApi';
 import { useEffect, useState } from 'react';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
-// TODO: Error mappings
-const promptErrorMappings = {};
+// TODO: Query requests left and show to user
 
+const promptErrorMappings = {
+  OVER_LIMIT_CHATBOT_REQUEST:
+    'You have hit your chatbot quota for this month. Please wait for it to renew before sending more prompts.',
+};
+
+// There are no unique error mappings for this endpoint
 const applicationsErrorMappings = {};
 
 const ResumeWorkshopPage = () => {
@@ -21,7 +26,7 @@ const ResumeWorkshopPage = () => {
   const aiResponse = promptResponse?.response;
   const applications = applicationsResponse?.applications;
 
-  console.log(aiResponse);
+  // console.log(aiResponse);
 
   const [selectedApplication, setSelectedApplication] = useState({});
 
