@@ -24,7 +24,6 @@ const promptErrorMappings = {
 
 const ResumeWorkshopPage = () => {
   const { data: promptResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
-  // TODO: Because of pagination this will be max 20 applications
   const {
     data: applicationsResponse,
     request: getApplicationsCallback,
