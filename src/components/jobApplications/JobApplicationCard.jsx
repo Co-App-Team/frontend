@@ -147,9 +147,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
                 ) : (
                   <span className="text-muted fs-6">
                     Applied on
-                    <span className="text-dark">
-                      {' ' + formatDate(jobApplication.dateApplied)}
-                    </span>
+                    <div className="text-dark">{' ' + formatDate(jobApplication.dateApplied)}</div>
                   </span>
                 )}
               </Col>
