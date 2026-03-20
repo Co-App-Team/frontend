@@ -13,18 +13,35 @@ export const deleteApplication = async (applicationId) => {
 };
 
 export const getApplications = async (sortOrder, status) => {
-  let params = {
-    sortBy: 'dateApplied',
-    sortOrder: 'desc',
-  };
+  let page = 0;
+  let hasNext = true;
 
-  if (sortOrder != null) {
-    params.sortOrder = sortOrder;
-  }
+  // Janky workaround for getting all applications
+  let applications = [];
+  do {
+    let params = {
+      sortBy: 'dateApplied',
+      sortOrder: 'desc',
+      page: page++, // Increment page after setting
+      size: 100,
+    };
 
-  if (status != null) {
-    params.status = status;
-  }
+    if (sortOrder != null) {
+      params.sortOrder = sortOrder;
+    }
 
-  return await axiosClient.get(`/application`, { params });
+    if (status != null) {
+      params.status = status;
+    }
+
+    const newApplications = await axiosClient.get(`/application`, { params });
+    applications = applications.concat(newApplications.applications);
+
+    hasNext = newApplications.pagination.hasNext;
+  } while (hasNext);
+
+  let latestCall = await axiosClient.get(`/application`);
+  latestCall.applications = applications;
+
+  return latestCall;
 };
