@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
-const AIPromptForm = ({ loading, onSubmit, validatePrompt }) => {
+const AIPromptForm = ({ loading, onSubmit, validatePrompt, promptError }) => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ goal: '', content: '' });
 
@@ -79,6 +79,7 @@ const AIPromptForm = ({ loading, onSubmit, validatePrompt }) => {
         onClick={handleSubmit}>
         {loading ? 'Generating...' : 'Generate Feedback'}
       </Button>
+      {promptError && <div className="text-danger">{promptError}</div>}
     </Form>
   );
 };

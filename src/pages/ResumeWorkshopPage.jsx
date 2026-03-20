@@ -1,14 +1,21 @@
-import { Badge, Col, Container, OverlayTrigger, Row, Spinner, Tooltip } from 'react-bootstrap';
+import {
+  Badge,
+  Col,
+  Container,
+  OverlayTrigger,
+  Placeholder,
+  Row,
+  Spinner,
+  Tooltip,
+} from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import AIPromptForm from '../components/resumeWorkshop/AIPromptForm';
 import useApi from '../hooks/useApi';
-import { sendPrompt } from '../api/resumeWorkshopApi';
+import { getQuota, sendPrompt } from '../api/resumeWorkshopApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import { getApplications } from '../api/jobApplicationsApi';
 import { useEffect, useState } from 'react';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
-
-// TODO: Query requests left and show to user
 
 const promptErrorMappings = {
   OVER_LIMIT_CHATBOT_REQUEST:
@@ -23,12 +30,13 @@ const ResumeWorkshopPage = () => {
     request: getApplicationsCallback,
     error: applicationsError,
   } = useApi(getApplications);
+  const { data: quotaResponse, error: quotaError, request: getQuotaCallback } = useApi(getQuota);
 
   const aiResponse = promptResponse?.response;
   const applications = applicationsResponse?.applications;
+  const userQuota = quotaResponse?.remainingQuota;
 
-  // console.log(aiResponse);
-
+  const [promptError, setPromptError] = useState('');
   const [selectedApplication, setSelectedApplication] = useState({});
 
   const generatePrompt = ({ goal, content }) => {
@@ -67,7 +75,7 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
       return true;
     } catch (error) {
       const message = getErrorMessage(error, promptErrorMappings);
-      console.log(message);
+      setPromptError(message);
       return false;
     }
   };
@@ -80,6 +88,12 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
         });
       } catch (error) {
         console.log('Failed to load applications. Is the server down?', error);
+      }
+
+      try {
+        await getQuotaCallback();
+      } catch (error) {
+        console.log('Failed to load user quota. Is the server down?', error);
       }
     };
     request();
@@ -97,7 +111,6 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
         <Col>
           <h2 className="m-0">Resume Workshop</h2>
         </Col>
-
         <Col className="d-flex justify-content-end align-items-center pe-0">
           <OverlayTrigger
             placement="left"
@@ -143,12 +156,45 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
         </Col>
       </Row>
 
-      <Row className="mt-4">
+      <Row>
+        <div className="text-end">
+          <Badge
+            bg={
+              quotaError
+                ? 'danger'
+                : userQuota == null
+                  ? 'info'
+                  : userQuota > 5
+                    ? 'secondary'
+                    : 'danger'
+            }>
+            {quotaError ? (
+              <>Error loading your prompt quota</>
+            ) : (
+              <>
+                You have
+                {userQuota == null ? (
+                  <>
+                    {' '}
+                    <Placeholder xs={1} />{' '}
+                  </>
+                ) : (
+                  <>{' ' + userQuota + ' '}</>
+                )}
+                prompts left
+              </>
+            )}
+          </Badge>
+        </div>
+      </Row>
+
+      <Row className="mt-1">
         <Col md={6}>
           <AIPromptForm
             onSubmit={handleSendPrompt}
             loading={loading}
             validatePrompt={validateUserPrompt}
+            promptError={promptError}
           />
         </Col>
 
