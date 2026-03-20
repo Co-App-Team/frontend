@@ -32,7 +32,19 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
         return !value ? 'Please select a company' : '';
 
       case 'startDate':
-        return !value ? 'Please select a start date' : '';
+        if (!value) {
+          return 'Please select a start date';
+        } else {
+          const startDate = new Date(value);
+          const endDate = new Date(formData?.endDate);
+          return endDate < startDate ? 'Start date must be before end date' : '';
+        }
+
+      case 'endDate': {
+        const startDate = new Date(formData?.startDate);
+        const endDate = new Date(value);
+        return endDate < startDate ? 'End date must be after start date' : '';
+      }
 
       case 'roleDescription':
         if (!value) {
@@ -55,7 +67,18 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setFormErrors({ ...formErrors, [name]: getValidationError(name, value) });
+    if (name === 'startDate' || name === 'endDate') {
+      setFormErrors({
+        ...formErrors,
+        startDate: getValidationError(
+          'startDate',
+          name === 'startDate' ? value : formData?.startDate,
+        ),
+        endDate: getValidationError('endDate', name === 'endDate' ? value : formData?.endDate),
+      });
+    } else {
+      setFormErrors({ ...formErrors, [name]: getValidationError(name, value) });
+    }
     hasEdited.current = true;
   };
 
@@ -63,7 +86,7 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
     const newErrors = {};
     let hasErrors = false;
 
-    ['roleTitle', 'company', 'startDate', 'roleDescription'].forEach((name) => {
+    ['roleTitle', 'company', 'startDate', 'endDate', 'roleDescription'].forEach((name) => {
       const value = formData[name] || '';
       const error = getValidationError(name, value);
 
