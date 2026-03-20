@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Spinner, Button } from 'react-bootstrap';
+import { Card, Spinner, Button, Container, Row, Col } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -238,45 +238,51 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
           </div>
         </Card.Header>
         <Card.Body>
-          <div className="d-flex justify-content-around">
-            <div
-              className="mx-4"
-              style={{ maxWidth: '30vw', overflowX: 'auto' }}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faBuilding}
-              />
-              {companyName}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faMapPin}
-              />
-              Location: {location}
-            </div>
-            <div className="vr"></div>
-            <div
-              className="mx-4 "
-              onClick={() => {
-                console.log('helloooo');
-              }}>
-              <i>
-                <a
-                  href={sourceLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-decoration-none text-muted">
-                  See job posting:
-                </a>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faExternalLink}
-                />
-              </i>
-            </div>
-          </div>
+          <Container className="text-center">
+            <Row>
+              <Col
+                className="border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faBuilding}
+                  />
+                  {companyName}
+                </div>
+              </Col>
+              <Col
+                className="border-start border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faMapPin}
+                  />
+                  Location: {location}
+                </div>
+              </Col>
+              <Col
+                className="border-start"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <i>
+                    <a
+                      href={sourceLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-decoration-none text-muted">
+                      See job posting:
+                    </a>
+                    <FontAwesomeIcon
+                      className="me-1"
+                      icon={faExternalLink}
+                    />
+                  </i>
+                </div>
+              </Col>
+            </Row>
+          </Container>
         </Card.Body>
       </Card>
 
