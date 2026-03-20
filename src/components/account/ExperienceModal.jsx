@@ -86,19 +86,22 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
             startDate: formData?.startDate,
             endDate: formData?.endDate,
           });
+          setFormData({});
         } catch (requestError) {
           const message = getErrorMessage(requestError, errorMappings);
           setRequestError(message);
         }
       } else {
         onHide();
+        setFormData({});
       }
-      setFormData({});
     }
   };
 
   const handleCancel = () => {
     setFormData({});
+    setFormErrors({});
+    setRequestError('');
     onHide();
   };
 

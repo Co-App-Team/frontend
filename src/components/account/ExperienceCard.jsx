@@ -99,7 +99,7 @@ const ExperienceCard = () => {
         companies={companies}
         defaultValues={experienceToEdit}
         submitCallback={handleModalSubmit}
-        key={experienceToEdit?.experienceId || 'new'}
+        key={!showModal || experienceToEdit?.experienceId || 'new'}
       />
       <Card.Header className="bg-white border-bottom-0 pt-4 pb-0 px-4">
         <h4 className="mb-0">
