@@ -15,13 +15,14 @@ const promptErrorMappings = {
     'You have hit your chatbot quota for this month. Please wait for it to renew before sending more prompts.',
 };
 
-// There are no unique error mappings for this endpoint
-const applicationsErrorMappings = {};
-
 const ResumeWorkshopPage = () => {
   const { data: promptResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
   // TODO: Because of pagination this will be max 20 applications
-  const { data: applicationsResponse, request: getApplicationsCallback } = useApi(getApplications);
+  const {
+    data: applicationsResponse,
+    request: getApplicationsCallback,
+    error: applicationsError,
+  } = useApi(getApplications);
 
   const aiResponse = promptResponse?.response;
   const applications = applicationsResponse?.applications;
@@ -78,8 +79,7 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
           status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED,INTERVIEWING,OFFER_RECEIVED',
         });
       } catch (error) {
-        const message = getErrorMessage(error, applicationsErrorMappings);
-        console.log('TODO', message);
+        console.log('Failed to load applications. Is the server down?', error);
       }
     };
     request();
@@ -118,9 +118,13 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
 
           <ReactSelectBootstrap
             isLoading={!applications}
-            options={applications?.map((application) => {
-              return { value: application, label: application.jobTitle };
-            })}
+            options={
+              applicationsError
+                ? null
+                : applications?.map((application) => {
+                    return { value: application, label: application.jobTitle };
+                  })
+            }
             className="ms-2 mt-2"
             onChange={onApplicationChange}
             value={
@@ -128,8 +132,13 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
                 ? { value: selectedApplication, label: selectedApplication.jobTitle }
                 : null
             }
-            disabled={loading}
-            placeholder="Select an application..."
+            isDisabled={applicationsError || loading}
+            placeholder={
+              applicationsError
+                ? 'Error loading applications try again'
+                : 'Select an application...'
+            }
+            isInvalid={applicationsError}
           />
         </Col>
       </Row>
