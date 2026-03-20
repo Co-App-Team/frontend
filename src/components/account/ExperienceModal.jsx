@@ -18,41 +18,61 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
 
   const { loading: isLoading, request: onSubmitCallback } = useApi(submitCallback);
 
+  const validateRoleTitle = (value) => {
+    if (!value) {
+      return 'Please provide a job title';
+    } else if (value.length > 80) {
+      return 'Job title too long. Please use 80 or fewer characters.';
+    }
+    return '';
+  };
+
+  const validateCompany = (value) => {
+    return !value ? 'Please select a company' : '';
+  };
+
+  const validateStartDate = (value) => {
+    if (!value) {
+      return 'Please select a start date';
+    } else {
+      const startDate = new Date(value);
+      const endDate = new Date(formData?.endDate);
+      return endDate < startDate ? 'Start date must be before end date' : '';
+    }
+  };
+
+  const validateEndDate = (value) => {
+    const startDate = new Date(formData?.startDate);
+    const endDate = new Date(value);
+    return endDate < startDate ? 'End date must be after start date' : '';
+  };
+
+  const validateRoleDescription = (value) => {
+    if (!value) {
+      return 'Please enter a job description';
+    } else if (value.length > 1000) {
+      return 'Job title too long. Please use 1000 or fewer characters.';
+    }
+    return '';
+  };
+
   const getValidationError = (name, value) => {
     switch (name) {
       case 'roleTitle':
-        if (!value) {
-          return 'Please provide a job title';
-        } else if (value.length > 80) {
-          return 'Job title too long. Please use 80 or fewer characters.';
-        }
-        return '';
+        return validateRoleTitle(value);
 
       case 'company':
-        return !value ? 'Please select a company' : '';
+        return validateCompany(value);
 
       case 'startDate':
-        if (!value) {
-          return 'Please select a start date';
-        } else {
-          const startDate = new Date(value);
-          const endDate = new Date(formData?.endDate);
-          return endDate < startDate ? 'Start date must be before end date' : '';
-        }
+        return validateStartDate(value);
 
       case 'endDate': {
-        const startDate = new Date(formData?.startDate);
-        const endDate = new Date(value);
-        return endDate < startDate ? 'End date must be after start date' : '';
+        return validateEndDate(value);
       }
 
       case 'roleDescription':
-        if (!value) {
-          return 'Please enter a job description';
-        } else if (value.length > 1000) {
-          return 'Job title too long. Please use 1000 or fewer characters.';
-        }
-        return '';
+        return validateRoleDescription(value);
 
       default:
         return '';
