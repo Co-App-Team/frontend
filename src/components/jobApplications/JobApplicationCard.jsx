@@ -128,114 +128,120 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
       <Card
         className={styles['application-card']}
         style={{ borderLeftColor: borderColor }}>
-        <Card.Header
-          className="d-flex justify-content-between align-items-center text-start border-bottom-0"
-          as={'h5'}>
-          <div className="d-flex align-items-center gap-3">
-            <div style={{ maxWidth: '30vw', overflowX: 'auto', overflowY: 'hidden' }}>
-              <span>{jobApplication.jobTitle}</span>
-            </div>
+        <Card.Header className="d-flex justify-content-between align-items-center text-start border-bottom-0">
+          <Container>
+            <Row>
+              <Col
+                className="d-flex align-items-center border-end"
+                style={{ width: '30vw', overflowX: 'auto', overflowY: 'auto' }}>
+                <h5 className="text-nowrap">{jobApplication.jobTitle}</h5>
+              </Col>
+              <Col
+                className="d-flex align-items-center fst-italic text-nowrap"
+                style={{ width: '10vw', overflowX: 'auto', overflowY: 'auto' }}>
+                {!jobApplication.dateApplied ? (
+                  <span className="text-muted fs-6">
+                    Due
+                    <span className="text-dark">{' ' + deadlineDate}</span>
+                  </span>
+                ) : (
+                  <span className="text-muted fs-6">
+                    Applied on
+                    <span className="text-dark">
+                      {' ' + formatDate(jobApplication.dateApplied)}
+                    </span>
+                  </span>
+                )}
+              </Col>
+              <Col className="d-flex align-items-center justify-content-end pe-0">
+                <Dropdown className="m-1">
+                  <Dropdown.Toggle
+                    className={styles['black-text']}
+                    variant={statusColor}
+                    id="dropdown-basic">
+                    {FORMAT_STATUS[status]}
+                  </Dropdown.Toggle>
 
-            <div className="d-flex gap-2 flex-wrap">
-              <Dropdown>
-                <Dropdown.Toggle
-                  className={styles['black-text']}
-                  variant={statusColor}
-                  id="dropdown-basic">
-                  {FORMAT_STATUS[status]}
-                </Dropdown.Toggle>
+                  <Dropdown.Menu className={styles['dropdown']}>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('NOT_APPLIED');
+                      }}>
+                      {FORMAT_STATUS['NOT_APPLIED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('APPLIED');
+                      }}>
+                      {FORMAT_STATUS['APPLIED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('INTERVIEW_SCHEDULED');
+                      }}>
+                      {FORMAT_STATUS['INTERVIEW_SCHEDULED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('INTERVIEWING');
+                      }}>
+                      {FORMAT_STATUS['INTERVIEWING']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('REJECTED');
+                      }}>
+                      {FORMAT_STATUS['REJECTED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('WITHDRAWN');
+                      }}>
+                      {FORMAT_STATUS['WITHDRAWN']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('OFFER_RECEIVED');
+                      }}>
+                      {FORMAT_STATUS['OFFER_RECEIVED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('ACCEPTED');
+                      }}>
+                      {FORMAT_STATUS['ACCEPTED']}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
 
-                <Dropdown.Menu className={styles['dropdown']}>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('NOT_APPLIED');
-                    }}>
-                    {FORMAT_STATUS['NOT_APPLIED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('APPLIED');
-                    }}>
-                    {FORMAT_STATUS['APPLIED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('INTERVIEW_SCHEDULED');
-                    }}>
-                    {FORMAT_STATUS['INTERVIEW_SCHEDULED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('INTERVIEWING');
-                    }}>
-                    {FORMAT_STATUS['INTERVIEWING']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('REJECTED');
-                    }}>
-                    {FORMAT_STATUS['REJECTED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('WITHDRAWN');
-                    }}>
-                    {FORMAT_STATUS['WITHDRAWN']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('OFFER_RECEIVED');
-                    }}>
-                    {FORMAT_STATUS['OFFER_RECEIVED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('ACCEPTED');
-                    }}>
-                    {FORMAT_STATUS['ACCEPTED']}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                <Button
+                  variant="primary"
+                  className="m-1"
+                  size="md"
+                  onClick={() => setIsEditing(true)}>
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faPen}
+                    size="sm"
+                  />
+                  Edit
+                </Button>
 
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => setIsEditing(true)}>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faPen}
-                  size="sm"
-                />
-                Edit
-              </Button>
-
-              <Button
-                variant="danger"
-                size="md"
-                onClick={() => setIsDeleting(true)}>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faTrash}
-                  size="sm"
-                />
-                Delete
-              </Button>
-            </div>
-          </div>
-
-          <div className="text-end ms-3">
-            {!jobApplication.dateApplied ? (
-              <span className="text-muted fs-6">
-                Due
-                <span className="text-dark">{' ' + deadlineDate}</span>
-              </span>
-            ) : (
-              <span className="text-muted fs-6">
-                Applied on
-                <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
-              </span>
-            )}
-          </div>
+                <Button
+                  variant="danger"
+                  className="m-1"
+                  size="md"
+                  onClick={() => setIsDeleting(true)}>
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faTrash}
+                    size="sm"
+                  />
+                  Delete
+                </Button>
+              </Col>
+            </Row>
+          </Container>
         </Card.Header>
         <Card.Body>
           <Container className="text-center">
