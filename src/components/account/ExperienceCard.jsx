@@ -1,3 +1,5 @@
+// Component styling developed in part using gemini: https://gemini.google.com/share/c6df56fd74b9
+
 import { Alert, Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTools } from '@fortawesome/free-solid-svg-icons';
@@ -118,9 +120,10 @@ const ExperienceCard = () => {
         )}
 
         {deleteError && <Alert variant="danger">{deleteError}</Alert>}
-
         {data ? (
-          <>
+          <div
+            className="overflow-y-auto overflow-x-hidden pe-3"
+            style={{ maxHeight: '450px' }}>
             {data?.experience?.map((experience) => {
               return (
                 <JobExperience
@@ -137,7 +140,7 @@ const ExperienceCard = () => {
                 />
               );
             })}
-          </>
+          </div>
         ) : (
           <>{!companiesError && !experienceError && <Spinner />}</>
         )}
