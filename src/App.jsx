@@ -82,6 +82,10 @@ function App() {
               path="interviews"
               element={<Calendar />}
             />
+            <Route
+              path="resume-workshop"
+              element={<ResumeWorkshopPage />}
+            />
           </Route>
         </Route>
       </Routes>
