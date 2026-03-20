@@ -16,6 +16,7 @@ const JobApplicationsPage = () => {
   const [otherFilteredApplications, setOtherFilteredApplications] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
+  const [useAppliedOnSort, setUseAppliedOnSort] = useState(false);
 
   const [error, setError] = useState(false);
 
@@ -71,7 +72,7 @@ const JobApplicationsPage = () => {
     await refreshApplicationsList(sortOrder, status, false);
   }
 
-  async function useAppliedOnSort(sortOrder, status) {
+  async function applyAppliedOnSort(sortOrder, status) {
     try {
       const applications = await getApplicationsCallback(sortOrder, status);
 
@@ -80,7 +81,7 @@ const JobApplicationsPage = () => {
       );
 
       setTopFilteredApplications(filterOutDateApplied);
-      setOtherFilteredApplications(filterOutDateApplied);
+      setOtherFilteredApplications([]);
     } catch (error) {
       const message = getErrorMessage(error);
       setError(message);
@@ -90,13 +91,16 @@ const JobApplicationsPage = () => {
   const updateSearch = (value) => {
     if (!applications?.applications) return;
 
-    const apps = applications.applications;
+    let apps = applications.applications;
+    if (useAppliedOnSort) {
+      apps = applications.applications.filter(
+        (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
+      );
+    }
 
-    const topFilter = apps.filter((c) =>
-      c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-    );
+    const topFilter = apps.filter((c) => c.jobTitle.toLowerCase().startsWith(value.toLowerCase()));
     const otherFilters = apps.filter(
-      (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+      (c) => c.jobTitle.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
     setOtherFilteredApplications(otherFilters);
@@ -136,7 +140,8 @@ const JobApplicationsPage = () => {
         <Row>
           <FilteringBar
             handleSearch={updateSearch}
-            handleCalendarSortOrder={useAppliedOnSort}
+            handleCalendarSortOrder={applyAppliedOnSort}
+            setUseAppliedOnSort={setUseAppliedOnSort}
             handleFilters={handleFilterChange}
             filters={filters}
             setFilters={setFilters}
