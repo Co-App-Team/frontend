@@ -93,7 +93,13 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
       } else {
         onHide();
       }
+      setFormData({});
     }
+  };
+
+  const handleCancel = () => {
+    setFormData({});
+    onHide();
   };
 
   return (
@@ -195,7 +201,7 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
       <Modal.Footer>
         <Button
           variant="info"
-          onClick={onHide}
+          onClick={handleCancel}
           disabled={isLoading}>
           Cancel
         </Button>
