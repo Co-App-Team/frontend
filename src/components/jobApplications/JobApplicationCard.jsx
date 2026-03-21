@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Card, Spinner, Button, Container, Row, Col } from 'react-bootstrap';
+import {
+  Card,
+  Spinner,
+  Button,
+  Container,
+  Row,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+} from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -212,31 +221,36 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
                   </Dropdown.Menu>
                 </Dropdown>
 
-                <Button
-                  variant="primary"
-                  className="m-1"
-                  size="md"
-                  onClick={() => setIsEditing(true)}>
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faPen}
-                    size="sm"
-                  />
-                  Edit
-                </Button>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip id="edit-tooltip">Edit Application</Tooltip>}>
+                  <Button
+                    variant="primary"
+                    className="m-1"
+                    size="md"
+                    onClick={() => setIsEditing(true)}>
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      size="sm"
+                    />
+                  </Button>
+                </OverlayTrigger>
 
-                <Button
-                  variant="danger"
-                  className="m-1"
-                  size="md"
-                  onClick={() => setIsDeleting(true)}>
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faTrash}
-                    size="sm"
-                  />
-                  Delete
-                </Button>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip id="delete-tooltip">Delete Application</Tooltip>}>
+                  <Button
+                    variant="danger"
+                    className="m-1"
+                    size="md"
+                    onClick={() => setIsDeleting(true)}>
+                    <FontAwesomeIcon
+                      className="me-1"
+                      icon={faTrash}
+                      size="sm"
+                    />
+                  </Button>
+                </OverlayTrigger>
               </Col>
             </Row>
           </Container>
