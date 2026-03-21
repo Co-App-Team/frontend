@@ -4,6 +4,10 @@ export const getCompanies = async () => {
   return axiosClient.get('/companies');
 };
 
+export const getCompany = async (companyId) => {
+  return await axiosClient.get(`/companies/${companyId}`);
+};
+
 export const getReviews = async (companyId, page, size) => {
   if (page != null && size != null) {
     return await axiosClient.get(`/companies/${companyId}`, {

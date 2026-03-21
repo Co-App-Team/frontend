@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
+import dropdownStyles from '../styling/common/Dropdown.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
 import { getErrorMessage } from '../../utils/errorUtils';
@@ -280,14 +281,14 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 Please enter a valid company name.
               </Form.Control.Feedback>
 
-              <div className={styles['dropdown-container']}>
+              <div className={dropdownStyles['dropdown-container']}>
                 {filteredCompanies.map((company) => {
                   return (
                     <div
                       key={company.companyId}
-                      className={styles['dropdown']}>
+                      className={dropdownStyles['dropdown']}>
                       <Dropdown.Item
-                        className={styles['dropdown-item']}
+                        className={dropdownStyles['dropdown-item']}
                         key={company.companyId}
                         onClick={() => handleSelectedCompany(company.companyName)}
                         disabled={isAddLoading || isEditLoading}>
