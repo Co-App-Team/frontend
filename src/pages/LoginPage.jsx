@@ -140,7 +140,7 @@ const LoginPage = () => {
           variant="danger"
           className="mt-3"
           style={{ maxWidth: '19rem' }}>
-          Warning: This app will not work without 3rd party cookies enabled
+          Warning: To use this app, make sure 3rd party cookies are enabled
         </Alert>
       </div>
     </PageTransition>
