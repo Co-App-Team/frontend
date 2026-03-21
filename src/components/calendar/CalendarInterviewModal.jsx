@@ -37,7 +37,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   };
 
   const validateApplication = (application) => {
-    return application && application.trim().includes('@');
+    return application?.trim()?.includes('@');
   };
 
   const validateInterviewDatetime = (date) => {
