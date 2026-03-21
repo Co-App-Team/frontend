@@ -7,12 +7,14 @@ import CalendarGrid from '../components/calendar/CalendarGrid';
 import NewInterviewModal from '../components/calendar/CalendarInterviewModal';
 import useApi from '../hooks/useApi';
 import { getErrorMessage } from '../utils/errorUtils';
-import { getApplications } from '../api/jobApplicationsApi';
+import { getApplications, getInterviews } from '../api/jobApplicationsApi';
 
 const Calendar = () => {
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showInterviewModal, setShowInterviewModal] = useState(false);
+
+  const [interviews, setInterviews] = useState([]);
 
   const [error, setError] = useState(false);
 
@@ -63,6 +65,7 @@ const Calendar = () => {
   };
 
   const { data: applicationsResponse, request: getApplicationsCallback } = useApi(getApplications);
+  const { request: getInterviewsCallback } = useApi(getInterviews);
 
   const applications = applicationsResponse?.applications;
 
@@ -85,6 +88,22 @@ const Calendar = () => {
   async function hideInterviewModal() {
     setShowInterviewModal(false);
   }
+
+  async function refreshInterviewsList() {
+    try {
+      const data = await getInterviewsCallback();
+      setInterviews(data);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setError(message);
+    }
+  }
+
+  // done for now to satisfy linting issues
+  // will be used to display interviews later on
+  useEffect(() => {
+    console.log('interviews: ', interviews);
+  });
 
   return (
     <Container className="mt-3">
@@ -168,7 +187,7 @@ const Calendar = () => {
         onShow={showInterviewModal}
         onHide={hideInterviewModal}
         applications={applications}
-        onSaved={null}
+        onSaved={refreshInterviewsList}
       />
     </Container>
   );
