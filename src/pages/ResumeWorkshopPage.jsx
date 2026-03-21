@@ -102,6 +102,35 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
     setSelectedApplication(e.value);
   };
 
+  const getQuotaBackgroundColour = () => {
+    if (quotaError) {
+      return 'danger';
+    } else if (userQuota == null) {
+      return 'info';
+    } else if (userQuota > 5) {
+      return 'secondary';
+    } else {
+      return 'danger';
+    }
+  };
+
+  const quotaBadge = () => {
+    return (
+      <>
+        You have
+        {userQuota == null ? (
+          <>
+            {' '}
+            <Placeholder xs={1} />{' '}
+          </>
+        ) : (
+          <>{' ' + userQuota + ' '}</>
+        )}
+        prompts left
+      </>
+    );
+  };
+
   return (
     <Container
       fluid="sm"
@@ -157,32 +186,8 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
 
       <Row>
         <div className="text-end">
-          <Badge
-            bg={
-              quotaError
-                ? 'danger'
-                : userQuota == null
-                  ? 'info'
-                  : userQuota > 5
-                    ? 'secondary'
-                    : 'danger'
-            }>
-            {quotaError ? (
-              <>Error loading your prompt quota</>
-            ) : (
-              <>
-                You have
-                {userQuota == null ? (
-                  <>
-                    {' '}
-                    <Placeholder xs={1} />{' '}
-                  </>
-                ) : (
-                  <>{' ' + userQuota + ' '}</>
-                )}
-                prompts left
-              </>
-            )}
+          <Badge bg={getQuotaBackgroundColour()}>
+            {quotaError ? <>Error loading your prompt quota</> : <>{quotaBadge()}</>}
           </Badge>
         </div>
       </Row>
