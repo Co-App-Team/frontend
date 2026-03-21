@@ -1,6 +1,5 @@
 import { Button, DropdownDivider, Form } from 'react-bootstrap';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
-import PropTypes from 'prop-types';
 
 const FilterSelection = ({ filters, setFilters, resetFilters }) => {
   const statusOptions = Object.entries(FORMAT_STATUS).map(([key, value]) => ({
@@ -32,12 +31,6 @@ const FilterSelection = ({ filters, setFilters, resetFilters }) => {
       ))}
     </>
   );
-};
-
-FilterSelection.propTypes = {
-  filters: PropTypes.array.isRequired,
-  setFilters: PropTypes.func.isRequired,
-  resetFilters: PropTypes.func.isRequired,
 };
 
 export default FilterSelection;

@@ -77,6 +77,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   };
 
   const updateStatus = async (newStatus) => {
+    setError('');
+    const errorMappings = {
+      REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'You cannot apply to this. The due date has already passed!',
+    };
     try {
       let finalFormData = {
         ...jobApplication,
@@ -87,7 +91,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
 
       await onUpdated();
     } catch (error) {
-      const message = getErrorMessage(error);
+      const message = getErrorMessage(error, errorMappings);
       setError(message);
     }
   };
