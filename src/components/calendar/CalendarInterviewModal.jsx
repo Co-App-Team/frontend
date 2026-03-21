@@ -1,46 +1,26 @@
 import { useState } from 'react';
-import { Form, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
-import styles from '../styling/jobApplications/JobApplications.module.css';
-import dropdownStyles from '../styling/common/Dropdown.module.css';
+import { Form, Modal, Button, Spinner } from 'react-bootstrap';
 import useApi from '../../hooks/useApi';
 import { editApplication } from '../../api/jobApplicationsApi';
 import { getCompany } from '../../api/rateMyCoopApi';
 import { getErrorMessage } from '../../utils/errorUtils';
+import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
 function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
   const [application, setApplication] = useState('');
   const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const [filteredApplications, setFilteredApplications] = useState([]);
-
   const [formData, setFormData] = useState([]);
+
+  const [dateTime, setDateTime] = useState(null);
 
   const { request: getCompanyCallback } = useApi(getCompany);
   const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
-  const filterApplications = (value) => {
-    if (value == '') return [];
-
-    return applications.filter(
-      (application) =>
-        application.jobTitle.toLowerCase().startsWith(value.toLowerCase()) ||
-        application.jobTitle.toLowerCase().includes(value.toLowerCase()),
-    );
-  };
-
-  const handleSearchApplication = (e) => {
-    const value = e.target.value;
-    setApplication(value);
-
-    if (value == '') {
-      setFilteredApplications([]);
-    } else {
-      setFilteredApplications(filterApplications(value));
-    }
-  };
-
-  const handleSelectedApplication = async (selected) => {
+  const handleSelectedApplication = async (e) => {
+    const selected = e.value;
+    console.log('this is selected', selected);
     try {
       const result = await getCompanyCallback(selected?.companyId);
       const companyName = result?.company?.companyName;
@@ -50,27 +30,22 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
       const message = getErrorMessage(error, {});
       setError(message);
     }
-    setFilteredApplications([]);
   };
 
   const onInterviewDateChange = (e) => {
-    setFormData({ ...formData, interviewDateTime: e.target.value });
+    setDateTime(e.target.value);
   };
 
   const validateApplication = (application) => {
-    return application.trim() != '' && application.includes('@');
+    return application && application.trim().includes('@');
   };
 
   const validateInterviewDatetime = (date) => {
-    let isValid = true;
-    if (!date) {
-      isValid = false;
-    }
-    return isValid;
+    return date;
   };
 
   const isApplicationValid = validateApplication(application);
-  const isInterviewDatetimeValid = validateInterviewDatetime(formData.interviewDateTime);
+  const isInterviewDatetimeValid = validateInterviewDatetime(dateTime);
 
   const reset = () => {
     setFormData([]);
@@ -87,8 +62,8 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
     }
 
     try {
-      console.log('submitting this', formData);
-      await editJobApplicationCallback(formData, formData.applicationId);
+      const finalFormData = { ...formData, interviewDateTime: dateTime };
+      await editJobApplicationCallback(finalFormData, finalFormData.applicationId);
       await onSaved();
       reset();
     } catch (error) {
@@ -110,7 +85,7 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
       onHide={onHide}
       centered>
       <Modal.Header closeButton>
-        <Modal.Title className={styles['black-text']}>New Job Interview</Modal.Title>
+        <Modal.Title className="text-dark">New Job Interview</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
@@ -118,33 +93,21 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
           <Form.Group className="mb-2">
             <Form.Label>Job Application</Form.Label>
             <Form.Group>
-              <Form.Control
-                type="text"
-                value={application}
-                onChange={handleSearchApplication}
-                isInvalid={showError && !isApplicationValid}
-                disabled={isEditLoading}></Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Please provide the job application this interview is for.
-              </Form.Control.Feedback>
-
-              <div className={dropdownStyles['dropdown-container']}>
-                {filteredApplications.map((app) => {
-                  return (
-                    <div
-                      key={app.applicationId}
-                      className={dropdownStyles['dropdown']}>
-                      <Dropdown.Item
-                        className={dropdownStyles['dropdown-item']}
-                        key={app.applicationId}
-                        onClick={() => handleSelectedApplication(app)}
-                        disabled={isEditLoading}>
-                        {app.jobTitle}
-                      </Dropdown.Item>
-                    </div>
-                  );
+              <ReactSelectBootstrap
+                isLoading={!applications}
+                options={applications?.map((application) => {
+                  return { value: application, label: application.jobTitle };
                 })}
-              </div>
+                onChange={handleSelectedApplication}
+                value={application ? { value: application, label: application } : null}
+                isInvalid={showError && !isApplicationValid}
+              />
+
+              {showError && !isApplicationValid && (
+                <div className="invalid-feedback d-block">
+                  Please provide the job application this interview is for.
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group>

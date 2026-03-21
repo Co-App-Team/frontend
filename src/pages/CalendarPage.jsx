@@ -6,15 +6,13 @@ import styles from '../components/styling/calendar/Calendar.module.css';
 import CalendarGrid from '../components/calendar/CalendarGrid';
 import NewInterviewModal from '../components/calendar/CalendarInterviewModal';
 import useApi from '../hooks/useApi';
-import { getApplications, getInterviews } from '../api/jobApplicationsApi';
 import { getErrorMessage } from '../utils/errorUtils';
+import { getApplications } from '../api/jobApplicationsApi';
 
 const Calendar = () => {
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showInterviewModal, setShowInterviewModal] = useState(false);
-  const [applications, setApplications] = useState([]);
-  const [interviews, setInterviews] = useState([]);
 
   const [error, setError] = useState(false);
 
@@ -64,57 +62,29 @@ const Calendar = () => {
     setCurrentDate(new Date(today.getFullYear(), today.getMonth(), 1));
   };
 
-  const { request: getApplicationsCallback } = useApi(getApplications);
-  const { request: getInterviewsCallback } = useApi(getInterviews);
+  const { data: applicationsResponse, request: getApplicationsCallback } = useApi(getApplications);
 
-  async function refreshInterviewsList() {
-    try {
-      const data = await getInterviewsCallback();
-      setInterviews(data);
-    } catch (error) {
-      const message = getErrorMessage(error);
-      setError(message);
-    }
-  }
+  const applications = applicationsResponse?.applications;
 
   useEffect(() => {
-    async function loadApplications() {
+    const request = async () => {
       try {
-        const data = await getApplicationsCallback();
         // only allow users to make interviews with applications
         // that are not at the "interviewing" stage yet
-        const validApplications = data.applications.filter((app) => app.status !== 'INTERVIEWING');
-        setApplications(validApplications);
+        await getApplicationsCallback({
+          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED,OFFER_RECEIVED',
+        });
       } catch (error) {
-        const message = getErrorMessage(error);
+        const message = getErrorMessage(error, {});
         setError(message);
       }
-    }
-    loadApplications();
+    };
+    request();
   }, [getApplicationsCallback]);
-
-  useEffect(() => {
-    async function loadInterviews() {
-      try {
-        const data = await getInterviewsCallback();
-        setInterviews(data);
-      } catch (error) {
-        const message = getErrorMessage(error);
-        setError(message);
-      }
-    }
-    loadInterviews();
-  }, [getInterviewsCallback]);
 
   async function hideInterviewModal() {
     setShowInterviewModal(false);
-    await refreshInterviewsList();
   }
-
-  // for now
-  useEffect(() => {
-    console.log('these are the interviews: ', interviews);
-  }, [interviews]);
 
   return (
     <Container className="mt-3">
@@ -198,7 +168,7 @@ const Calendar = () => {
         onShow={showInterviewModal}
         onHide={hideInterviewModal}
         applications={applications}
-        onSaved={refreshInterviewsList}
+        onSaved={null}
       />
     </Container>
   );
