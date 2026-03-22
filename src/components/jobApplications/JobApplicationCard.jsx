@@ -13,10 +13,10 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMapPin,
-  faBuilding,
   faExternalLink,
   faPen,
   faTrash,
+  faIdCard,
 } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { getErrorMessage } from '../../utils/errorUtils';
@@ -126,7 +126,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
               <Col
                 className="d-flex align-items-center border-end"
                 style={{ width: '30vw', overflowX: 'auto', overflowY: 'auto' }}>
-                <h5 className="text-nowrap">{jobApplication.jobTitle}</h5>
+                <h5 className="text-nowrap">{companyName}</h5>
               </Col>
               <Col
                 className="d-flex align-items-center fst-italic text-nowrap"
@@ -247,9 +247,9 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
                 <div className="m-1">
                   <FontAwesomeIcon
                     className="me-1"
-                    icon={faBuilding}
+                    icon={faIdCard}
                   />
-                  {companyName}
+                  Job Title: {jobApplication.jobTitle}
                 </div>
               </Col>
               <Col
