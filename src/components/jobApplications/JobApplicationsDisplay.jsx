@@ -9,6 +9,7 @@ const JobApplicationsDisplay = ({
   refreshApplicationsList,
   loading,
   setError,
+  companies,
 }) => {
   return (
     <CardContainer>
@@ -24,6 +25,7 @@ const JobApplicationsDisplay = ({
                   key={application.applicationId}>
                   <Col>
                     <JobApplicationCard
+                      companies={companies}
                       setError={setError}
                       jobApplication={application}
                       onUpdated={refreshApplicationsList}
@@ -55,6 +57,7 @@ const JobApplicationsDisplay = ({
                     key={application}>
                     <Col key={application}>
                       <JobApplicationCard
+                        companies={companies}
                         setError={setError}
                         jobApplication={application}
                         onUpdated={refreshApplicationsList}
@@ -81,6 +84,7 @@ const JobApplicationsDisplay = ({
                       key={application}>
                       <Col key={application}>
                         <JobApplicationCard
+                          companies={companies}
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
@@ -106,6 +110,7 @@ const JobApplicationsDisplay = ({
                       key={application.applicationId}>
                       <Col key={application}>
                         <JobApplicationCard
+                          companies={companies}
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
@@ -122,6 +127,7 @@ const JobApplicationsDisplay = ({
                       key={application}>
                       <Col key={application}>
                         <JobApplicationCard
+                          companies={companies}
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
