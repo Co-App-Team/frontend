@@ -23,8 +23,6 @@ export const getApplications = async (params) => {
     params.size = 100;
   }
 
-  // Un-paginate the applications, this isn't the "greatest" solution but allows us to keep the endpoint
-  // paginated, and users won't likely have thousands of applications so this shouldn't have to run for many iterations.
   let applications = [];
   let hasNext = true;
   params.page = 0;

@@ -56,7 +56,11 @@ const JobApplicationsPage = () => {
 
   async function refreshApplicationsList(sortOrder, status, resetFilters) {
     try {
-      const applications = await getApplicationsCallback({ sortOrder, status });
+      const params = {
+        sortOrder: sortOrder,
+        status: status,
+      };
+      const applications = await getApplicationsCallback(params);
       setTopFilteredApplications(applications.applications);
       setOtherFilteredApplications(applications.applications);
       if (resetFilters) {
@@ -74,7 +78,11 @@ const JobApplicationsPage = () => {
 
   async function applyAppliedOnSort(sortOrder, status) {
     try {
-      const applications = await getApplicationsCallback({ sortOrder, status });
+      const params = {
+        sortOrder: sortOrder,
+        status: status,
+      };
+      const applications = await getApplicationsCallback(params);
 
       const filterOutDateApplied = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
