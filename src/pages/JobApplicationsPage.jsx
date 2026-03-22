@@ -96,19 +96,28 @@ const JobApplicationsPage = () => {
     }
   }
 
+  function getCompany(jobApplication) {
+    return companies.find((c) => c.companyId === jobApplication.companyId);
+  }
+
   const updateSearch = (value) => {
-    if (!applications?.applications) return;
+    if (!applications?.applications || !companies) return;
 
     let apps = applications.applications;
+
     if (useAppliedOnSort) {
       apps = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
       );
     }
 
-    const topFilter = apps.filter((c) => c.jobTitle.toLowerCase().startsWith(value.toLowerCase()));
+    const topFilter = apps.filter((c) =>
+      getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
+    );
     const otherFilters = apps.filter(
-      (c) => c.jobTitle.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+      (c) =>
+        getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
+        !topFilter.includes(c),
     );
 
     setOtherFilteredApplications(otherFilters);
@@ -165,6 +174,7 @@ const JobApplicationsPage = () => {
         refreshApplicationsList={refreshApplicationsList}
         loading={applicationRequestLoading}
         setError={setError}
+        companies={companies}
       />
 
       <NewApplicationModal

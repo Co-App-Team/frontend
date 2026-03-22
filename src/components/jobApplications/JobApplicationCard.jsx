@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Card,
   Spinner,
@@ -22,7 +22,6 @@ import styles from '../styling/jobApplications/JobApplications.module.css';
 import { getErrorMessage } from '../../utils/errorUtils';
 
 import useApi from '../../hooks/useApi';
-import { getCompanies } from '../../api/rateMyCoopApi';
 import { editApplication } from '../../api/jobApplicationsApi';
 
 import EditApplicationModal from './JobApplicationModal';
@@ -30,7 +29,7 @@ import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
-const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -38,9 +37,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const [companies, setCompanies] = useState([]);
-
-  const { request: getCompaniesCallback } = useApi(getCompanies);
   const { request: editJobApplicationCallback } = useApi(editApplication);
 
   function formatDate(date) {
@@ -104,19 +100,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
       setError(message);
     }
   };
-
-  useEffect(() => {
-    async function loadCompanies() {
-      try {
-        const data = await getCompaniesCallback();
-        setCompanies(data.companies);
-      } catch (error) {
-        const message = getErrorMessage(error);
-        console.log(message);
-      }
-    }
-    loadCompanies();
-  }, [getCompaniesCallback]);
 
   if (isLoading) {
     return (
