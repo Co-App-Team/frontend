@@ -39,3 +39,7 @@ export const getApplications = async (params) => {
 
   return { applications: applications };
 };
+
+export const getInterviews = async () => {
+  return await axiosClient.get(`/application/interviews`);
+};

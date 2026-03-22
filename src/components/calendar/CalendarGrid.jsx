@@ -12,13 +12,13 @@ function CalendarGrid({ weeks, today, currentDate }) {
 
   return (
     <div className={styles['calendar-grid']}>
-      {weeks.map((week) => (
+      {weeks.map((week, weekIndex) => (
         <div
-          key={week}
+          key={`week-${currentDate.getFullYear()}-${currentDate.getMonth()}-${weekIndex}`}
           className={styles['calendar-row']}>
-          {week.map((day) => (
+          {week.map((day, dayIndex) => (
             <div
-              key={day}
+              key={`day-${weekIndex}-${dayIndex}`}
               className={styles['calendar-cell']}>
               {day && (
                 <div className={isToday(day) ? styles['calendar-today'] : styles['calendar-date']}>

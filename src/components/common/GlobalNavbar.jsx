@@ -71,6 +71,11 @@ const GlobalNavbar = () => {
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
+                to="/interviews">
+                Interview Calendar
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
                 to="/resume-workshop">
                 Resume Workshop
               </Nav.Link>
