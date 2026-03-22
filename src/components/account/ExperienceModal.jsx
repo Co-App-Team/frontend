@@ -188,7 +188,7 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
                   ? { value: formData.company, label: formData.company.companyName }
                   : null
               }
-              disabled={isLoading}
+              isDisabled={isLoading}
               isInvalid={formErrors?.company}
             />
             {formErrors?.company && (

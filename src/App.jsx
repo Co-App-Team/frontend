@@ -75,6 +75,10 @@ function App() {
               element={<RateMyCoopPage />}
             />
             <Route
+              path="resume-workshop"
+              element={<ResumeWorkshopPage />}
+            />
+            <Route
               path="interviews"
               element={<Calendar />}
             />
