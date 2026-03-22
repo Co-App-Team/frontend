@@ -89,7 +89,6 @@ const JobApplicationsPage = () => {
   }
 
   function getCompany(jobApplication) {
-    console.log(companies);
     return companies.find((c) => c.companyId === jobApplication.companyId);
   }
 
