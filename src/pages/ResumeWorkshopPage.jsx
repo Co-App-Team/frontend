@@ -1,97 +1,134 @@
-import { faPen } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
 import {
   Badge,
-  Button,
   Col,
   Container,
-  Dropdown,
   OverlayTrigger,
+  Placeholder,
   Row,
+  Spinner,
   Tooltip,
 } from 'react-bootstrap';
 import ReactMarkdown from 'react-markdown';
 import AIPromptForm from '../components/resumeWorkshop/AIPromptForm';
+import useApi from '../hooks/useApi';
+import { getQuota, sendPrompt } from '../api/resumeWorkshopApi';
+import { getErrorMessage } from '../utils/errorUtils';
+import { getApplications } from '../api/jobApplicationsApi';
+import { useEffect, useState } from 'react';
+import { ReactSelectBootstrap } from 'react-select-bootstrap';
+
+const promptErrorMappings = {
+  OVER_LIMIT_CHATBOT_REQUEST:
+    'You have hit your chatbot quota for this month. Please wait for it to renew before sending more prompts.',
+};
 
 const ResumeWorkshopPage = () => {
-  const [aiResponse, setAiResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { data: promptResponse, loading, request: sendPromptCallback } = useApi(sendPrompt);
+  const {
+    data: applicationsResponse,
+    request: getApplicationsCallback,
+    error: applicationsError,
+  } = useApi(getApplications);
+  const { data: quotaResponse, error: quotaError, request: getQuotaCallback } = useApi(getQuota);
 
-  const handleGenerate = ({ goal, content }) => {
-    setLoading(true);
+  const aiResponse = promptResponse?.response;
+  const applications = applicationsResponse?.applications;
+  const userQuota = quotaResponse?.remainingQuota;
 
-    console.log(goal, content);
+  const [promptError, setPromptError] = useState('');
+  const [selectedApplication, setSelectedApplication] = useState({});
 
-    // placeholder mock response
-    setTimeout(() => {
-      setAiResponse(
-        `Hello **Aidan**
+  const generatePrompt = ({ goal, content }) => {
+    const objective = goal?.trim() || 'General professional polish and impact.';
+    return `
+---
+### USER-SPECIFIED PARAMETERS
+**Primary Objective:** ${objective}
 
-### Suggestions
+### RESUME CONTENT TO REVIEW
+${content}
 
-• Use stronger action verbs  
-• Add measurable results  
-• Reduce filler wording
+### FINAL INSTRUCTION
+Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" specifically prioritize the **Primary Objective** and **Student's Specific Focus** listed above.
+---
+`;
+  };
 
-Example rewrite:
-
-> Developed an internal inventory dashboard used by 5+ departments, improving tracking efficiency by 30%.
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-
-# height test
-`,
+  const validateUserPrompt = ({ goal, content }) => {
+    if (generatePrompt({ goal, content }).length > 5000) {
+      return (
+        'Prompt exceeds limit by ' +
+        (generatePrompt({ goal, content }).length - 5000) +
+        ' characters'
       );
-      setLoading(false);
-    }, 800);
+    } else {
+      return '';
+    }
+  };
+
+  const handleSendPrompt = async ({ goal, content }) => {
+    const userPrompt = generatePrompt({ goal, content });
+
+    try {
+      await sendPromptCallback({ userPrompt, applicationId: selectedApplication?.applicationId });
+      return true;
+    } catch (error) {
+      const message = getErrorMessage(error, promptErrorMappings);
+      setPromptError(message);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const request = async () => {
+      try {
+        await getApplicationsCallback({
+          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED,INTERVIEWING,OFFER_RECEIVED',
+        });
+      } catch (error) {
+        console.log('Failed to load applications. Is the server down?', error);
+      }
+
+      try {
+        await getQuotaCallback();
+      } catch (error) {
+        console.log('Failed to load user quota. Is the server down?', error);
+      }
+    };
+    request();
+  }, [getApplicationsCallback]);
+
+  const onApplicationChange = (e) => {
+    setSelectedApplication(e.value);
+  };
+
+  const getQuotaBackgroundColour = () => {
+    if (quotaError) {
+      return 'danger';
+    } else if (userQuota == null) {
+      return 'info';
+    } else if (userQuota > 5) {
+      return 'secondary';
+    } else {
+      return 'danger';
+    }
+  };
+
+  const quotaBadge = () => {
+    return (
+      <>
+        You have
+        {userQuota == null ? (
+          <>
+            {' '}
+            <Placeholder xs={1} />{' '}
+          </>
+        ) : (
+          <>{' ' + userQuota + ' '}</>
+        )}
+        prompts left
+      </>
+    );
   };
 
   return (
@@ -102,7 +139,6 @@ height test
         <Col>
           <h2 className="m-0">Resume Workshop</h2>
         </Col>
-
         <Col className="d-flex justify-content-end align-items-center pe-0">
           <OverlayTrigger
             placement="left"
@@ -121,29 +157,48 @@ height test
             </Badge>
           </OverlayTrigger>
 
-          <Dropdown
-            align="end"
-            className="ms-2 mt-2">
-            <Dropdown.Toggle as={Button}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPen}
-              />
-              Select an application...
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu style={{ padding: '0.5rem', width: 'max-content' }}>
-              Options
-            </Dropdown.Menu>
-          </Dropdown>
+          <ReactSelectBootstrap
+            isLoading={!applications}
+            options={
+              applicationsError
+                ? null
+                : applications?.map((application) => {
+                    return { value: application, label: application.jobTitle };
+                  })
+            }
+            className="ms-2 mt-2"
+            onChange={onApplicationChange}
+            value={
+              selectedApplication?.applicationId
+                ? { value: selectedApplication, label: selectedApplication.jobTitle }
+                : null
+            }
+            isDisabled={applicationsError || loading}
+            placeholder={
+              applicationsError
+                ? 'Error loading applications try again'
+                : 'Select an application...'
+            }
+            isInvalid={applicationsError}
+          />
         </Col>
       </Row>
 
-      <Row className="mt-4">
+      <Row>
+        <div className="text-end">
+          <Badge bg={getQuotaBackgroundColour()}>
+            {quotaError ? <>Error loading your prompt quota</> : <>{quotaBadge()}</>}
+          </Badge>
+        </div>
+      </Row>
+
+      <Row className="mt-1">
         <Col md={6}>
           <AIPromptForm
-            handleGenerate={handleGenerate}
+            onSubmit={handleSendPrompt}
             loading={loading}
+            validatePrompt={validateUserPrompt}
+            promptError={promptError}
           />
         </Col>
 
@@ -158,9 +213,18 @@ height test
             </p>
           )}
 
-          {loading && <p className="text-muted">Generating suggestions...</p>}
+          {loading && (
+            <>
+              <p className="text-muted">Generating suggestions...</p>
+              <Spinner />
+            </>
+          )}
 
-          {aiResponse && !loading && <ReactMarkdown>{aiResponse}</ReactMarkdown>}
+          {aiResponse && !loading && (
+            <div className="text-start">
+              <ReactMarkdown>{aiResponse}</ReactMarkdown>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>
