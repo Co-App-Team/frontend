@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
+import {
+  Form,
+  Row,
+  Col,
+  InputGroup,
+  Modal,
+  Button,
+  Spinner,
+  Dropdown,
+  FormGroup,
+} from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import dropdownStyles from '../styling/common/Dropdown.module.css';
 import useApi from '../../hooks/useApi';
@@ -43,6 +53,9 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     numPositions: data?.numPositions || '',
     status: data?.status || 'NOT_APPLIED',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+    interviewDateTime: data?.interviewDateTime
+      ? new Date(data.interviewDateTime).toISOString().slice(0, 16)
+      : '',
     jobDescription: data?.jobDescription || '',
     sourceLink: data?.sourceLink || '',
   });
@@ -93,6 +106,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return date && date.trim() != '';
   };
 
+  const validateInterviewDatetime = (date) => {
+    return formData.status !== 'INTERVIEWING' || (date && date.trim() !== '');
+  };
+
   const validateNumPositions = (num) => {
     return num > 0;
   };
@@ -128,6 +145,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
+  const isInterviewDateTimeValid = validateInterviewDatetime(formData.interviewDateTime);
   const isCompanyValid = validateCompany(company);
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
@@ -158,6 +176,15 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     }
   };
 
+  const onInterviewDateTimeChange = (e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, interviewDateTime: value });
+
+    if (value) {
+      setShowError(false);
+    }
+  };
+
   const onSourceLinkChange = (e) => {
     setFormData({ ...formData, sourceLink: e.target.value });
   };
@@ -173,6 +200,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     if (
       !isJobTitleValid ||
       !isApplicationDeadlineValid ||
+      !isInterviewDateTimeValid ||
       !isCompanyValid ||
       !isNumPositionsValid ||
       !isStatusValid ||
@@ -184,13 +212,17 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     }
 
     try {
+      let finalFormData = {
+        ...formData,
+      };
+      if (formData.status !== 'INTERVIEWING' && formData.interviewDateTime != '') {
+        finalFormData.interviewDateTime = '';
+      }
       if (data) {
-        let finalFormData = {
-          ...formData,
-          applicationId: data.applicationId,
-          dateCreated: today,
-        };
-        if (formData.sourceLink == '') {
+        finalFormData.applicationId = data.applicationId;
+        finalFormData.dateCreated = today;
+
+        if (finalFormData.sourceLink == '') {
           finalFormData.sourceLink = null;
         }
 
@@ -200,15 +232,12 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       } else {
         // Allow users to not have to select from the dropdown
         // if their input already matches one of the company names
-        if (formData.companyId == '') {
+        if (finalFormData.companyId == '') {
           const foundCompany = findCompany(company);
-          const finalFormData = {
-            ...formData,
-            companyId: foundCompany.companyId,
-          };
+          finalFormData.companyId = foundCompany.companyId;
           await addJobApplicationCallback(finalFormData);
         } else {
-          await addJobApplicationCallback(formData);
+          await addJobApplicationCallback(finalFormData);
         }
         onHide();
       }
@@ -318,18 +347,39 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 </>
               )}
 
-              <Form.Label>Deadline Date</Form.Label>
-              <Form.Control
-                type="date"
-                onClick={(e) => e.target.showPicker?.()}
-                onChange={onDeadlineDateChange}
-                isInvalid={showError && !isApplicationDeadlineValid}
-                value={formData.applicationDeadline}
-                disabled={isAddLoading || isEditLoading}
-              />
-              <Form.Control.Feedback type="invalid">
-                Please provide the application deadline.
-              </Form.Control.Feedback>
+              <FormGroup>
+                {formData.status === 'INTERVIEWING' && (
+                  <>
+                    <Form.Label>Interview Date and Time</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      onClick={(e) => e.target.showPicker?.()}
+                      onChange={onInterviewDateTimeChange}
+                      isInvalid={showError && !isInterviewDateTimeValid}
+                      disabled={isAddLoading || isEditLoading}
+                      value={formData.interviewDateTime}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide the interview's date and time.
+                    </Form.Control.Feedback>
+                  </>
+                )}
+              </FormGroup>
+
+              <FormGroup>
+                <Form.Label>Deadline Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  onClick={(e) => e.target.showPicker?.()}
+                  onChange={onDeadlineDateChange}
+                  isInvalid={showError && !isApplicationDeadlineValid}
+                  value={formData.applicationDeadline}
+                  disabled={isAddLoading || isEditLoading}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please provide the application deadline.
+                </Form.Control.Feedback>
+              </FormGroup>
 
               <Form.Label>Job Posting Link</Form.Label>
               <InputGroup hasValidation>
