@@ -171,7 +171,9 @@ const JobApplicationsPage = () => {
         applications={applications?.applications ? applications.applications : []}
         topFilteredApplications={topFilteredApplications}
         otherFilteredApplications={otherFilteredApplications}
-        refreshApplicationsList={refreshApplicationsList}
+        refreshApplicationsList={() => {
+          refreshApplicationsList(null, null, true);
+        }}
         loading={applicationRequestLoading}
         setError={setError}
         companies={companies}
