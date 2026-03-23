@@ -96,7 +96,7 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
       }
     };
     request();
-  }, [getApplicationsCallback]);
+  }, [getApplicationsCallback, getQuotaCallback]);
 
   const onApplicationChange = (e) => {
     setSelectedApplication(e.value);
