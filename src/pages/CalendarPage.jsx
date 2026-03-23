@@ -104,8 +104,7 @@ const Calendar = () => {
 
   async function refreshInterviews() {
     try {
-      const data = await getInterviewsCallback();
-      setInterviews(data);
+      setInterviews(await getInterviewsCallback());
     } catch (error) {
       const message = getErrorMessage(error);
       setError(message);
