@@ -63,12 +63,12 @@ function CalendarEvents({ day, interviews }) {
   return (
     <>
       <div className={styles['calendar-event']}>
-        {visible.map((event, index) => {
+        {visible.map((event) => {
           const companyName = companyNames[event.companyId];
           const time = formatTime(event.interviewDateTime);
           return (
             <Button
-              key={index}
+              key={event.applicationId}
               className={styles['event']}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => handleClickedEvent(event)}>
@@ -112,12 +112,12 @@ function CalendarEvents({ day, interviews }) {
             {day}
           </Popover.Header>
           <Popover.Body className={styles['popover-body']}>
-            {interviews.map((event, index) => {
+            {interviews.map((event) => {
               const companyName = companyNames[event.companyId];
               const time = formatTime(event.interviewDateTime);
               return (
                 <Button
-                  key={index}
+                  key={event.applicationId}
                   className={styles['event']}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {

@@ -31,34 +31,32 @@ function CalendarGrid({ weeks, today, currentDate, interviews }) {
   };
 
   return (
-    <>
-      <div className={styles['calendar-grid']}>
-        {weeks.map((week, weekIndex) => (
-          <div
-            key={`week-${currentDate.getFullYear()}-${currentDate.getMonth()}-${weekIndex}`}
-            className={styles['calendar-row']}>
-            {week.map((day, dayIndex) => (
-              <div
-                key={`day-${weekIndex}-${dayIndex}`}
-                className={styles['calendar-cell']}>
-                {day && (
-                  <>
-                    <div
-                      className={isToday(day) ? styles['calendar-today'] : styles['calendar-date']}>
-                      {day}
-                    </div>
-                    <CalendarEvents
-                      day={day}
-                      interviews={getInterviewsForDay(day)}
-                    />
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </>
+    <div className={styles['calendar-grid']}>
+      {weeks.map((week, weekIndex) => (
+        <div
+          key={`week-${currentDate.getFullYear()}-${currentDate.getMonth()}-${weekIndex}`}
+          className={styles['calendar-row']}>
+          {week.map((day, dayIndex) => (
+            <div
+              key={`day-${weekIndex}-${dayIndex}`}
+              className={styles['calendar-cell']}>
+              {day && (
+                <>
+                  <div
+                    className={isToday(day) ? styles['calendar-today'] : styles['calendar-date']}>
+                    {day}
+                  </div>
+                  <CalendarEvents
+                    day={day}
+                    interviews={getInterviewsForDay(day)}
+                  />
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
   );
 }
 
