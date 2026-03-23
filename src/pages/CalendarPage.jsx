@@ -75,7 +75,7 @@ const Calendar = () => {
         // only allow users to make interviews with applications
         // that are not at the "interviewing" stage yet
         await getApplicationsCallback({
-          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED,OFFER_RECEIVED',
+          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED',
         });
       } catch (error) {
         const message = getErrorMessage(error, {});
@@ -85,11 +85,24 @@ const Calendar = () => {
     request();
   }, [getApplicationsCallback]);
 
+  useEffect(() => {
+    const loadInterviews = async () => {
+      try {
+        const data = await getInterviewsCallback();
+        setInterviews(data);
+      } catch (error) {
+        const message = getErrorMessage(error);
+        setError(message);
+      }
+    };
+    loadInterviews();
+  }, [getInterviewsCallback]);
+
   async function hideInterviewModal() {
     setShowInterviewModal(false);
   }
 
-  async function refreshInterviewsList() {
+  async function refreshInterviews() {
     try {
       const data = await getInterviewsCallback();
       setInterviews(data);
@@ -98,12 +111,6 @@ const Calendar = () => {
       setError(message);
     }
   }
-
-  // done for now to satisfy linting issues
-  // will be used to display interviews later on
-  useEffect(() => {
-    console.log('interviews: ', interviews);
-  });
 
   return (
     <Container className="mt-3">
@@ -179,7 +186,8 @@ const Calendar = () => {
           <CalendarGrid
             weeks={weeks}
             today={today}
-            currentDate={currentDate}></CalendarGrid>
+            currentDate={currentDate}
+            interviews={interviews}></CalendarGrid>
         </Row>
       </div>
 
@@ -187,7 +195,7 @@ const Calendar = () => {
         onShow={showInterviewModal}
         onHide={hideInterviewModal}
         applications={applications}
-        onSaved={refreshInterviewsList}
+        onSaved={refreshInterviews}
       />
     </Container>
   );
