@@ -63,11 +63,10 @@ function InterviewDetailsModal({ onShow, onHide, data, companyName }) {
       </Modal.Body>
 
       <Modal.Footer className="border-0">
-        <Button variant="secondary">Edit Interview</Button>
         <Button
           variant="info"
           onClick={onHide}>
-          Cancel
+          Done
         </Button>
       </Modal.Footer>
     </Modal>
