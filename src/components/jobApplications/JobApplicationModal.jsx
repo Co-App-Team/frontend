@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
+import { Form, Row, Col, InputGroup, Modal, Button, Spinner } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
@@ -106,7 +106,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
   const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
-  // TODO: Convert to company entity
   const submit = async () => {
     if (
       !isJobTitleValid ||
