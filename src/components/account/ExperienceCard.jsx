@@ -76,13 +76,13 @@ const ExperienceCard = () => {
     loadExperiences();
   };
 
-  const refreshCompanies = async () => {
+  const refreshCompanies = useCallback(async () => {
     try {
       await getCompaniesCallback();
     } catch (error) {
       console.log('Failed to load company list, is the server down?', getErrorMessage(error));
     }
-  };
+  }, [getCompaniesCallback]);
 
   useEffect(() => {
     refreshCompanies();
