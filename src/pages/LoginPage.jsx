@@ -140,7 +140,13 @@ const LoginPage = () => {
           variant="danger"
           className="mt-3"
           style={{ maxWidth: '19rem' }}>
-          Warning: To use this app, make sure 3rd party cookies are enabled
+          Warning: To use this app, make sure 3rd party cookies are enabled. Unsure how to enable?
+          Try{' '}
+          <Link
+            target="_blank"
+            to="https://www.niu.edu/blackboard/issues/third-party-cookies.shtml">
+            these steps
+          </Link>
         </Alert>
       </div>
     </PageTransition>
