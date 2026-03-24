@@ -180,7 +180,7 @@ const JobApplicationsPage = () => {
       />
 
       <NewApplicationModal
-        onShow={showApplicationModal}
+        show={showApplicationModal}
         onHide={hideApplicationModal}
         companies={companies}
         data={null}

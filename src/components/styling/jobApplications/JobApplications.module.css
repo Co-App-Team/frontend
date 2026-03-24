@@ -5,11 +5,6 @@
   transition: filter 0.2s ease;
 }
 
-.text-field {
-  overflow-y: auto;
-  resize: vertical;
-}
-
 .black-text {
   color: black !important;
 }

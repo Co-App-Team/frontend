@@ -289,7 +289,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
 
       {isEditing && (
         <EditApplicationModal
-          onShow={isEditing}
+          show={isEditing}
           onHide={hideEditApplicationModal}
           companies={companies}
           data={jobApplication}
