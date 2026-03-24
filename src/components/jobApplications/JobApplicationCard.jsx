@@ -1,19 +1,27 @@
-import { useState, useEffect } from 'react';
-import { Card, Spinner, Button } from 'react-bootstrap';
-import { Dropdown } from 'react-bootstrap';
+import { useState } from 'react';
+import {
+  Card,
+  Spinner,
+  Button,
+  Container,
+  Row,
+  Col,
+  OverlayTrigger,
+  Tooltip,
+  Dropdown,
+} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMapPin,
-  faBuilding,
   faExternalLink,
   faPen,
   faTrash,
+  faIdCard,
 } from '@fortawesome/free-solid-svg-icons';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import { getErrorMessage } from '../../utils/errorUtils';
 
 import useApi from '../../hooks/useApi';
-import { getCompanies } from '../../api/rateMyCoopApi';
 import { editApplication } from '../../api/jobApplicationsApi';
 
 import EditApplicationModal from './JobApplicationModal';
@@ -21,7 +29,7 @@ import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
-const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
+const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -29,9 +37,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const [companies, setCompanies] = useState([]);
-
-  const { request: getCompaniesCallback } = useApi(getCompanies);
   const { request: editJobApplicationCallback } = useApi(editApplication);
 
   function formatDate(date) {
@@ -96,19 +101,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
     }
   };
 
-  useEffect(() => {
-    async function loadCompanies() {
-      try {
-        const data = await getCompaniesCallback();
-        setCompanies(data.companies);
-      } catch (error) {
-        const message = getErrorMessage(error);
-        console.log(message);
-      }
-    }
-    loadCompanies();
-  }, [getCompaniesCallback]);
-
   if (isLoading) {
     return (
       <>
@@ -128,155 +120,170 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError }) => {
       <Card
         className={styles['application-card']}
         style={{ borderLeftColor: borderColor }}>
-        <Card.Header
-          className="d-flex justify-content-between align-items-center text-start border-bottom-0"
-          as={'h5'}>
-          <div className="d-flex align-items-center gap-3">
-            <div style={{ maxWidth: '30vw', overflowX: 'auto', overflowY: 'hidden' }}>
-              <span>{jobApplication.jobTitle}</span>
-            </div>
+        <Card.Header className="d-flex justify-content-between align-items-center text-start border-bottom-0">
+          <Container>
+            <Row>
+              <Col
+                className="d-flex align-items-center border-end"
+                style={{ width: '30vw', overflowX: 'auto', overflowY: 'auto' }}>
+                <h5 className="text-nowrap">{companyName}</h5>
+              </Col>
+              <Col
+                className="d-flex align-items-center fst-italic text-nowrap"
+                style={{ width: '10vw', overflowX: 'auto', overflowY: 'auto' }}>
+                {!jobApplication.dateApplied ? (
+                  <span className="text-muted fs-6">
+                    Due
+                    <span className="text-dark">{' ' + deadlineDate}</span>
+                  </span>
+                ) : (
+                  <span className="text-muted fs-6">
+                    Applied on
+                    <div className="text-dark">{' ' + formatDate(jobApplication.dateApplied)}</div>
+                  </span>
+                )}
+              </Col>
+              <Col className="d-flex align-items-center justify-content-end pe-0">
+                <Dropdown className="m-1">
+                  <Dropdown.Toggle
+                    className={styles['black-text']}
+                    variant={statusColor}
+                    id="dropdown-basic">
+                    {FORMAT_STATUS[status]}
+                  </Dropdown.Toggle>
 
-            <div className="d-flex gap-2 flex-wrap">
-              <Dropdown>
-                <Dropdown.Toggle
-                  className={styles['black-text']}
-                  variant={statusColor}
-                  id="dropdown-basic">
-                  {FORMAT_STATUS[status]}
-                </Dropdown.Toggle>
+                  <Dropdown.Menu className={styles['dropdown']}>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('NOT_APPLIED');
+                      }}>
+                      {FORMAT_STATUS['NOT_APPLIED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('APPLIED');
+                      }}>
+                      {FORMAT_STATUS['APPLIED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('INTERVIEW_SCHEDULED');
+                      }}>
+                      {FORMAT_STATUS['INTERVIEW_SCHEDULED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('INTERVIEWING');
+                      }}>
+                      {FORMAT_STATUS['INTERVIEWING']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('REJECTED');
+                      }}>
+                      {FORMAT_STATUS['REJECTED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('WITHDRAWN');
+                      }}>
+                      {FORMAT_STATUS['WITHDRAWN']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('OFFER_RECEIVED');
+                      }}>
+                      {FORMAT_STATUS['OFFER_RECEIVED']}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => {
+                        updateStatus('ACCEPTED');
+                      }}>
+                      {FORMAT_STATUS['ACCEPTED']}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
 
-                <Dropdown.Menu className={styles['dropdown']}>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('NOT_APPLIED');
-                    }}>
-                    {FORMAT_STATUS['NOT_APPLIED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('APPLIED');
-                    }}>
-                    {FORMAT_STATUS['APPLIED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('INTERVIEW_SCHEDULED');
-                    }}>
-                    {FORMAT_STATUS['INTERVIEW_SCHEDULED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('INTERVIEWING');
-                    }}>
-                    {FORMAT_STATUS['INTERVIEWING']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('REJECTED');
-                    }}>
-                    {FORMAT_STATUS['REJECTED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('WITHDRAWN');
-                    }}>
-                    {FORMAT_STATUS['WITHDRAWN']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('OFFER_RECEIVED');
-                    }}>
-                    {FORMAT_STATUS['OFFER_RECEIVED']}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      updateStatus('ACCEPTED');
-                    }}>
-                    {FORMAT_STATUS['ACCEPTED']}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip id="edit-tooltip">Edit Application</Tooltip>}>
+                  <Button
+                    variant="primary"
+                    className="m-1"
+                    size="md"
+                    onClick={() => setIsEditing(true)}>
+                    <FontAwesomeIcon
+                      icon={faPen}
+                      size="sm"
+                    />
+                  </Button>
+                </OverlayTrigger>
 
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => setIsEditing(true)}>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faPen}
-                  size="sm"
-                />
-                Edit
-              </Button>
-
-              <Button
-                variant="danger"
-                size="md"
-                onClick={() => setIsDeleting(true)}>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faTrash}
-                  size="sm"
-                />
-                Delete
-              </Button>
-            </div>
-          </div>
-
-          <div className="text-end ms-3">
-            {!jobApplication.dateApplied ? (
-              <span className="text-muted fs-6">
-                Due
-                <span className="text-dark">{' ' + deadlineDate}</span>
-              </span>
-            ) : (
-              <span className="text-muted fs-6">
-                Applied on
-                <span className="text-dark">{' ' + jobApplication.dateApplied}</span>
-              </span>
-            )}
-          </div>
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip id="delete-tooltip">Delete Application</Tooltip>}>
+                  <Button
+                    variant="danger"
+                    className="m-1"
+                    size="md"
+                    onClick={() => setIsDeleting(true)}>
+                    <FontAwesomeIcon
+                      className="me-1"
+                      icon={faTrash}
+                      size="sm"
+                    />
+                  </Button>
+                </OverlayTrigger>
+              </Col>
+            </Row>
+          </Container>
         </Card.Header>
         <Card.Body>
-          <div className="d-flex justify-content-around">
-            <div
-              className="mx-4"
-              style={{ maxWidth: '30vw', overflowX: 'auto' }}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faBuilding}
-              />
-              {companyName}
-            </div>
-            <div className="vr"></div>
-            <div className="mx-4">
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faMapPin}
-              />
-              Location: {location}
-            </div>
-            <div className="vr"></div>
-            <div
-              className="mx-4 "
-              onClick={() => {
-                console.log('helloooo');
-              }}>
-              <i>
-                <a
-                  href={sourceLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-decoration-none text-muted">
-                  See job posting:
-                </a>
-                <FontAwesomeIcon
-                  className="me-1"
-                  icon={faExternalLink}
-                />
-              </i>
-            </div>
-          </div>
+          <Container className="text-center">
+            <Row>
+              <Col
+                className="border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faIdCard}
+                  />
+                  Job Title: {jobApplication.jobTitle}
+                </div>
+              </Col>
+              <Col
+                className="border-start border-end"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faMapPin}
+                  />
+                  Location: {location}
+                </div>
+              </Col>
+              <Col
+                className="border-start"
+                style={{ overflowX: 'auto' }}>
+                <div className="m-1">
+                  <i>
+                    <a
+                      href={sourceLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-decoration-none text-muted">
+                      See job posting:
+                    </a>
+                    <FontAwesomeIcon
+                      className="me-1"
+                      icon={faExternalLink}
+                    />
+                  </i>
+                </div>
+              </Col>
+            </Row>
+          </Container>
         </Card.Body>
       </Card>
 

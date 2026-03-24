@@ -30,7 +30,7 @@ const JobApplicationsPage = () => {
   useEffect(() => {
     async function loadApplications() {
       try {
-        const applications = await getApplicationsCallback();
+        const applications = await getApplicationsCallback({});
         setTopFilteredApplications(applications.applications);
         setOtherFilteredApplications(applications.applications);
       } catch (error) {
@@ -56,7 +56,11 @@ const JobApplicationsPage = () => {
 
   async function refreshApplicationsList(sortOrder, status, resetFilters) {
     try {
-      const applications = await getApplicationsCallback(sortOrder, status);
+      const params = {
+        sortOrder: sortOrder,
+        status: status,
+      };
+      const applications = await getApplicationsCallback(params);
       setTopFilteredApplications(applications.applications);
       setOtherFilteredApplications(applications.applications);
       if (resetFilters) {
@@ -74,7 +78,11 @@ const JobApplicationsPage = () => {
 
   async function applyAppliedOnSort(sortOrder, status) {
     try {
-      const applications = await getApplicationsCallback(sortOrder, status);
+      const params = {
+        sortOrder: sortOrder,
+        status: status,
+      };
+      const applications = await getApplicationsCallback(params);
 
       const filterOutDateApplied = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
@@ -88,19 +96,28 @@ const JobApplicationsPage = () => {
     }
   }
 
+  function getCompany(jobApplication) {
+    return companies.find((c) => c.companyId === jobApplication.companyId);
+  }
+
   const updateSearch = (value) => {
-    if (!applications?.applications) return;
+    if (!applications?.applications || !companies) return;
 
     let apps = applications.applications;
+
     if (useAppliedOnSort) {
       apps = applications.applications.filter(
         (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
       );
     }
 
-    const topFilter = apps.filter((c) => c.jobTitle.toLowerCase().startsWith(value.toLowerCase()));
+    const topFilter = apps.filter((c) =>
+      getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
+    );
     const otherFilters = apps.filter(
-      (c) => c.jobTitle.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+      (c) =>
+        getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
+        !topFilter.includes(c),
     );
 
     setOtherFilteredApplications(otherFilters);
@@ -154,9 +171,12 @@ const JobApplicationsPage = () => {
         applications={applications?.applications ? applications.applications : []}
         topFilteredApplications={topFilteredApplications}
         otherFilteredApplications={otherFilteredApplications}
-        refreshApplicationsList={refreshApplicationsList}
+        refreshApplicationsList={() => {
+          refreshApplicationsList(null, null, true);
+        }}
         loading={applicationRequestLoading}
         setError={setError}
+        companies={companies}
       />
 
       <NewApplicationModal

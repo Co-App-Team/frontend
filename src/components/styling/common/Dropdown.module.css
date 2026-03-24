@@ -1,0 +1,18 @@
+.dropdown-container {
+  max-height: 10vh;
+  overflow-y: scroll;
+}
+
+.dropdown {
+  border: 1px solid grey;
+  overflow: hidden;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.dropdown-item {
+  border-color: grey;
+  border-width: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
