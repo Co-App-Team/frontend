@@ -7,15 +7,19 @@ import { faAddressCard, faLink, faMapPin } from '@fortawesome/free-solid-svg-ico
 import useApi from '../../hooks/useApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 
-function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
+function AddCompanyModal({ defaultValues, showModal, hideModal, refreshCompanies }) {
   const [showError, setShowError] = useState(false);
   const [error, setError] = useState(false);
 
-  const [formData, setFormData] = useState({
-    companyName: '',
-    location: '',
-    website: '',
-  });
+  const [formData, setFormData] = useState(
+    defaultValues
+      ? defaultValues
+      : {
+          companyName: '',
+          location: '',
+          website: '',
+        },
+  );
 
   const errorMappings = {
     INVALID_WEBSITE: "The website must start with 'http://' or 'https://' ",
@@ -37,16 +41,9 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
   const isLocationValid = validateLocation(formData.location);
   const isWebsiteValid = validateWebsite(formData.website);
 
-  const onCompanyNameChange = (e) => {
-    setFormData({ ...formData, companyName: e.target.value });
-  };
-
-  const onLocationChange = (e) => {
-    setFormData({ ...formData, location: e.target.value });
-  };
-
-  const onWebsiteChange = (e) => {
-    setFormData({ ...formData, website: e.target.value });
+  const onFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
@@ -118,11 +115,14 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
                 <FontAwesomeIcon icon={faAddressCard}></FontAwesomeIcon>
               </InputGroup.Text>
               <Form.Control
+                name="companyName"
                 type="text"
                 placeholder="Enter the company name"
-                onChange={onCompanyNameChange}
+                onChange={onFormChange}
                 isInvalid={showError && !isCompanyNameValid}
-                disabled={isLoading}></Form.Control>
+                disabled={isLoading}
+                value={formData?.companyName || ''}
+              />
               <Form.Control.Feedback type="invalid">
                 Please provide a company name.
               </Form.Control.Feedback>
@@ -140,11 +140,13 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
                 <FontAwesomeIcon icon={faMapPin}></FontAwesomeIcon>
               </InputGroup.Text>
               <Form.Control
+                name="location"
                 type="text"
                 placeholder="Enter the company's location"
-                onChange={onLocationChange}
+                onChange={onFormChange}
                 isInvalid={showError && !isLocationValid}
                 disabled={isLoading}
+                value={formData?.location || ''}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a location.
@@ -163,11 +165,13 @@ function AddCompanyModal({ showModal, hideModal, refreshCompanies }) {
                 <FontAwesomeIcon icon={faLink}></FontAwesomeIcon>
               </InputGroup.Text>
               <Form.Control
+                name="website"
                 type="text"
                 placeholder="Enter the link to the company's website"
-                onChange={onWebsiteChange}
+                onChange={onFormChange}
                 isInvalid={showError && !isWebsiteValid}
                 disabled={isLoading}
+                value={formData?.website || ''}
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a website.
