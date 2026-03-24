@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd } from '@fortawesome/free-solid-svg-icons';
@@ -41,18 +41,23 @@ const JobApplicationsPage = () => {
     loadApplications();
   }, [getApplicationsCallback]);
 
-  useEffect(() => {
-    async function loadCompanies() {
-      try {
-        const data = await getCompaniesCallback();
-        setCompanies(data.companies);
-      } catch (error) {
-        const message = getErrorMessage(error);
-        setError(message);
-      }
+  const loadCompanies = useCallback(async () => {
+    try {
+      const data = await getCompaniesCallback();
+      setCompanies(data.companies);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      setError(message);
     }
-    loadCompanies();
   }, [getCompaniesCallback]);
+
+  useEffect(() => {
+    // Makes eslint happy, it doesn't think the useCallback is async
+    const request = async () => {
+      loadCompanies();
+    };
+    request();
+  }, [loadCompanies]);
 
   async function refreshApplicationsList(sortOrder, status, resetFilters) {
     try {
@@ -177,6 +182,7 @@ const JobApplicationsPage = () => {
         loading={applicationRequestLoading}
         setError={setError}
         companies={companies}
+        refreshCompanies={loadCompanies}
       />
 
       <NewApplicationModal
@@ -187,6 +193,7 @@ const JobApplicationsPage = () => {
         onSaved={() => {
           refreshApplicationsList(null, null, true);
         }}
+        refreshCompanies={loadCompanies}
       />
     </Container>
   );

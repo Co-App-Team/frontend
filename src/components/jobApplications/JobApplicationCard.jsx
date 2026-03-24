@@ -29,7 +29,13 @@ import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
-const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) => {
+const JobApplicationCard = ({
+  jobApplication,
+  onUpdated,
+  setError,
+  companies,
+  refreshCompanies,
+}) => {
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -294,6 +300,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
           companies={companies}
           data={jobApplication}
           onSaved={onUpdated}
+          refreshCompanies={refreshCompanies}
         />
       )}
 

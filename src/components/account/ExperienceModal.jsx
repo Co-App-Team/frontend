@@ -53,8 +53,6 @@ const ExperienceModal = ({
     setIsCreatingCompany(true);
   };
 
-  // TODO: How feasible is it to select the company after creating it?
-
   return (
     <>
       <AddCompanyModal

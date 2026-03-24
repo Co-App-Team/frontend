@@ -7,7 +7,7 @@ import { getErrorMessage } from '../../utils/errorUtils';
 import JobApplicationForm from './JobApplicationForm';
 import AddCompanyModal from '../rateMyCoop/AddCompanyModal';
 
-function JobApplicationModal({ show, onHide, companies, data, onSaved }) {
+function JobApplicationModal({ show, onHide, companies, data, onSaved, refreshCompanies }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
 
   const [error, setError] = useState(false);
@@ -70,7 +70,7 @@ function JobApplicationModal({ show, onHide, companies, data, onSaved }) {
         hideModal={() => {
           setIsCreatingCompany(false);
         }}
-        refreshCompanies={() => {}} // TODO
+        refreshCompanies={refreshCompanies}
         defaultValues={{ companyName: newCompanyName, location: '', website: '' }}
         key={newCompanyName}
       />
