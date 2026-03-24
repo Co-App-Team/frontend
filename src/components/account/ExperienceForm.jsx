@@ -31,12 +31,12 @@ const ExperienceForm = ({
   };
 
   const validateStartDate = (value) => {
-    if (!value) {
-      return 'Please select a start date';
-    } else {
+    if (value) {
       const startDate = new Date(value);
       const endDate = new Date(formData?.endDate);
       return endDate < startDate ? 'Start date must be before end date' : '';
+    } else {
+      return 'Please select a start date';
     }
   };
 

@@ -12,18 +12,8 @@ const ReactCreateBootstrap = ({ isInvalid = false, ...props }) => {
           control: (styles) => ({
             ...styles,
             borderRadius: 'var(--bs-border-radius)',
-            ...(!isInvalid
+            ...(isInvalid
               ? {
-                  borderColor: '#ced4da',
-                  '&:hover': {
-                    border: '1px solid #ced4da',
-                  },
-                  '&:focus-within': {
-                    boxShadow: '0 0 0 0.25rem rgba(13, 110, 253, 0.25)',
-                    borderColor: '#86b7fe',
-                  },
-                }
-              : {
                   borderColor: 'var(--bs-red)',
                   '&:hover': {
                     border: '1px solid var(--bs-red)',
@@ -31,6 +21,16 @@ const ReactCreateBootstrap = ({ isInvalid = false, ...props }) => {
                   '&:focus-within': {
                     boxShadow: '0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25)',
                     borderColor: 'var(--bs-red)',
+                  },
+                }
+              : {
+                  borderColor: '#ced4da',
+                  '&:hover': {
+                    border: '1px solid #ced4da',
+                  },
+                  '&:focus-within': {
+                    boxShadow: '0 0 0 0.25rem rgba(13, 110, 253, 0.25)',
+                    borderColor: '#86b7fe',
                   },
                 }),
           }),
