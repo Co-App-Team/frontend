@@ -186,7 +186,8 @@ const Calendar = () => {
             weeks={weeks}
             today={today}
             currentDate={currentDate}
-            interviews={interviews}></CalendarGrid>
+            interviews={interviews}
+          />
         </Row>
       </div>
 
