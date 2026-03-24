@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Alert, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { login } from '../api/authApi';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -64,7 +64,7 @@ const LoginPage = () => {
 
   return (
     <PageTransition>
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
+      <div className="d-flex flex-column justify-content-center align-items-center min-vh-100">
         <div
           className="p-4 border rounded d-flex flex-column align-items-center"
           style={{ maxWidth: '19rem' }}>
@@ -128,6 +128,7 @@ const LoginPage = () => {
             </div>
           </Form>
           {error && <p className="text-danger mt-3">{error}</p>}
+
           <p className={error ? '' : 'mt-3'}>
             Or sign up <Link to="/signup">here</Link>
           </p>
@@ -135,6 +136,18 @@ const LoginPage = () => {
             <Link to="/forgot-password">Forgot your password?</Link>
           </p>
         </div>
+        <Alert
+          variant="danger"
+          className="mt-3"
+          style={{ maxWidth: '19rem' }}>
+          Warning: To use this app, make sure 3rd party cookies are enabled. Unsure how to enable?
+          Try{' '}
+          <Link
+            target="_blank"
+            to="https://www.niu.edu/blackboard/issues/third-party-cookies.shtml">
+            these steps
+          </Link>
+        </Alert>
       </div>
     </PageTransition>
   );
