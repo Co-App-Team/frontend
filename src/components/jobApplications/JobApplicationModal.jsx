@@ -1,20 +1,28 @@
 import { useState } from 'react';
-import { Form, Row, Col, InputGroup, Modal, Button, Spinner, Dropdown } from 'react-bootstrap';
+import { Form, Row, Col, InputGroup, Modal, Button, Spinner } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
-import dropdownStyles from '../styling/common/Dropdown.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
 import { getErrorMessage } from '../../utils/errorUtils';
 import PropTypes from 'prop-types';
+import { ReactSelectBootstrap } from 'react-select-bootstrap';
 
 function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const oldCompany = data ? companies.find((c) => c.companyId === data.companyId) : null;
 
-  const [company, setCompany] = useState(oldCompany?.companyName || '');
-  const [filteredCompanies, setFilteredCompanies] = useState([]);
-
   const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
+
+  const [formData, setFormData] = useState({
+    company: oldCompany,
+    companyId: data?.companyId || '',
+    jobTitle: data?.jobTitle || '',
+    numPositions: data?.numPositions || '',
+    status: data?.status || 'NOT_APPLIED',
+    applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+    jobDescription: data?.jobDescription || '',
+    sourceLink: data?.sourceLink || '',
+  });
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -35,54 +43,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     BAD_REQUEST:
       'Please ensure all of the mandatory fields (job title, company name, and deadline date) are filled in.',
     COMPANY_NOT_FOUND: 'The provided company name does not exist. Please try again!',
-  };
-
-  const [formData, setFormData] = useState({
-    companyId: data?.companyId || '',
-    jobTitle: data?.jobTitle || '',
-    numPositions: data?.numPositions || '',
-    status: data?.status || 'NOT_APPLIED',
-    applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
-    jobDescription: data?.jobDescription || '',
-    sourceLink: data?.sourceLink || '',
-  });
-
-  const filterCompanies = (value) => {
-    if (value == '') return [];
-
-    return companies.filter(
-      (company) =>
-        company.companyName.toLowerCase().startsWith(value.toLowerCase()) ||
-        company.companyName.toLowerCase().includes(value.toLowerCase()),
-    );
-  };
-
-  const handleSearchCompany = (e) => {
-    const value = e.target.value;
-    setCompany(value);
-
-    if (value == '') {
-      setFilteredCompanies([]);
-    } else {
-      setFilteredCompanies(filterCompanies(value));
-    }
-
-    if (validateCompany(value)) {
-      setShowError(false);
-    }
-  };
-
-  const findCompany = (companyName) => {
-    return companies.find((c) => c.companyName.toLowerCase() === companyName.toLowerCase());
-  };
-
-  const handleSelectedCompany = (selected) => {
-    setCompany(selected);
-    const company = findCompany(selected);
-    setFormData({ ...formData, companyId: company.companyId });
-    setFilteredCompanies([]);
-
-    setShowError(false);
   };
 
   const validateJobTitle = (jobTitle) => {
@@ -113,40 +73,25 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return isValid;
   };
 
-  const validateCompany = (companyName) => {
-    let isValid = false;
-
-    if (
-      companyName != '' &&
-      companies.find((c) => c.companyName?.toLowerCase() === companyName?.toLowerCase())
-    ) {
-      isValid = true;
-    }
-
-    return isValid;
+  const validateCompany = (company) => {
+    return company;
   };
 
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
-  const isCompanyValid = validateCompany(company);
+  const isCompanyValid = validateCompany(formData.company);
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
   const isStatusValid = validateStatus(formData.status);
   const isLinkValid = validateLink(formData.sourceLink);
 
-  const onJobTitleChange = (e) => {
-    setFormData({ ...formData, jobTitle: e.target.value });
+  const onValueChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const onNumPositionsChange = (e) => {
-    setFormData({ ...formData, numPositions: e.target.value });
-  };
-
-  const onStatusChange = (e) => {
-    setFormData({
-      ...formData,
-      status: e.target.value,
-    });
+  const onCompanyChange = (e) => {
+    setFormData({ ...formData, company: e.value });
   };
 
   const onDeadlineDateChange = (e) => {
@@ -156,14 +101,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     if (value) {
       setShowError(false);
     }
-  };
-
-  const onSourceLinkChange = (e) => {
-    setFormData({ ...formData, sourceLink: e.target.value });
-  };
-
-  const onJobDescriptionChange = (e) => {
-    setFormData({ ...formData, jobDescription: e.target.value });
   };
 
   const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
@@ -179,7 +116,6 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       !isLinkValid
     ) {
       setShowError(true);
-      setFilteredCompanies([]);
       return;
     }
 
@@ -187,30 +123,20 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
       if (data) {
         let finalFormData = {
           ...formData,
+          companyId: formData.company?.companyId,
           applicationId: data.applicationId,
           dateCreated: today,
         };
-        if (formData.sourceLink == '') {
+        if (!formData.sourceLink) {
           finalFormData.sourceLink = null;
         }
 
         await editJobApplicationCallback(finalFormData, finalFormData.applicationId);
         await onSaved();
-        onHide();
+        handleHide();
       } else {
-        // Allow users to not have to select from the dropdown
-        // if their input already matches one of the company names
-        if (formData.companyId == '') {
-          const foundCompany = findCompany(company);
-          const finalFormData = {
-            ...formData,
-            companyId: foundCompany.companyId,
-          };
-          await addJobApplicationCallback(finalFormData);
-        } else {
-          await addJobApplicationCallback(formData);
-        }
-        onHide();
+        await addJobApplicationCallback({ ...formData, companyId: formData.company?.companyId });
+        handleHide();
       }
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
@@ -223,11 +149,27 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     submit();
   };
 
+  const handleHide = () => {
+    setFormData({
+      company: oldCompany,
+      companyId: data?.companyId || '',
+      jobTitle: data?.jobTitle || '',
+      numPositions: data?.numPositions || '',
+      status: data?.status || 'NOT_APPLIED',
+      applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+      jobDescription: data?.jobDescription || '',
+      sourceLink: data?.sourceLink || '',
+    });
+    setError(false);
+    setShowError(false);
+    onHide();
+  };
+
   return (
     <>
       <Modal
         show={onShow}
-        onHide={onHide}
+        onHide={handleHide}
         centered>
         <Modal.Header closeButton>
           {data != null ? (
@@ -244,8 +186,9 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 <Col>
                   <Form.Label>Job Title</Form.Label>
                   <Form.Control
+                    name="jobTitle"
                     type="text"
-                    onChange={onJobTitleChange}
+                    onChange={onValueChange}
                     isInvalid={showError && !isJobTitleValid}
                     value={formData.jobTitle}
                     disabled={isAddLoading || isEditLoading}
@@ -257,9 +200,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                 <Col>
                   <Form.Label>Number of Positions</Form.Label>
                   <Form.Control
+                    name="numPositions"
                     type="number"
                     min="0"
-                    onChange={onNumPositionsChange}
+                    onChange={onValueChange}
                     isInvalid={showError && !isNumPositionsValid}
                     value={formData.numPositions}
                     disabled={isAddLoading || isEditLoading}
@@ -271,40 +215,32 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               </Row>
 
               <Form.Label>Company</Form.Label>
-              <Form.Control
-                type="text"
-                value={company}
-                onChange={handleSearchCompany}
-                isInvalid={showError && !isCompanyValid}
-                disabled={isAddLoading || isEditLoading}></Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Please enter a valid company name.
-              </Form.Control.Feedback>
-
-              <div className={dropdownStyles['dropdown-container']}>
-                {filteredCompanies.map((company) => {
-                  return (
-                    <div
-                      key={company.companyId}
-                      className={dropdownStyles['dropdown']}>
-                      <Dropdown.Item
-                        className={dropdownStyles['dropdown-item']}
-                        key={company.companyId}
-                        onClick={() => handleSelectedCompany(company.companyName)}
-                        disabled={isAddLoading || isEditLoading}>
-                        {company.companyName}
-                      </Dropdown.Item>
-                    </div>
-                  );
+              <ReactSelectBootstrap
+                isLoading={!companies}
+                options={companies?.map((company) => {
+                  return { value: company, label: company.companyName };
                 })}
-              </div>
+                className={showError && !isCompanyValid ? 'is-invalid' : 'mb-2 '}
+                onChange={onCompanyChange}
+                value={
+                  formData.company
+                    ? { value: formData.company, label: formData.company?.companyName }
+                    : null
+                }
+                isInvalid={showError && !isCompanyValid}
+                disabled={isAddLoading || isEditLoading}
+              />
+              {showError && !isCompanyValid && (
+                <div className="invalid-feedback d-block">Please select a company.</div>
+              )}
 
               {data == null && (
                 <>
                   <Form.Label>Status</Form.Label>
                   <Form.Select
+                    name="status"
                     value={formData.status}
-                    onChange={onStatusChange}
+                    onChange={onValueChange}
                     disabled={isAddLoading || isEditLoading}>
                     {Object.entries(statusMappings).map(([key, label]) => (
                       <option
@@ -334,8 +270,9 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               <Form.Label>Job Posting Link</Form.Label>
               <InputGroup hasValidation>
                 <Form.Control
+                  name="sourceLink"
                   type="url"
-                  onChange={onSourceLinkChange}
+                  onChange={onValueChange}
                   value={formData.sourceLink}
                   isInvalid={showError && !isLinkValid}
                   disabled={isAddLoading || isEditLoading}
@@ -348,10 +285,11 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
               <Form.Label>Job Description</Form.Label>
               <Form.Control
+                name="jobDescription"
                 as="textarea"
                 rows={3}
                 className={styles['text-field']}
-                onChange={onJobDescriptionChange}
+                onChange={onValueChange}
                 value={formData.jobDescription}
                 disabled={isAddLoading || isEditLoading}
               />
@@ -362,7 +300,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
         <Modal.Footer>
           <Button
             variant="info"
-            onClick={onHide}
+            onClick={handleHide}
             disabled={isAddLoading || isEditLoading}>
             Cancel
           </Button>
