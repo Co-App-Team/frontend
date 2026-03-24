@@ -15,8 +15,9 @@
   border: 0.1vw solid #ddd;
   padding: 0.5vw;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
 .calendar-date {
@@ -32,8 +33,8 @@
   background-color: var(--primary);
   color: white;
   border-radius: 50%;
-  width: 2.5vw;
-  height: 4vh;
+  width: 2vw;
+  height: 3vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,4 +44,62 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   margin-bottom: 0.5vh;
+}
+
+.calendar-event {
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5vh 0.5vw;
+  gap: 0.7vh;
+  width: 100%;
+}
+
+.event {
+  font-size: 0.85rem;
+  background-color: var(--bs-warning);
+  color: black;
+  border: none;
+  border-radius: 0.5vw;
+  padding: 0.4vh 0.6vw;
+  min-height: 2.2vh;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.event:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.more {
+  font-size: 0.75rem;
+  color: black;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0.4vh 0.6vw;
+}
+
+.event:hover .more:hover {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.popover {
+  max-width: 12vw;
+  min-width: 6vw;
+  width: auto;
+}
+
+.popover-body {
+  max-height: 25vh;
+  overflow-y: auto;
+  padding: 0.5rem;
 }
