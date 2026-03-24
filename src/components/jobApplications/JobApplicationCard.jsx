@@ -99,7 +99,6 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
 
       // prompt user to enter the interview's date and time
       if (jobApplication.status !== 'INTERVIEWING' && newStatus === 'INTERVIEWING') {
-        console.log('we are here');
         const updated = {
           ...finalFormData,
           status: newStatus,
