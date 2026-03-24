@@ -12,13 +12,11 @@ function AddCompanyModal({ defaultValues, showModal, hideModal, refreshCompanies
   const [error, setError] = useState(false);
 
   const [formData, setFormData] = useState(
-    defaultValues
-      ? defaultValues
-      : {
-          companyName: '',
-          location: '',
-          website: '',
-        },
+    defaultValues || {
+      companyName: '',
+      location: '',
+      website: '',
+    },
   );
 
   const errorMappings = {

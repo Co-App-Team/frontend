@@ -21,12 +21,13 @@ const ExperienceForm = ({
       return 'Please provide a job title';
     } else if (value.length > 80) {
       return 'Job title too long. Please use 80 or fewer characters.';
+    } else {
+      return '';
     }
-    return '';
   };
 
   const validateCompany = (value) => {
-    return !value ? 'Please select a company' : '';
+    return value ? '' : 'Please select a company';
   };
 
   const validateStartDate = (value) => {
@@ -50,8 +51,9 @@ const ExperienceForm = ({
       return 'Please enter a job description';
     } else if (value.length > 1000) {
       return 'Job title too long. Please use 1000 or fewer characters.';
+    } else {
+      return '';
     }
-    return '';
   };
 
   const getValidationError = (name, value) => {
@@ -133,90 +135,86 @@ const ExperienceForm = ({
   };
 
   return (
-    <>
-      <Form
-        id={id}
-        onSubmit={handleSubmit}>
-        <Form.Group>
-          <Form.Label>Job Title</Form.Label>
-          <Form.Control
-            type="text"
-            onChange={handleChange}
-            isInvalid={formErrors?.roleTitle}
-            value={formData?.roleTitle || ''}
-            disabled={isLoading}
-            name="roleTitle"
-          />
-          <Form.Control.Feedback type="invalid">{formErrors?.roleTitle}</Form.Control.Feedback>
+    <Form
+      id={id}
+      onSubmit={handleSubmit}>
+      <Form.Group>
+        <Form.Label>Job Title</Form.Label>
+        <Form.Control
+          type="text"
+          onChange={handleChange}
+          isInvalid={formErrors?.roleTitle}
+          value={formData?.roleTitle || ''}
+          disabled={isLoading}
+          name="roleTitle"
+        />
+        <Form.Control.Feedback type="invalid">{formErrors?.roleTitle}</Form.Control.Feedback>
 
-          <Form.Label>Company</Form.Label>
-          <ReactCreateBootstrap
-            isLoading={!companies}
-            options={companies?.map((company) => {
-              return { value: company, label: company.companyName };
-            })}
-            className={formErrors?.company ? 'is-invalid' : 'mb-2 '}
-            onChange={onCompanyChange}
-            value={
-              formData?.company
-                ? { value: formData.company, label: formData.company.companyName }
-                : null
-            }
-            isDisabled={isLoading}
-            isInvalid={formErrors?.company}
-            createOptionPosition="first"
-            onCreateOption={onCompanyCreate}
-          />
-          {formErrors?.company && (
-            <div className="invalid-feedback d-block">{formErrors.company}</div>
-          )}
+        <Form.Label>Company</Form.Label>
+        <ReactCreateBootstrap
+          isLoading={!companies}
+          options={companies?.map((company) => {
+            return { value: company, label: company.companyName };
+          })}
+          className={formErrors?.company ? 'is-invalid' : 'mb-2 '}
+          onChange={onCompanyChange}
+          value={
+            formData?.company
+              ? { value: formData.company, label: formData.company.companyName }
+              : null
+          }
+          isDisabled={isLoading}
+          isInvalid={formErrors?.company}
+          createOptionPosition="first"
+          onCreateOption={onCompanyCreate}
+        />
+        {formErrors?.company && (
+          <div className="invalid-feedback d-block">{formErrors.company}</div>
+        )}
 
-          <Row>
-            <Col>
-              <Form.Label>Start Date</Form.Label>
-              <Form.Control
-                type="date"
-                onClick={(e) => e.target.showPicker?.()}
-                onChange={handleChange}
-                isInvalid={formErrors?.startDate}
-                value={formData?.startDate || ''}
-                disabled={isLoading}
-                name="startDate"
-              />
-              <Form.Control.Feedback type="invalid">{formErrors?.startDate}</Form.Control.Feedback>
-            </Col>
-            <Col>
-              <Form.Label>End Date (Optional)</Form.Label>
-              <Form.Control
-                type="date"
-                onClick={(e) => e.target.showPicker?.()}
-                onChange={handleChange}
-                isInvalid={formErrors?.endDate}
-                value={formData?.endDate || ''}
-                disabled={isLoading}
-                name="endDate"
-              />
-              <Form.Control.Feedback type="invalid">{formErrors?.endDate}</Form.Control.Feedback>
-            </Col>
-          </Row>
+        <Row>
+          <Col>
+            <Form.Label>Start Date</Form.Label>
+            <Form.Control
+              type="date"
+              onClick={(e) => e.target.showPicker?.()}
+              onChange={handleChange}
+              isInvalid={formErrors?.startDate}
+              value={formData?.startDate || ''}
+              disabled={isLoading}
+              name="startDate"
+            />
+            <Form.Control.Feedback type="invalid">{formErrors?.startDate}</Form.Control.Feedback>
+          </Col>
+          <Col>
+            <Form.Label>End Date (Optional)</Form.Label>
+            <Form.Control
+              type="date"
+              onClick={(e) => e.target.showPicker?.()}
+              onChange={handleChange}
+              isInvalid={formErrors?.endDate}
+              value={formData?.endDate || ''}
+              disabled={isLoading}
+              name="endDate"
+            />
+            <Form.Control.Feedback type="invalid">{formErrors?.endDate}</Form.Control.Feedback>
+          </Col>
+        </Row>
 
-          <Form.Label>Job Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            onChange={handleChange}
-            value={formData?.roleDescription || ''}
-            disabled={isLoading}
-            name="roleDescription"
-            style={{ resize: 'none' }}
-            isInvalid={formErrors?.roleDescription}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formErrors?.roleDescription}
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Form>
-    </>
+        <Form.Label>Job Description</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
+          onChange={handleChange}
+          value={formData?.roleDescription || ''}
+          disabled={isLoading}
+          name="roleDescription"
+          style={{ resize: 'none' }}
+          isInvalid={formErrors?.roleDescription}
+        />
+        <Form.Control.Feedback type="invalid">{formErrors?.roleDescription}</Form.Control.Feedback>
+      </Form.Group>
+    </Form>
   );
 };
 
