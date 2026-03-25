@@ -30,6 +30,7 @@ import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
 const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) => {
+  const [applicationToEdit, setApplicationToEdit] = useState(jobApplication);
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -95,6 +96,25 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
       await editJobApplicationCallback(finalFormData, jobApplication.applicationId);
 
       await onUpdated();
+
+      const isAtInterviewStage =
+        (jobApplication.status === 'INTERVIEWING' ||
+          jobApplication.status === 'INTERVIEW_SCHEDULED') &&
+        (newStatus === 'INTERVIEWING' || newStatus === 'INTERVIEW_SCHEDULED');
+
+      // prompt user to enter the interview's date and time
+      if (
+        !isAtInterviewStage &&
+        (newStatus === 'INTERVIEW_SCHEDULED' || newStatus === 'INTERVIEWING')
+      ) {
+        const updated = {
+          ...finalFormData,
+          status: newStatus,
+        };
+
+        setApplicationToEdit(updated);
+        setIsEditing(true);
+      }
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
       setError(message);
@@ -211,7 +231,10 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
                     variant="primary"
                     className="m-1"
                     size="md"
-                    onClick={() => setIsEditing(true)}>
+                    onClick={() => {
+                      setApplicationToEdit(jobApplication);
+                      setIsEditing(true);
+                    }}>
                     <FontAwesomeIcon
                       icon={faPen}
                       size="sm"
@@ -292,7 +315,7 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
           onShow={isEditing}
           onHide={hideEditApplicationModal}
           companies={companies}
-          data={jobApplication}
+          data={applicationToEdit}
           onSaved={onUpdated}
         />
       )}

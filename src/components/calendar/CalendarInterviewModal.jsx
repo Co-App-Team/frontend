@@ -20,7 +20,6 @@ function CalendarInterviewModal({ onShow, onHide, applications, onSaved }) {
 
   const handleSelectedApplication = async (e) => {
     const selected = e.value;
-    console.log('this is selected', selected);
     try {
       const result = await getCompanyCallback(selected?.companyId);
       const companyName = result?.company?.companyName;

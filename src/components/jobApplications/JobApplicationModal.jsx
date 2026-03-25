@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Row, Col, InputGroup, Modal, Button, Spinner } from 'react-bootstrap';
+import { Form, Row, Col, InputGroup, Modal, Button, Spinner, FormGroup } from 'react-bootstrap';
 import styles from '../styling/jobApplications/JobApplications.module.css';
 import useApi from '../../hooks/useApi';
 import { addApplication, editApplication } from '../../api/jobApplicationsApi';
@@ -13,6 +13,21 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   const [error, setError] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    // ensure each part is at least two characters long
+    // if not, pads it with 0 (e.g. 5 to 05)
+    const pad = (n) => n.toString().padStart(2, '0');
+
+    const year = dateTime.getFullYear();
+    const month = pad(dateTime.getMonth() + 1);
+    const day = pad(dateTime.getDate());
+    const hour = pad(dateTime.getHours());
+    const minutes = pad(dateTime.getMinutes());
+
+    return `${year}-${month}-${day}T${hour}:${minutes}`;
+  };
+
   const [formData, setFormData] = useState({
     company: oldCompany,
     companyId: data?.companyId || '',
@@ -20,6 +35,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     numPositions: data?.numPositions || '',
     status: data?.status || 'NOT_APPLIED',
     applicationDeadline: data?.applicationDeadline ? data.applicationDeadline.split('T')[0] : '',
+    interviewDateTime: data?.interviewDateTime ? formatDateTime(data.interviewDateTime) : '',
     jobDescription: data?.jobDescription || '',
     sourceLink: data?.sourceLink || '',
   });
@@ -53,6 +69,13 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     return date && date.trim() != '';
   };
 
+  const validateInterviewDateTime = (date) => {
+    return (
+      (formData.status !== 'INTERVIEW_SCHEDULED' && formData.status !== 'INTERVIEWING') ||
+      (date && date.trim() !== '')
+    );
+  };
+
   const validateNumPositions = (num) => {
     return num > 0;
   };
@@ -79,6 +102,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
 
   const isJobTitleValid = validateJobTitle(formData.jobTitle);
   const isApplicationDeadlineValid = validateDeadlineDate(formData.applicationDeadline);
+  const isInterviewDateTimeValid = validateInterviewDateTime(formData.interviewDateTime);
   const isCompanyValid = validateCompany(formData.company);
   const isNumPositionsValid =
     formData.numPositions == '' ? true : validateNumPositions(formData.numPositions);
@@ -103,6 +127,15 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     }
   };
 
+  const onInterviewDateTimeChange = (e) => {
+    const value = e.target.value;
+    setFormData({ ...formData, interviewDateTime: value });
+
+    if (value) {
+      setShowError(false);
+    }
+  };
+
   const { request: addJobApplicationCallback, loading: isAddLoading } = useApi(addApplication);
   const { request: editJobApplicationCallback, loading: isEditLoading } = useApi(editApplication);
 
@@ -110,6 +143,7 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
     if (
       !isJobTitleValid ||
       !isApplicationDeadlineValid ||
+      !isInterviewDateTimeValid ||
       !isCompanyValid ||
       !isNumPositionsValid ||
       !isStatusValid ||
@@ -253,6 +287,26 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
                   </Form.Select>
                 </>
               )}
+
+              <FormGroup>
+                {(formData.status === 'INTERVIEW_SCHEDULED' ||
+                  formData.status === 'INTERVIEWING') && (
+                  <>
+                    <Form.Label>Interview Date and Time</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      onClick={(e) => e.target.showPicker?.()}
+                      onChange={onInterviewDateTimeChange}
+                      isInvalid={showError && !isInterviewDateTimeValid}
+                      disabled={isAddLoading || isEditLoading}
+                      value={formData.interviewDateTime}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide the interview's date and time.
+                    </Form.Control.Feedback>
+                  </>
+                )}
+              </FormGroup>
 
               <Form.Label>Deadline Date</Form.Label>
               <Form.Control
