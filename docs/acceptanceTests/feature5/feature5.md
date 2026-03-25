@@ -37,7 +37,33 @@ Once the new interview has been successfully added, they should be redirected to
 
 
 ## Monthly Calendar View
+Given that the user is in the *Interview Calendar* page, 
+![image](calendarPage.png)
+then the calendar should be in the current month by default. 
+![image](calendar-1.png)
+
+Looking at the calendar, the current day should be highlighted with a blue circle. 
+![image](calendar-3.png)
 
 
+If the user clicks the *<* button, 
+![image](switchButtons.png)
+then the calendar should switch to the previous month.
+![image](calendar-2.png)
+
+If the user clicks the *Today* button, 
+![image](switchButtons.png)
+then the calendar should switch to the current month. 
+![image](calendarPage.png)
+
+If the user clicks the *>* button, 
+![image](switchButtons.png)
+then the calendar should switch to the next month. 
+![image](calendar-4.png)
+
+If the user creates a new job interview, 
+![image](calendar-5.png)
+when the user navigates to the month in which the interview is scheduled, then the interview should be visible on the specific day it was scheduled for. 
+![image](calendar-6.png)
 
 ## Quick Navigation
