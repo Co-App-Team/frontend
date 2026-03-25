@@ -97,8 +97,16 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
 
       await onUpdated();
 
+      const isAtInterviewStage =
+        (jobApplication.status === 'INTERVIEWING' ||
+          jobApplication.status === 'INTERVIEW_SCHEDULED') &&
+        (newStatus === 'INTERVIEWING' || newStatus === 'INTERVIEW_SCHEDULED');
+
       // prompt user to enter the interview's date and time
-      if (jobApplication.status !== 'INTERVIEWING' && newStatus === 'INTERVIEWING') {
+      if (
+        !isAtInterviewStage &&
+        (newStatus === 'INTERVIEW_SCHEDULED' || newStatus === 'INTERVIEWING')
+      ) {
         const updated = {
           ...finalFormData,
           status: newStatus,

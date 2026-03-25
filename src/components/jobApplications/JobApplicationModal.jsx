@@ -70,7 +70,10 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
   };
 
   const validateInterviewDateTime = (date) => {
-    return formData.status !== 'INTERVIEWING' || (date && date.trim() !== '');
+    return (
+      (formData.status !== 'INTERVIEW_SCHEDULED' && formData.status !== 'INTERVIEWING') ||
+      (date && date.trim() !== '')
+    );
   };
 
   const validateNumPositions = (num) => {
@@ -286,7 +289,8 @@ function JobApplicationModal({ onShow, onHide, companies, data, onSaved }) {
               )}
 
               <FormGroup>
-                {formData.status === 'INTERVIEWING' && (
+                {(formData.status === 'INTERVIEW_SCHEDULED' ||
+                  formData.status === 'INTERVIEWING') && (
                   <>
                     <Form.Label>Interview Date and Time</Form.Label>
                     <Form.Control
