@@ -31,20 +31,20 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
     return !value ? 'Please select a company' : '';
   };
 
-  const validateStartDate = (value) => {
+  const validateStartDate = (value, endDate) => {
     if (!value) {
       return 'Please select a start date';
     } else {
       const startDate = new Date(value);
-      const endDate = new Date(formData?.endDate);
-      return endDate < startDate ? 'Start date must be before end date' : '';
+      const endDateObj = endDate && new Date(endDate);
+      return endDate && endDateObj < startDate ? 'Start date must be before end date' : '';
     }
   };
 
-  const validateEndDate = (value) => {
-    const startDate = new Date(formData?.startDate);
+  const validateEndDate = (value, startDate) => {
+    const startDateObj = new Date(startDate);
     const endDate = new Date(value);
-    return endDate < startDate ? 'End date must be after start date' : '';
+    return startDate && endDate < startDateObj ? 'End date must be after start date' : '';
   };
 
   const validateRoleDescription = (value) => {
@@ -65,10 +65,10 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
         return validateCompany(value);
 
       case 'startDate':
-        return validateStartDate(value);
+        return validateStartDate(value, formData?.endDate);
 
       case 'endDate': {
-        return validateEndDate(value);
+        return validateEndDate(value, formData?.startDate);
       }
 
       case 'roleDescription':
@@ -87,14 +87,17 @@ const ExperienceModal = ({ show, onHide, defaultValues, companies, submitCallbac
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (name === 'startDate' || name === 'endDate') {
+    if (name === 'startDate') {
       setFormErrors({
         ...formErrors,
-        startDate: getValidationError(
-          'startDate',
-          name === 'startDate' ? value : formData?.startDate,
-        ),
-        endDate: getValidationError('endDate', name === 'endDate' ? value : formData?.endDate),
+        startDate: validateStartDate(value, formData?.endDate),
+        endDate: validateEndDate(formData?.endDate, value),
+      });
+    } else if (name === 'endDate') {
+      setFormErrors({
+        ...formErrors,
+        startDate: validateStartDate(formData?.startDate, value),
+        endDate: validateEndDate(value, formData?.startDate),
       });
     } else {
       setFormErrors({ ...formErrors, [name]: getValidationError(name, value) });
