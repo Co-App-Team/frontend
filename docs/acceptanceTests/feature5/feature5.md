@@ -67,3 +67,33 @@ when the user navigates to the month in which the interview is scheduled, then t
 ![image](calendar-6.png)
 
 ## Quick Navigation
+Given that the user is in the *Interview Calendar* page
+![image](calendarPage.png)
+
+If the user clicks on an interview in the calendar, 
+![image](calendar-6.png)
+then there should be a popup showing all the interview details. 
+![image](navigation-1.png)
+
+If the user clicks *Done*, 
+![image](navigation-2.png)
+then the user should be redirected back to the *Interview Calendar* page. 
+![image](navigation-3.png)
+
+If there are many interviews occurring in a single day, 
+
+then there should be a *+ n more* button, with *n* being the number of additional interviews not currently shown. 
+![image](navigation-4.png)
+
+If the user clicks the *+ n more* button, 
+
+then there should be a popup that displays all the interviews occurring in the day. 
+![image](navigation-5.png)
+
+This popup should be scrollable to accomodate a large number of interviews. 
+![image](navigation-6.png)
+
+If the user clicks on any of the interviews from the popup, 
+![image](navigation-7.png)
+then the interview's details should be shown and the popup should no longer be displayed. 
+![image](navigation-8.png)
