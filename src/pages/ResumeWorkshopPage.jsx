@@ -71,6 +71,7 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
 
     try {
       await sendPromptCallback({ userPrompt, applicationId: selectedApplication?.applicationId });
+      getQuotaCallback();
       return true;
     } catch (error) {
       const message = getErrorMessage(error, promptErrorMappings);
@@ -126,7 +127,8 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
         ) : (
           <>{' ' + userQuota + ' '}</>
         )}
-        prompts left
+        prompt{userQuota !== 1 && 's'}
+        {' ' + 'left'}
       </>
     );
   };

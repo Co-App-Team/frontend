@@ -73,9 +73,9 @@ const Calendar = () => {
     const request = async () => {
       try {
         // only allow users to make interviews with applications
-        // that are not at the "interviewing" stage yet
+        // that are at either "not applied" or "applied" stage
         await getApplicationsCallback({
-          status: 'NOT_APPLIED,APPLIED,INTERVIEW_SCHEDULED',
+          status: 'NOT_APPLIED,APPLIED',
         });
       } catch (error) {
         const message = getErrorMessage(error, {});

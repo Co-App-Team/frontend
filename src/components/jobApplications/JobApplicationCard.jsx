@@ -36,6 +36,7 @@ const JobApplicationCard = ({
   companies,
   refreshCompanies,
 }) => {
+  const [applicationToEdit, setApplicationToEdit] = useState(jobApplication);
   const status = jobApplication.status;
 
   const sourceLink = jobApplication.sourceLink ? `${jobApplication.sourceLink}` : '';
@@ -101,6 +102,25 @@ const JobApplicationCard = ({
       await editJobApplicationCallback(finalFormData, jobApplication.applicationId);
 
       await onUpdated();
+
+      const isAtInterviewStage =
+        (jobApplication.status === 'INTERVIEWING' ||
+          jobApplication.status === 'INTERVIEW_SCHEDULED') &&
+        (newStatus === 'INTERVIEWING' || newStatus === 'INTERVIEW_SCHEDULED');
+
+      // prompt user to enter the interview's date and time
+      if (
+        !isAtInterviewStage &&
+        (newStatus === 'INTERVIEW_SCHEDULED' || newStatus === 'INTERVIEWING')
+      ) {
+        const updated = {
+          ...finalFormData,
+          status: newStatus,
+        };
+
+        setApplicationToEdit(updated);
+        setIsEditing(true);
+      }
     } catch (error) {
       const message = getErrorMessage(error, errorMappings);
       setError(message);
@@ -217,7 +237,10 @@ const JobApplicationCard = ({
                     variant="primary"
                     className="m-1"
                     size="md"
-                    onClick={() => setIsEditing(true)}>
+                    onClick={() => {
+                      setApplicationToEdit(jobApplication);
+                      setIsEditing(true);
+                    }}>
                     <FontAwesomeIcon
                       icon={faPen}
                       size="sm"
@@ -298,7 +321,7 @@ const JobApplicationCard = ({
           show={isEditing}
           onHide={hideEditApplicationModal}
           companies={companies}
-          data={jobApplication}
+          data={applicationToEdit}
           onSaved={onUpdated}
           refreshCompanies={refreshCompanies}
         />
