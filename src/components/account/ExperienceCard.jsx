@@ -76,16 +76,17 @@ const ExperienceCard = () => {
     loadExperiences();
   };
 
-  useEffect(() => {
-    const callback = async () => {
-      try {
-        await getCompaniesCallback();
-      } catch (error) {
-        console.log('Failed to load company list, is the server down?', getErrorMessage(error));
-      }
-    };
-    callback();
+  const refreshCompanies = useCallback(async () => {
+    try {
+      await getCompaniesCallback();
+    } catch (error) {
+      console.log('Failed to load company list, is the server down?', getErrorMessage(error));
+    }
   }, [getCompaniesCallback]);
+
+  useEffect(() => {
+    refreshCompanies();
+  }, [refreshCompanies]);
 
   useEffect(() => {
     loadExperiences();
@@ -101,6 +102,7 @@ const ExperienceCard = () => {
         companies={companies}
         defaultValues={experienceToEdit}
         submitCallback={handleModalSubmit}
+        refreshCompaniesCallback={refreshCompanies}
         key={!showModal || experienceToEdit?.experienceId || 'new'}
       />
       <Card.Header className="bg-white border-bottom-0 pt-4 pb-0 px-4">

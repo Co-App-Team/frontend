@@ -10,6 +10,7 @@ const JobApplicationsDisplay = ({
   loading,
   setError,
   companies,
+  refreshCompanies,
 }) => {
   return (
     <CardContainer>
@@ -29,6 +30,7 @@ const JobApplicationsDisplay = ({
                       setError={setError}
                       jobApplication={application}
                       onUpdated={refreshApplicationsList}
+                      refreshCompanies={refreshCompanies}
                     />
                   </Col>
                 </Row>
@@ -61,6 +63,7 @@ const JobApplicationsDisplay = ({
                         setError={setError}
                         jobApplication={application}
                         onUpdated={refreshApplicationsList}
+                        refreshCompanies={refreshCompanies}
                       />
                     </Col>
                   </Row>
@@ -88,6 +91,7 @@ const JobApplicationsDisplay = ({
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
+                          refreshCompanies={refreshCompanies}
                         />
                       </Col>
                     </Row>
@@ -114,6 +118,7 @@ const JobApplicationsDisplay = ({
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
+                          refreshCompanies={refreshCompanies}
                         />
                       </Col>
                     </Row>
@@ -131,6 +136,7 @@ const JobApplicationsDisplay = ({
                           setError={setError}
                           jobApplication={application}
                           onUpdated={refreshApplicationsList}
+                          refreshCompanies={refreshCompanies}
                         />
                       </Col>
                     </Row>

@@ -29,7 +29,13 @@ import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 import PropTypes from 'prop-types';
 
-const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) => {
+const JobApplicationCard = ({
+  jobApplication,
+  onUpdated,
+  setError,
+  companies,
+  refreshCompanies,
+}) => {
   const [applicationToEdit, setApplicationToEdit] = useState(jobApplication);
   const status = jobApplication.status;
 
@@ -312,11 +318,12 @@ const JobApplicationCard = ({ jobApplication, onUpdated, setError, companies }) 
 
       {isEditing && (
         <EditApplicationModal
-          onShow={isEditing}
+          show={isEditing}
           onHide={hideEditApplicationModal}
           companies={companies}
           data={applicationToEdit}
           onSaved={onUpdated}
+          refreshCompanies={refreshCompanies}
         />
       )}
 
