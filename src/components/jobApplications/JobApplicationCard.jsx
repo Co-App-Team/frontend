@@ -27,7 +27,6 @@ import { editApplication } from '../../api/jobApplicationsApi';
 import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
-import PropTypes from 'prop-types';
 
 const JobApplicationCard = ({
   jobApplication,
@@ -335,12 +334,6 @@ const JobApplicationCard = ({
       />
     </>
   );
-};
-
-JobApplicationCard.propTypes = {
-  jobApplication: PropTypes.object.isRequired,
-  onUpdated: PropTypes.func.isRequired,
-  setError: PropTypes.func.isRequired,
 };
 
 export default JobApplicationCard;
