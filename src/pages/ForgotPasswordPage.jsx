@@ -47,23 +47,25 @@ const ForgotPasswordPage = () => {
 
   return (
     <PageTransition>
-      <div
-        className="p-4 border rounded d-flex flex-column align-items-center"
-        style={{ maxWidth: '19rem' }}>
-        <img
-          src={LogoImage}
-          width={220}
-        />
-        <h2 className="mt-0 mb-0 text-primary fw-bold">Password Reset</h2>
-        <SendForgotPasswordForm
-          isLoading={isLoading}
-          handleSendResetCode={handleSendResetCode}
-        />
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div
+          className="p-4 border rounded d-flex flex-column align-items-center"
+          style={{ maxWidth: '19rem' }}>
+          <img
+            src={LogoImage}
+            width={220}
+          />
+          <h2 className="mt-0 mb-0 text-primary fw-bold">Password Reset</h2>
+          <SendForgotPasswordForm
+            isLoading={isLoading}
+            handleSendResetCode={handleSendResetCode}
+          />
 
-        {requestError && <p className="text-danger mt-3">{requestError}</p>}
-        <p className={'mb-0 ' + (requestError ? 'mt-0' : 'mt-4')}>
-          <Link to="/login">Back to sign in</Link>
-        </p>
+          {requestError && <p className="text-danger mt-3">{requestError}</p>}
+          <p className={'mb-0 ' + (requestError ? 'mt-0' : 'mt-4')}>
+            <Link to="/login">Back to sign in</Link>
+          </p>
+        </div>
       </div>
     </PageTransition>
   );

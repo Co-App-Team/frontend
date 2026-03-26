@@ -69,6 +69,16 @@ const GlobalNavbar = () => {
                 to="/rate-my-co-op">
                 Rate My Co-op
               </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/interviews">
+                Interview Calendar
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/resume-workshop">
+                Resume Workshop
+              </Nav.Link>
             </Nav>
 
             <Nav>

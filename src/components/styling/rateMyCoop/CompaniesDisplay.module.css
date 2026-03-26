@@ -1,6 +1,5 @@
 .companies-container {
   height: 70vh;
-  width: 80vw;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.5rem;
@@ -17,10 +16,10 @@
   border-left: 0.5rem;
   border-style: solid;
   border-left-color: var(--primary);
-  width: 78vw;
   padding: 0;
   transition: filter 0.2s ease;
 }
+
 .company-card:hover {
   filter: brightness(0.9);
   cursor: pointer;

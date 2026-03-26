@@ -29,10 +29,14 @@
     "axios": "^1.13.4",
     "bootstrap": "^5.3.8",
     "framer-motion": "^12.34.0",
+    "prop-types": "^15.8.1",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.13.0",
+    "react-select": "^5.10.2",
+    "react-select-bootstrap": "^1.0.1",
     "sass": "^1.97.3"
   },
   "devDependencies": {

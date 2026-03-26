@@ -9,6 +9,7 @@ import { changePassword } from '../api/userApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import ChangePasswordCard from '../components/account/ChangePasswordCard';
 import ProfileCard from '../components/account/ProfileCard';
+import ExperienceCard from '../components/account/ExperienceCard';
 
 const changePasswordErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Please provide both your current password, and a new one',
@@ -56,30 +57,47 @@ const AccountPage = () => {
   };
 
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
+    <Container className="py-4">
+      <Row className="justify-content-center ">
         <Col
-          xs={12}
-          md={12}
-          lg={12}
-          xl={12}>
+          xs={11}
+          xxl={10}>
           <div className="mb-4">
             <h2>Account Settings</h2>
             <p className="text-muted">Manage your profile and security preferences.</p>
           </div>
+          <Row className="g-3 mb-3">
+            <Col
+              md={6}
+              className="d-flex">
+              <ProfileCard
+                user={user}
+                onSignOut={handleSignOut}
+                error={signOutError}
+              />
+            </Col>
 
-          <ProfileCard
-            user={user}
-            onSignOut={handleSignOut}
-            error={signOutError}
-          />
-
-          <ChangePasswordCard
-            isLoading={isLoading}
-            onSubmit={handlePasswordChange}
-            error={changePasswordError}
-            success={changePasswordSuccess}
-          />
+            <Col
+              md={6}
+              className="d-flex">
+              <ChangePasswordCard
+                isLoading={isLoading}
+                onSubmit={handlePasswordChange}
+                error={changePasswordError}
+                success={changePasswordSuccess}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <ExperienceCard
+                isLoading={isLoading}
+                onSubmit={handlePasswordChange}
+                error={changePasswordError}
+                success={changePasswordSuccess}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>

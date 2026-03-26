@@ -110,43 +110,45 @@ const ConfirmEmailPage = () => {
 
   return (
     <PageTransition>
-      <div
-        className="p-4 border rounded d-flex flex-column align-items-center"
-        style={{ maxWidth: '21rem' }}>
-        <h2 className="mt-4 mb-0">Confirm your email</h2>
-        <p className="text-center mt-4">
-          Please check <strong>{email}</strong> and enter the code we sent you below.
-        </p>
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div
+          className="p-4 border rounded d-flex flex-column align-items-center"
+          style={{ maxWidth: '21rem' }}>
+          <h2 className="mt-4 mb-0">Confirm your email</h2>
+          <p className="text-center mt-4">
+            Please check <strong>{email}</strong> and enter the code we sent you below.
+          </p>
 
-        <Form>
-          <Row>
-            <Form.Group className="mb-3">
-              <Form.Control
-                type="text"
-                placeholder="Enter confirmation code"
-                isInvalid={error}
-                onChange={updateConfirmationCode}
-                value={confirmationCode}
-                disabled={isLoading}
-              />
-              <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-        </Form>
-        {showResentMessage && <p className="mb-1 text-success">Confirmation code resent ✓</p>}
-        {isLoading && <Spinner />}
-        <p className="mt-2">
-          Don't see an email? Check your spam folder or{' '}
-          <ResendCodeButton
-            resendCodeCallback={resendCode}
-            isLoading={isLoading}
-          />
-          .
-        </p>
-        <p className="mt-0">
-          Not your email? Try <Link to="/signup">signing up</Link> or{' '}
-          <Link to="/login">logging in</Link> with your email.
-        </p>
+          <Form>
+            <Row>
+              <Form.Group className="mb-3">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter confirmation code"
+                  isInvalid={error}
+                  onChange={updateConfirmationCode}
+                  value={confirmationCode}
+                  disabled={isLoading}
+                />
+                <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+          </Form>
+          {showResentMessage && <p className="mb-1 text-success">Confirmation code resent ✓</p>}
+          {isLoading && <Spinner />}
+          <p className="mt-2">
+            Don't see an email? Check your spam folder or{' '}
+            <ResendCodeButton
+              resendCodeCallback={resendCode}
+              isLoading={isLoading}
+            />
+            .
+          </p>
+          <p className="mt-0">
+            Not your email? Try <Link to="/signup">signing up</Link> or{' '}
+            <Link to="/login">logging in</Link> with your email.
+          </p>
+        </div>
       </div>
     </PageTransition>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Alert, Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { login } from '../api/authApi';
 import { useAuthContext } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -64,75 +64,90 @@ const LoginPage = () => {
 
   return (
     <PageTransition>
-      <div
-        className="p-4 border rounded d-flex flex-column align-items-center"
-        style={{ maxWidth: '19rem' }}>
-        <img
-          src={LogoImage}
-          width={220}
-        />
-        <Form>
-          <Form.Group
-            className="mb-3"
-            controlId="formBasicEmail">
-            <div className="text-start mt-4 mb-1">
-              <Form.Label>Email</Form.Label>
-            </div>
+      <div className="d-flex flex-column justify-content-center align-items-center min-vh-100">
+        <div
+          className="p-4 border rounded d-flex flex-column align-items-center"
+          style={{ maxWidth: '19rem' }}>
+          <img
+            src={LogoImage}
+            width={220}
+          />
+          <Form>
+            <Form.Group
+              className="mb-3"
+              controlId="formBasicEmail">
+              <div className="text-start mt-4 mb-1">
+                <Form.Label>Email</Form.Label>
+              </div>
 
-            <Form.Control
-              type="email"
-              placeholder="Enter your email"
-              onChange={onEmailChange}
-              disabled={isLoading}
-            />
-          </Form.Group>
-
-          <Form.Group
-            className="mb-3"
-            controlId="formBasicPassword">
-            <div className="text-start mt-4 mb-1">
-              <Form.Label>Password</Form.Label>
-            </div>
-            <InputGroup>
               <Form.Control
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                onChange={onPasswordChange}
+                type="email"
+                placeholder="Enter your email"
+                onChange={onEmailChange}
                 disabled={isLoading}
               />
-              <ShowPasswordButton
-                isShowingPassword={showPassword}
-                isLoading={isLoading}
-                onClick={togglePasswordVisibility}
-              />
-            </InputGroup>
-          </Form.Group>
-          <div className="d-grid">
-            <Button
-              variant="primary"
-              type="button"
-              onClick={submit}
-              size="lg"
-              disabled={isLoading}>
-              {isLoading ? (
-                <Spinner
-                  animation="border"
-                  role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              ) : (
-                'Log in'
-              )}
-            </Button>
-          </div>
-        </Form>
-        {error && <p className="text-danger mt-3">{error}</p>}
-        <p className={error ? '' : 'mt-3'}>
-          Or sign up <Link to="/signup">here</Link>
-        </p>
-        <p>
-          <Link to="/forgot-password">Forgot your password?</Link>
-        </p>
+            </Form.Group>
+
+            <Form.Group
+              className="mb-3"
+              controlId="formBasicPassword">
+              <div className="text-start mt-4 mb-1">
+                <Form.Label>Password</Form.Label>
+              </div>
+              <InputGroup>
+                <Form.Control
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  onChange={onPasswordChange}
+                  disabled={isLoading}
+                />
+                <ShowPasswordButton
+                  isShowingPassword={showPassword}
+                  isLoading={isLoading}
+                  onClick={togglePasswordVisibility}
+                />
+              </InputGroup>
+            </Form.Group>
+            <div className="d-grid">
+              <Button
+                variant="primary"
+                type="button"
+                onClick={submit}
+                size="lg"
+                disabled={isLoading}>
+                {isLoading ? (
+                  <Spinner
+                    animation="border"
+                    role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                ) : (
+                  'Log in'
+                )}
+              </Button>
+            </div>
+          </Form>
+          {error && <p className="text-danger mt-3">{error}</p>}
+
+          <p className={error ? '' : 'mt-3'}>
+            Or sign up <Link to="/signup">here</Link>
+          </p>
+          <p>
+            <Link to="/forgot-password">Forgot your password?</Link>
+          </p>
+        </div>
+        <Alert
+          variant="danger"
+          className="mt-3"
+          style={{ maxWidth: '19rem' }}>
+          Warning: To use this app, make sure 3rd party cookies are enabled. Unsure how to enable?
+          Try{' '}
+          <Link
+            target="_blank"
+            to="https://www.niu.edu/blackboard/issues/third-party-cookies.shtml">
+            these steps
+          </Link>
+        </Alert>
       </div>
     </PageTransition>
   );
