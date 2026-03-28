@@ -20,6 +20,8 @@ import { ReactSelectBootstrap } from 'react-select-bootstrap';
 const promptErrorMappings = {
   OVER_LIMIT_CHATBOT_REQUEST:
     'You have hit your chatbot quota for this month. Please wait for it to renew before sending more prompts.',
+  OVER_LIMIT_CHARACTER: 'Your prompt is too long. Please shorten it and try again...',
+  SERVICE_UNAVAILABLE: 'The resume workshop is currently unavailable. Please try again later.',
 };
 
 const ResumeWorkshopPage = () => {
