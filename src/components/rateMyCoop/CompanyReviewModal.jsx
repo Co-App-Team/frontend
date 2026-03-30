@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faStar,
   faMapPin,
-  faLink,
   faTrash,
   faPen,
   faPlus,
+  faExternalLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -54,7 +54,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
             <Row>
               <Col
                 className="border-end"
-                style={{ overflowX: 'auto' }}>
+                xs="auto">
                 <div className="m-1">
                   <FontAwesomeIcon
                     className="me-1"
@@ -82,18 +82,20 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
               </Col>
               <Col
                 className="border-start"
-                style={{ overflowX: 'scroll' }}>
+                xs="auto">
                 <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faLink}
-                  />
                   <i>
                     <a
-                      className="pe-2"
-                      href={company.website}>
-                      {company.website}
+                      href={company.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-decoration-none text-muted mx-1">
+                      Visit their website:
                     </a>
+                    <FontAwesomeIcon
+                      className="me-2"
+                      icon={faExternalLink}
+                    />
                   </i>
                 </div>
               </Col>
