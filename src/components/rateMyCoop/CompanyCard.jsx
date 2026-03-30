@@ -1,9 +1,8 @@
-import { Card, Container, Row, Col } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faMapPin, faLink } from '@fortawesome/free-solid-svg-icons';
+import { Card } from 'react-bootstrap';
 import { useState } from 'react';
 import CompanyReviewModal from './CompanyReviewModal';
 import styles from '../styling/rateMyCoop/CompaniesDisplay.module.css';
+import CompanyInformationHeader from './CompanyInformationHeader';
 
 const CompanyCard = ({ company, refreshCompanies }) => {
   const [modalShow, setModalShow] = useState(false);
@@ -24,52 +23,7 @@ const CompanyCard = ({ company, refreshCompanies }) => {
           {company.companyName}
         </Card.Header>
         <Card.Body>
-          <Container className="text-center">
-            <Row>
-              <Col
-                className="border-end"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faStar}
-                  />
-
-                  {company.avgRating == 0 ? (
-                    /* A rating of 0 is not valid, 
-                    so if avgRating = 0, then no reviews for this company*/
-                    <>No Reviews Yet!</>
-                  ) : (
-                    <>Average Rating: {company.avgRating}/5</>
-                  )}
-                </div>
-              </Col>
-              <Col
-                className="border-start border-end"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faMapPin}
-                  />
-                  Location: {company.location}
-                </div>
-              </Col>
-              <Col
-                className="border-start"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faLink}
-                  />
-                  <i>
-                    <a href={company.website}>{company.website}</a>
-                  </i>
-                </div>
-              </Col>
-            </Row>
-          </Container>
+          <CompanyInformationHeader company={company} />
         </Card.Body>
       </Card>
       <CompanyReviewModal

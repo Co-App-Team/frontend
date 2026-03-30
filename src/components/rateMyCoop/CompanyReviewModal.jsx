@@ -1,19 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faStar,
-  faMapPin,
-  faTrash,
-  faPen,
-  faPlus,
-  faExternalLink,
-} from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import ViewReviews from './CompanyReviewModalComponents/ViewReviews';
 import DeleteReviews from './CompanyReviewModalComponents/DeleteReview';
 import WriteOrEditReviews from './CompanyReviewModalComponents/WriteOrEditReview';
+import CompanyInformationHeader from './CompanyInformationHeader';
 
 function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies }) {
   const [writingReview, setWritingReview] = useState(false);
@@ -43,65 +37,22 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       fullscreen
       centered>
       <Modal.Header closeButton>
-        <div className="d-flex flex-column justify-content-start align-items-start">
-          <Modal.Title
-            as="h2"
-            id="contained-modal-title-vcenter"
-            className="m-2">
-            <div style={{ overflowX: 'auto', maxWidth: '80vw' }}>{company.companyName}</div>
-          </Modal.Title>
-          <Container className="text-center text-nowrap">
-            <Row>
-              <Col
-                className="border-end"
-                xs="auto">
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faStar}
-                  />
-                  {company.avgRating == 0 ? (
-                    /* A rating of 0 is not valid, 
-                    so if avgRating = 0, then no reviews for this company*/
-                    <>No Reviews Yet!</>
-                  ) : (
-                    <>Average Rating: {company.avgRating}/5</>
-                  )}
-                </div>
-              </Col>
-              <Col
-                className="border-start border-end"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faMapPin}
-                  />
-                  Location: {company.location}
-                </div>
-              </Col>
-              <Col
-                className="border-start"
-                xs="auto">
-                <div className="m-1">
-                  <i>
-                    <a
-                      href={company.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-decoration-none text-muted mx-1">
-                      Visit their website:
-                    </a>
-                    <FontAwesomeIcon
-                      className="me-2"
-                      icon={faExternalLink}
-                    />
-                  </i>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </div>
+        <Container className="mx-0">
+          <Row>
+            <h2
+              style={{
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                height: '3.5rem',
+                maxWidth: '80vw',
+              }}>
+              {company.companyName}
+            </h2>
+          </Row>
+          <Row>
+            <CompanyInformationHeader company={company} />
+          </Row>
+        </Container>
       </Modal.Header>
       <Modal.Body className="overflow-x-hidden">
         {!writingReview && !deletingReview && !editingReview && (
