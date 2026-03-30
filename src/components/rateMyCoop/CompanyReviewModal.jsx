@@ -82,14 +82,18 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
               </Col>
               <Col
                 className="border-start"
-                style={{ overflowX: 'auto' }}>
+                style={{ overflowX: 'scroll' }}>
                 <div className="m-1">
                   <FontAwesomeIcon
                     className="me-1"
                     icon={faLink}
                   />
                   <i>
-                    <a href={company.website}>{company.website}</a>
+                    <a
+                      className="pe-4"
+                      href={company.website}>
+                      {company.website}
+                    </a>
                   </i>
                 </div>
               </Col>
