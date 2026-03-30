@@ -35,12 +35,12 @@ const CompanyCard = ({ company, refreshCompanies }) => {
                     icon={faStar}
                   />
 
-                  {company.avgRating != 0 ? (
+                  {company.avgRating == 0 ? (
                     /* A rating of 0 is not valid, 
                     so if avgRating = 0, then no reviews for this company*/
-                    <>Average Rating: {company.avgRating}/5</>
-                  ) : (
                     <>No Reviews Yet!</>
+                  ) : (
+                    <>Average Rating: {company.avgRating}/5</>
                   )}
                 </div>
               </Col>

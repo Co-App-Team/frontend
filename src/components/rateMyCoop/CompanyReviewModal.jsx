@@ -50,7 +50,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
             className="m-2">
             <div style={{ overflowX: 'auto', maxWidth: '80vw' }}>{company.companyName}</div>
           </Modal.Title>
-          <Container className="text-center">
+          <Container className="text-center text-nowrap">
             <Row>
               <Col
                 className="border-end"
@@ -60,12 +60,12 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                     className="me-1"
                     icon={faStar}
                   />
-                  {company.avgRating != 0 ? (
+                  {company.avgRating == 0 ? (
                     /* A rating of 0 is not valid, 
                     so if avgRating = 0, then no reviews for this company*/
-                    <>Average Rating: {company.avgRating}/5</>
-                  ) : (
                     <>No Reviews Yet!</>
+                  ) : (
+                    <>Average Rating: {company.avgRating}/5</>
                   )}
                 </div>
               </Col>
