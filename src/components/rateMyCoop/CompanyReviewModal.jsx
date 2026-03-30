@@ -9,11 +9,8 @@ import {
   faPen,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
-import { getReviews } from '../../api/rateMyCoopApi';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import useApi from '../../hooks/useApi';
-import { getErrorMessage } from '../../utils/errorUtils';
 import ViewReviews from './CompanyReviewModalComponents/ViewReviews';
 import DeleteReviews from './CompanyReviewModalComponents/DeleteReview';
 import WriteOrEditReviews from './CompanyReviewModalComponents/WriteOrEditReview';
@@ -23,25 +20,6 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
   const [editingReview, setEditingReview] = useState(false);
   const [deletingReview, setdeletingReview] = useState(false);
   const [error, setError] = useState(false);
-
-  const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
-
-  useEffect(() => {
-    async function checkIfCompanyHasReviews() {
-      const errorMappings = {
-        COMPANY_NOT_FOUND: 'This company no longer exists.',
-      };
-      if (company) {
-        try {
-          await getReviewsCallback(company.companyId);
-        } catch (error) {
-          const message = getErrorMessage(error, errorMappings);
-          setError(message);
-        }
-      }
-    }
-    checkIfCompanyHasReviews();
-  }, [company, showModal, getReviewsCallback]);
 
   function navigateOut() {
     setWritingReview(false);
@@ -82,7 +60,9 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                     className="me-1"
                     icon={faStar}
                   />
-                  {reviews && reviews.reviewsPagination.totalItems > 0 ? (
+                  {company.avgRating != 0 ? (
+                    /* A rating of 0 is not valid, 
+                    so if avgRating = 0, then no reviews for this company*/
                     <>Average Rating: {company.avgRating}/5</>
                   ) : (
                     <>No Reviews Yet!</>
