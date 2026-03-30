@@ -90,7 +90,7 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
                   />
                   <i>
                     <a
-                      className="pe-4"
+                      className="pe-2"
                       href={company.website}>
                       {company.website}
                     </a>
