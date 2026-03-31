@@ -52,7 +52,7 @@ const ExperienceForm = ({
     if (!value) {
       return 'Please enter a job description';
     } else if (value.length > 1000) {
-      return 'Job title too long. Please use 1000 or fewer characters.';
+      return 'Job experience too long. Please use 1000 or fewer characters.';
     } else {
       return '';
     }
