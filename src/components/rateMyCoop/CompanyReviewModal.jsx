@@ -1,47 +1,19 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faStar,
-  faMapPin,
-  faLink,
-  faTrash,
-  faPen,
-  faPlus,
-} from '@fortawesome/free-solid-svg-icons';
-import { getReviews } from '../../api/rateMyCoopApi';
-import { useEffect, useState } from 'react';
+import { faTrash, faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import useApi from '../../hooks/useApi';
-import { getErrorMessage } from '../../utils/errorUtils';
 import ViewReviews from './CompanyReviewModalComponents/ViewReviews';
 import DeleteReviews from './CompanyReviewModalComponents/DeleteReview';
 import WriteOrEditReviews from './CompanyReviewModalComponents/WriteOrEditReview';
+import CompanyInformationHeader from './CompanyInformationHeader';
 
 function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies }) {
   const [writingReview, setWritingReview] = useState(false);
   const [editingReview, setEditingReview] = useState(false);
   const [deletingReview, setdeletingReview] = useState(false);
   const [error, setError] = useState(false);
-
-  const { request: getReviewsCallback, data: reviews } = useApi(getReviews);
-
-  useEffect(() => {
-    async function checkIfCompanyHasReviews() {
-      const errorMappings = {
-        COMPANY_NOT_FOUND: 'This company no longer exists.',
-      };
-      if (company) {
-        try {
-          await getReviewsCallback(company.companyId);
-        } catch (error) {
-          const message = getErrorMessage(error, errorMappings);
-          setError(message);
-        }
-      }
-    }
-    checkIfCompanyHasReviews();
-  }, [company, showModal, getReviewsCallback]);
 
   function navigateOut() {
     setWritingReview(false);
@@ -65,57 +37,22 @@ function CompanyReviewModal({ company, showModal, hideModal, refreshCompanies })
       fullscreen
       centered>
       <Modal.Header closeButton>
-        <div className="d-flex flex-column justify-content-start align-items-start">
-          <Modal.Title
-            as="h2"
-            id="contained-modal-title-vcenter"
-            className="m-2">
-            <div style={{ overflowX: 'auto', maxWidth: '80vw' }}>{company.companyName}</div>
-          </Modal.Title>
-          <Container className="text-center">
-            <Row>
-              <Col
-                className="border-end"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faStar}
-                  />
-                  {reviews && reviews.reviewsPagination.totalItems > 0 ? (
-                    <>Average Rating: {company.avgRating}/5</>
-                  ) : (
-                    <>No Reviews Yet!</>
-                  )}
-                </div>
-              </Col>
-              <Col
-                className="border-start border-end"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faMapPin}
-                  />
-                  Location: {company.location}
-                </div>
-              </Col>
-              <Col
-                className="border-start"
-                style={{ overflowX: 'auto' }}>
-                <div className="m-1">
-                  <FontAwesomeIcon
-                    className="me-1"
-                    icon={faLink}
-                  />
-                  <i>
-                    <a href={company.website}>{company.website}</a>
-                  </i>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </div>
+        <Container className="mx-0">
+          <Row>
+            <h2
+              style={{
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                height: '3.5rem',
+                maxWidth: '80vw',
+              }}>
+              {company.companyName}
+            </h2>
+          </Row>
+          <Row>
+            <CompanyInformationHeader company={company} />
+          </Row>
+        </Container>
       </Modal.Header>
       <Modal.Body className="overflow-x-hidden">
         {!writingReview && !deletingReview && !editingReview && (
