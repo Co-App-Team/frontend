@@ -11,6 +11,8 @@ const JobApplicationForm = ({
   onSubmitCallback,
   onCompanyCreate,
 }) => {
+  const MAX_NUM_POSITIONS = 100;
+
   const [showError, setShowError] = useState(false);
 
   const formatDateTime = (dateTimeString) => {
@@ -60,7 +62,7 @@ const JobApplicationForm = ({
   };
 
   const validateNumPositions = (num) => {
-    return num > 0;
+    return num > 0 && num <= MAX_NUM_POSITIONS;
   };
 
   const validateStatus = (status) => {
@@ -177,7 +179,7 @@ const JobApplicationForm = ({
               disabled={isLoading}
             />
             <Form.Control.Feedback type="invalid">
-              Please provide a positive number.
+              Please provide a valid number between 1 and 100.
             </Form.Control.Feedback>
           </Col>
         </Row>
