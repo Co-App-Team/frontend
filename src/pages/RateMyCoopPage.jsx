@@ -53,7 +53,7 @@ const RateMyCoopPage = () => {
     }
   }
 
-  const updateSearch = (value) => {
+  const updateSearch = async (value) => {
     if (!data?.companies) return;
 
     setSearchLoading(true);

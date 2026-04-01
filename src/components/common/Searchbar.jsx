@@ -9,33 +9,22 @@ const Searchbar = ({ handleSearch }) => {
     let newValue = newInput;
     if (!newInput) {
       newValue = '';
-      handleSearch(newValue);
     }
+    handleSearch(newValue);
     setSearchValue(newValue);
-  };
-
-  const onSearchSubmit = () => {
-    handleSearch(searchValue);
   };
 
   return (
     <>
       <InputGroup>
+        <InputGroup.Text>
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </InputGroup.Text>
         <Form.Control
           placeholder="Search"
           value={searchValue}
           onChange={(e) => onSearchInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              onSearchSubmit();
-            }
-          }}
         />
-        <Button
-          variant="outline-primary"
-          onClick={onSearchSubmit}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </Button>
       </InputGroup>
     </>
   );

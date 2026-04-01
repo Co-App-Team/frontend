@@ -106,7 +106,7 @@ const JobApplicationsPage = () => {
     return companies.find((c) => c.companyId === jobApplication.companyId);
   }
 
-  const updateSearch = (value) => {
+  const updateSearch = async (value) => {
     if (!applications?.applications || !companies) return;
 
     setSearchLoading(true);
