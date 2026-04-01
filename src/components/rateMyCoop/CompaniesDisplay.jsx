@@ -22,8 +22,8 @@ const CompaniesDisplay = ({
                 {companies.map((company) => (
                   <Row
                     className="py-2 px-0"
-                    key={company}>
-                    <Col key={company}>
+                    key={company?.companyId}>
+                    <Col key={company?.companyId}>
                       <CompanyCard
                         company={company}
                         refreshCompanies={refreshCompanies}
