@@ -11,10 +11,11 @@ const JobApplicationsDisplay = ({
   setError,
   companies,
   refreshCompanies,
+  searchLoading,
 }) => {
   return (
     <CardContainer>
-      {applications.length == 0 && loading ? (
+      {(applications.length == 0 && loading) || searchLoading ? (
         <Spinner />
       ) : (
         <>

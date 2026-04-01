@@ -17,6 +17,7 @@ const JobApplicationsPage = () => {
   const [companies, setCompanies] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [useAppliedOnSort, setUseAppliedOnSort] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [error, setError] = useState(false);
 
@@ -108,28 +109,34 @@ const JobApplicationsPage = () => {
   const updateSearch = (value) => {
     if (!applications?.applications || !companies) return;
 
-    let apps = applications.applications;
+    setSearchLoading(true);
 
-    if (useAppliedOnSort) {
-      apps = applications.applications.filter(
-        (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
+    /* Micro-delay to deal with asynchronous setting of loading state */
+    setTimeout(() => {
+      let apps = applications.applications;
+
+      if (useAppliedOnSort) {
+        apps = applications.applications.filter(
+          (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
+        );
+      }
+
+      const topFilter = apps.filter((c) =>
+        getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
       );
-    }
+      const otherFilters = apps.filter(
+        (c) =>
+          getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
+          !topFilter.includes(c),
+      );
 
-    const topFilter = apps.filter((c) =>
-      getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
-    );
-    const otherFilters = apps.filter(
-      (c) =>
-        getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
-        !topFilter.includes(c),
-    );
-
-    setOtherFilteredApplications(otherFilters);
-    if (value === '') {
-      setOtherFilteredApplications([]);
-    }
-    setTopFilteredApplications(topFilter);
+      setOtherFilteredApplications(otherFilters);
+      if (value === '') {
+        setOtherFilteredApplications([]);
+      }
+      setTopFilteredApplications(topFilter);
+      setSearchLoading(false);
+    }, 0);
   };
 
   async function hideApplicationModal() {
@@ -183,6 +190,7 @@ const JobApplicationsPage = () => {
         setError={setError}
         companies={companies}
         refreshCompanies={loadCompanies}
+        searchLoading={searchLoading}
       />
 
       <NewApplicationModal

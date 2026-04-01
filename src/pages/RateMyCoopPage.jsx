@@ -1,4 +1,4 @@
-import Searchbar from '../components/rateMyCoop/Searchbar';
+import Searchbar from '../components/common/Searchbar';
 import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
 import { getCompanies } from '../api/rateMyCoopApi';
 import useApi from '../hooks/useApi';
@@ -15,6 +15,7 @@ const RateMyCoopPage = () => {
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const { request: getCompaniesCallback, data, loading } = useApi(getCompanies);
 
@@ -55,20 +56,25 @@ const RateMyCoopPage = () => {
   const updateSearch = (value) => {
     if (!data?.companies) return;
 
-    const companies = data.companies;
+    setSearchLoading(true);
 
-    const topFilter = companies.filter((c) =>
-      c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-    );
-    const otherFilters = companies.filter(
-      (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
-    );
+    /* "Micro timeout" to deal with asynchronous setting of "setLoadingTimeout"*/
+    setTimeout(() => {
+      const companies = data.companies;
 
-    setOtherFilteredCompanies(otherFilters);
-    if (value === '') {
-      setOtherFilteredCompanies([]);
-    }
-    setTopFilteredCompanies(topFilter);
+      const topFilter = companies.filter((c) =>
+        c.companyName.toLowerCase().startsWith(value.toLowerCase()),
+      );
+
+      const otherFilters = companies.filter(
+        (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+      );
+
+      setOtherFilteredCompanies(value === '' ? [] : otherFilters);
+      setTopFilteredCompanies(topFilter);
+
+      setSearchLoading(false);
+    }, 0);
   };
 
   return (
@@ -106,6 +112,7 @@ const RateMyCoopPage = () => {
         topFilteredCompanies={topFilteredCompanies}
         otherFilteredCompanies={otherFilteredCompanies}
         loading={loading}
+        searchLoading={searchLoading}
         refreshCompanies={refreshCompanyList}
       />
 

@@ -9,10 +9,11 @@ const CompaniesDisplay = ({
   otherFilteredCompanies,
   loading,
   refreshCompanies,
+  searchLoading,
 }) => {
   return (
     <CardContainer>
-      {companies.length == 0 && loading ? (
+      {(companies.length == 0 && loading) || searchLoading ? (
         <Spinner />
       ) : (
         <>
