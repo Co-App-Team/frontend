@@ -9,7 +9,7 @@ import PasswordInput from '../components/auth/PasswordInput';
 import { signup } from '../api/authApi';
 import useApi from '../hooks/useApi';
 import { getErrorMessage } from '../utils/errorUtils';
-import PageTransition from '../components/auth/PageTransition';
+import PageTransition from '../components/common/PageTransition';
 
 const errorMappings = {
   EXIST_ACCOUNT_WITH_EMAIL: 'An account with that email already exists. Try signing in.',

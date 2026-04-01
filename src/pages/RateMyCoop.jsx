@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
+import PageTransition from '../components/common/PageTransition';
 
 const RateMyCoop = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
@@ -72,7 +73,7 @@ const RateMyCoop = () => {
   };
 
   return (
-    <>
+    <PageTransition>
       <h1 className="mb-2 pb-2">Rate My Co-op</h1>
       <Container
         fluid
@@ -110,7 +111,7 @@ const RateMyCoop = () => {
         hideModal={handleCreateCompanyModalClose}
         refreshCompanies={refreshCompanyList}
       />
-    </>
+    </PageTransition>
   );
 };
 

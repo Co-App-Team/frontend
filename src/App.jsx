@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import { useAuthContext } from './contexts/AuthContext.js';
 import NotFoundPage from './pages/NotFoundPage.jsx';
@@ -20,9 +20,13 @@ import Calendar from './pages/CalendarPage.jsx';
 function App() {
   const { isLoggedIn } = useAuthContext();
 
+  const location = useLocation();
+
   return (
-    <AnimatePresence>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes
+        location={location}
+        key={location.pathname}>
         {/* Globally accessible routes */}
 
         {/* Globally accessible routes with app header */}

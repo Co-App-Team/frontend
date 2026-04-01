@@ -8,6 +8,7 @@ import NewInterviewModal from '../components/calendar/CalendarInterviewModal';
 import useApi from '../hooks/useApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import { getApplications, getInterviews } from '../api/jobApplicationsApi';
+import PageTransition from '../components/common/PageTransition';
 
 const Calendar = () => {
   const today = new Date();
@@ -112,92 +113,94 @@ const Calendar = () => {
   }
 
   return (
-    <Container className="mt-3">
-      <div className="d-flex flex-column justify-content-center">
-        {error && <span className="text-danger mt-3">{error}</span>}
-        <Row className="text-start align-bottom d-flex align-items-end my-1">
-          <Col>
-            <Button
-              size="sm"
-              className="btn btn-primary m-1"
-              onClick={prevMonth}>
-              <FontAwesomeIcon
-                className="d-flex justify-content-center m-1"
-                icon={faAngleLeft}
-              />
-            </Button>
-
-            <Button
-              size="sm"
-              className="btn btn-primary m-1"
-              onClick={currMonth}>
-              Today
-            </Button>
-
-            <Button
-              size="sm"
-              className="btn btn-primary m-1"
-              onClick={nextMonth}>
-              <FontAwesomeIcon
-                className="d-flex justify-content-center m-1"
-                icon={faAngleRight}
-              />
-            </Button>
-          </Col>
-
-          <Col className="text-center">
-            <h2 className="m-0">
-              {currentDate.toLocaleString('en-GB', { month: 'long' }) +
-                ' ' +
-                currentDate.getFullYear()}
-            </h2>
-          </Col>
-
-          <Col>
-            <div className="d-flex justify-content-end">
+    <PageTransition>
+      <Container className="mt-3">
+        <div className="d-flex flex-column justify-content-center">
+          {error && <span className="text-danger mt-3">{error}</span>}
+          <Row className="text-start align-bottom d-flex align-items-end my-1">
+            <Col>
               <Button
                 size="sm"
                 className="btn btn-primary m-1"
-                onClick={() => setShowInterviewModal(true)}>
+                onClick={prevMonth}>
                 <FontAwesomeIcon
-                  className="me-1"
-                  icon={faAdd}
+                  className="d-flex justify-content-center m-1"
+                  icon={faAngleLeft}
                 />
-                New Job Interview
               </Button>
-            </div>
-          </Col>
-        </Row>
 
-        <Row>
-          <div className={styles['calendar-weekdays']}>
-            {daysOfTheWeek.map((day) => (
-              <div
-                key={day}
-                className={'text-center'}>
-                {day}
+              <Button
+                size="sm"
+                className="btn btn-primary m-1"
+                onClick={currMonth}>
+                Today
+              </Button>
+
+              <Button
+                size="sm"
+                className="btn btn-primary m-1"
+                onClick={nextMonth}>
+                <FontAwesomeIcon
+                  className="d-flex justify-content-center m-1"
+                  icon={faAngleRight}
+                />
+              </Button>
+            </Col>
+
+            <Col className="text-center">
+              <h2 className="m-0">
+                {currentDate.toLocaleString('en-GB', { month: 'long' }) +
+                  ' ' +
+                  currentDate.getFullYear()}
+              </h2>
+            </Col>
+
+            <Col>
+              <div className="d-flex justify-content-end">
+                <Button
+                  size="sm"
+                  className="btn btn-primary m-1"
+                  onClick={() => setShowInterviewModal(true)}>
+                  <FontAwesomeIcon
+                    className="me-1"
+                    icon={faAdd}
+                  />
+                  New Job Interview
+                </Button>
               </div>
-            ))}
-          </div>
-        </Row>
+            </Col>
+          </Row>
 
-        <Row>
-          <CalendarGrid
-            weeks={weeks}
-            today={today}
-            currentDate={currentDate}
-            interviews={interviews}
-          />
-        </Row>
-      </div>
+          <Row>
+            <div className={styles['calendar-weekdays']}>
+              {daysOfTheWeek.map((day) => (
+                <div
+                  key={day}
+                  className={'text-center'}>
+                  {day}
+                </div>
+              ))}
+            </div>
+          </Row>
 
-      <NewInterviewModal
-        onShow={showInterviewModal}
-        onHide={hideInterviewModal}
-        applications={applications}
-        onSaved={refreshInterviews}
-      />
-    </Container>
+          <Row>
+            <CalendarGrid
+              weeks={weeks}
+              today={today}
+              currentDate={currentDate}
+              interviews={interviews}
+            />
+          </Row>
+        </div>
+
+        <NewInterviewModal
+          onShow={showInterviewModal}
+          onHide={hideInterviewModal}
+          applications={applications}
+          onSaved={refreshInterviews}
+        />
+      </Container>
+    </PageTransition>
   );
 };
 
