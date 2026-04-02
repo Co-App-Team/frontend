@@ -9,6 +9,7 @@ import { getApplications } from '../api/jobApplicationsApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import FilteringBar from '../components/jobApplications/FilteringBar';
 import JobApplicationsDisplay from '../components/jobApplications/JobApplicationsDisplay';
+import { useDebouncedCallback } from '../hooks/useDebounce';
 
 const JobApplicationsPage = () => {
   const [filters, setFilters] = useState([]);
@@ -17,6 +18,7 @@ const JobApplicationsPage = () => {
   const [companies, setCompanies] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [useAppliedOnSort, setUseAppliedOnSort] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [error, setError] = useState(false);
 
@@ -105,9 +107,7 @@ const JobApplicationsPage = () => {
     return companies.find((c) => c.companyId === jobApplication.companyId);
   }
 
-  const updateSearch = (value) => {
-    if (!applications?.applications || !companies) return;
-
+  const performSearchFilter = (value) => {
     let apps = applications.applications;
 
     if (useAppliedOnSort) {
@@ -130,6 +130,18 @@ const JobApplicationsPage = () => {
       setOtherFilteredApplications([]);
     }
     setTopFilteredApplications(topFilter);
+  };
+
+  const debouncedSearch = useDebouncedCallback((value) => {
+    performSearchFilter(value);
+    setSearchLoading(false);
+  }, 200);
+
+  const updateSearch = async (value) => {
+    if (!applications?.applications || !companies) return;
+
+    setSearchLoading(true);
+    debouncedSearch(value);
   };
 
   async function hideApplicationModal() {
@@ -183,6 +195,7 @@ const JobApplicationsPage = () => {
         setError={setError}
         companies={companies}
         refreshCompanies={loadCompanies}
+        searchLoading={searchLoading}
       />
 
       <NewApplicationModal

@@ -1,4 +1,4 @@
-import Searchbar from '../components/rateMyCoop/Searchbar';
+import Searchbar from '../components/common/Searchbar';
 import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
 import { getCompanies } from '../api/rateMyCoopApi';
 import useApi from '../hooks/useApi';
@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
+import { useDebouncedCallback } from '../hooks/useDebounce';
 
 const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
@@ -15,6 +16,7 @@ const RateMyCoopPage = () => {
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const { request: getCompaniesCallback, data, loading } = useApi(getCompanies);
 
@@ -52,7 +54,7 @@ const RateMyCoopPage = () => {
     }
   }
 
-  const updateSearch = (value) => {
+  const performSearch = async (value) => {
     if (!data?.companies) return;
 
     const companies = data.companies;
@@ -60,15 +62,25 @@ const RateMyCoopPage = () => {
     const topFilter = companies.filter((c) =>
       c.companyName.toLowerCase().startsWith(value.toLowerCase()),
     );
+
     const otherFilters = companies.filter(
       (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
-    setOtherFilteredCompanies(otherFilters);
-    if (value === '') {
-      setOtherFilteredCompanies([]);
-    }
+    setOtherFilteredCompanies(value === '' ? [] : otherFilters);
     setTopFilteredCompanies(topFilter);
+  };
+
+  const debouncedSearch = useDebouncedCallback((value) => {
+    performSearch(value);
+    setSearchLoading(false);
+  }, 200);
+
+  const updateSearch = async (value) => {
+    if (!data?.companies) return;
+
+    setSearchLoading(true);
+    debouncedSearch(value);
   };
 
   return (
@@ -106,6 +118,7 @@ const RateMyCoopPage = () => {
         topFilteredCompanies={topFilteredCompanies}
         otherFilteredCompanies={otherFilteredCompanies}
         loading={loading}
+        searchLoading={searchLoading}
         refreshCompanies={refreshCompanyList}
       />
 

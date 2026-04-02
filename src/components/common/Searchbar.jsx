@@ -10,23 +10,21 @@ const Searchbar = ({ handleSearch }) => {
     if (!newInput) {
       newValue = '';
     }
-    setSearchValue(newValue);
     handleSearch(newValue);
+    setSearchValue(newValue);
   };
 
   return (
-    <>
-      <InputGroup>
-        <InputGroup.Text>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </InputGroup.Text>
-        <Form.Control
-          placeholder="Search"
-          value={searchValue}
-          onChange={(e) => onSearchInput(e.target.value)}
-        />
-      </InputGroup>
-    </>
+    <InputGroup>
+      <InputGroup.Text>
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+      </InputGroup.Text>
+      <Form.Control
+        placeholder="Search"
+        value={searchValue}
+        onChange={(e) => onSearchInput(e.target.value)}
+      />
+    </InputGroup>
   );
 };
 
