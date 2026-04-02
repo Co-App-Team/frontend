@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
+import { useDebouncedCallback } from '../hooks/useDebounce';
 import PageTransition from '../components/common/PageTransition';
 
 const RateMyCoopPage = () => {
@@ -54,28 +55,33 @@ const RateMyCoopPage = () => {
     }
   }
 
-  const updateSearch = (value) => {
+  const performSearch = async (value) => {
+    if (!data?.companies) return;
+
+    const companies = data.companies;
+
+    const topFilter = companies.filter((c) =>
+      c.companyName.toLowerCase().startsWith(value.toLowerCase()),
+    );
+
+    const otherFilters = companies.filter(
+      (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
+    );
+
+    setOtherFilteredCompanies(value === '' ? [] : otherFilters);
+    setTopFilteredCompanies(topFilter);
+  };
+
+  const debouncedSearch = useDebouncedCallback((value) => {
+    performSearch(value);
+    setSearchLoading(false);
+  }, 200);
+
+  const updateSearch = async (value) => {
     if (!data?.companies) return;
 
     setSearchLoading(true);
-
-    /* "Micro timeout" to deal with asynchronous setting of "setLoadingTimeout"*/
-    setTimeout(() => {
-      const companies = data.companies;
-
-      const topFilter = companies.filter((c) =>
-        c.companyName.toLowerCase().startsWith(value.toLowerCase()),
-      );
-
-      const otherFilters = companies.filter(
-        (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
-      );
-
-      setOtherFilteredCompanies(value === '' ? [] : otherFilters);
-      setTopFilteredCompanies(topFilter);
-
-      setSearchLoading(false);
-    }, 0);
+    debouncedSearch(value);
   };
 
   return (

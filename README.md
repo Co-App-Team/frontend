@@ -10,9 +10,9 @@ For further information, please check out our [Project Proposal](https://github.
 
 ## Project set up
 
-## Setup Instructions 
+## Setup and Contributing Instructions 
 
-See [CONTRIBUTING.md](/.github/CONTRIBUTING.md) for setup instructions for the development environment
+See [CONTRIBUTING.md](/.github/CONTRIBUTING.md) for setup instructions for the development environment and process.
 
 ## Running Instructions 
 
@@ -77,7 +77,3 @@ function App(){
 ```
 
 Adds both a margin and padding around the Button.
-
-## elsint and Prettier
-
-[eslint](https://eslint.org/) and [Prettier](https://prettier.io/) are configured to run on-commit using [Husky](https://typicode.github.io/husky/), or can be triggered manually using `npm run lint` or `npx prettier` and `npx eslint`.

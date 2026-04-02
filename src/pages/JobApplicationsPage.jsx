@@ -9,6 +9,7 @@ import { getApplications } from '../api/jobApplicationsApi';
 import { getErrorMessage } from '../utils/errorUtils';
 import FilteringBar from '../components/jobApplications/FilteringBar';
 import JobApplicationsDisplay from '../components/jobApplications/JobApplicationsDisplay';
+import { useDebouncedCallback } from '../hooks/useDebounce';
 import PageTransition from '../components/common/PageTransition';
 
 const JobApplicationsPage = () => {
@@ -107,37 +108,41 @@ const JobApplicationsPage = () => {
     return companies.find((c) => c.companyId === jobApplication.companyId);
   }
 
-  const updateSearch = (value) => {
+  const performSearchFilter = (value) => {
+    let apps = applications.applications;
+
+    if (useAppliedOnSort) {
+      apps = applications.applications.filter(
+        (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
+      );
+    }
+
+    const topFilter = apps.filter((c) =>
+      getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
+    );
+    const otherFilters = apps.filter(
+      (c) =>
+        getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
+        !topFilter.includes(c),
+    );
+
+    setOtherFilteredApplications(otherFilters);
+    if (value === '') {
+      setOtherFilteredApplications([]);
+    }
+    setTopFilteredApplications(topFilter);
+  };
+
+  const debouncedSearch = useDebouncedCallback((value) => {
+    performSearchFilter(value);
+    setSearchLoading(false);
+  }, 200);
+
+  const updateSearch = async (value) => {
     if (!applications?.applications || !companies) return;
 
     setSearchLoading(true);
-
-    /* Micro-delay to deal with asynchronous setting of loading state */
-    setTimeout(() => {
-      let apps = applications.applications;
-
-      if (useAppliedOnSort) {
-        apps = applications.applications.filter(
-          (app) => app.dateApplied !== null && app.status !== 'NOT_APPLIED',
-        );
-      }
-
-      const topFilter = apps.filter((c) =>
-        getCompany(c).companyName.toLowerCase().startsWith(value.toLowerCase()),
-      );
-      const otherFilters = apps.filter(
-        (c) =>
-          getCompany(c).companyName.toLowerCase().includes(value.toLowerCase()) &&
-          !topFilter.includes(c),
-      );
-
-      setOtherFilteredApplications(otherFilters);
-      if (value === '') {
-        setOtherFilteredApplications([]);
-      }
-      setTopFilteredApplications(topFilter);
-      setSearchLoading(false);
-    }, 0);
+    debouncedSearch(value);
   };
 
   async function hideApplicationModal() {
