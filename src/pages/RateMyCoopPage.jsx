@@ -63,7 +63,6 @@ const RateMyCoopPage = () => {
     const topFilter = companies.filter((c) =>
       c.companyName.toLowerCase().startsWith(value.toLowerCase()),
     );
-
     const otherFilters = companies.filter(
       (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
