@@ -45,7 +45,7 @@ const JobApplicationsDisplay = ({
             otherFilteredApplications.length != applications.length &&
             otherFilteredApplications.length == 0) ||
             (topFilteredApplications.length == 0 && !loading)) && (
-            <h3 className="text-start">No Results</h3>
+            <h3 className="text-center">No Results</h3>
           )}
 
           {/* Case 2: Yes top filters, no other filters */}
@@ -78,7 +78,7 @@ const JobApplicationsDisplay = ({
             otherFilteredApplications.length !== applications.length &&
             otherFilteredApplications.length != 0 && (
               <>
-                <h3 className="text-start">
+                <h3 className="text-center">
                   <i>Did you mean?</i>
                 </h3>
                 <Container className="m-0 p-0">
@@ -107,7 +107,7 @@ const JobApplicationsDisplay = ({
             otherFilteredApplications.length !== applications.length &&
             otherFilteredApplications.length != 0 && (
               <>
-                <h3 className="text-start">Top Results:</h3>
+                <h3 className="text-center">Top Results:</h3>
                 <Container className="m-0 p-0">
                   {topFilteredApplications.map((application) => (
                     <Row
@@ -125,7 +125,7 @@ const JobApplicationsDisplay = ({
                     </Row>
                   ))}
                 </Container>
-                <h3 className="text-start">Other Results:</h3>
+                <h3 className="text-center">Other Results:</h3>
                 <Container className="m-0 p-0">
                   {otherFilteredApplications.map((application) => (
                     <Row
