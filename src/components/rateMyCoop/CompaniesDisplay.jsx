@@ -9,10 +9,11 @@ const CompaniesDisplay = ({
   otherFilteredCompanies,
   loading,
   refreshCompanies,
+  searchLoading,
 }) => {
   return (
     <CardContainer>
-      {companies.length == 0 && loading ? (
+      {(companies.length == 0 && loading) || searchLoading ? (
         <Spinner />
       ) : (
         <>
@@ -22,8 +23,8 @@ const CompaniesDisplay = ({
                 {companies.map((company) => (
                   <Row
                     className="py-2 px-0"
-                    key={company}>
-                    <Col key={company}>
+                    key={company?.companyId}>
+                    <Col key={company?.companyId}>
                       <CompanyCard
                         company={company}
                         refreshCompanies={refreshCompanies}

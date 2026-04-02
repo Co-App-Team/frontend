@@ -16,10 +16,13 @@ import { getErrorMessage } from '../utils/errorUtils';
 import { getApplications } from '../api/jobApplicationsApi';
 import { useEffect, useState } from 'react';
 import { ReactSelectBootstrap } from 'react-select-bootstrap';
+import PageTransition from '../components/common/PageTransition';
 
 const promptErrorMappings = {
   OVER_LIMIT_CHATBOT_REQUEST:
     'You have hit your chatbot quota for this month. Please wait for it to renew before sending more prompts.',
+  OVER_LIMIT_CHARACTER: 'Your prompt is too long. Please shorten it and try again...',
+  SERVICE_UNAVAILABLE: 'The resume workshop is currently unavailable. Please try again later.',
 };
 
 const ResumeWorkshopPage = () => {
@@ -134,102 +137,104 @@ Please ensure that "Section 1: Key Feedback" and "Section 2: Improved Version" s
   };
 
   return (
-    <Container
-      fluid="sm"
-      className="mt-3">
-      <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
-        <Col>
-          <h2 className="m-0">Resume Workshop</h2>
-        </Col>
-        <Col className="d-flex justify-content-end align-items-center pe-0">
-          <OverlayTrigger
-            placement="left"
-            delay={{ show: 100, hide: 200 }} // Show/hide delay
-            overlay={
-              <Tooltip id="button-tooltip">
-                Choose an application as context for the AI to tailor your resume.
-              </Tooltip>
-            }
-            trigger={['hover', 'focus']}>
-            <Badge
-              pill
-              bg="secondary"
-              className="mt-2">
-              ?
+    <PageTransition>
+      <Container
+        fluid="sm"
+        className="mt-3">
+        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1">
+          <Col>
+            <h2 className="m-0">Resume Workshop</h2>
+          </Col>
+          <Col className="d-flex justify-content-end align-items-center pe-0">
+            <OverlayTrigger
+              placement="left"
+              delay={{ show: 100, hide: 200 }} // Show/hide delay
+              overlay={
+                <Tooltip id="button-tooltip">
+                  Choose an application as context for the AI to tailor your resume.
+                </Tooltip>
+              }
+              trigger={['hover', 'focus']}>
+              <Badge
+                pill
+                bg="secondary"
+                className="mt-2">
+                ?
+              </Badge>
+            </OverlayTrigger>
+
+            <ReactSelectBootstrap
+              isLoading={!applications}
+              options={
+                applicationsError
+                  ? null
+                  : applications?.map((application) => {
+                      return { value: application, label: application.jobTitle };
+                    })
+              }
+              className="ms-2 mt-2"
+              onChange={onApplicationChange}
+              value={
+                selectedApplication?.applicationId
+                  ? { value: selectedApplication, label: selectedApplication.jobTitle }
+                  : null
+              }
+              isDisabled={applicationsError || loading}
+              placeholder={
+                applicationsError
+                  ? 'Error loading applications try again'
+                  : 'Select an application...'
+              }
+              isInvalid={applicationsError}
+            />
+          </Col>
+        </Row>
+
+        <Row>
+          <div className="text-end">
+            <Badge bg={getQuotaBackgroundColour()}>
+              {quotaError ? <>Error loading your prompt quota</> : <>{quotaBadge()}</>}
             </Badge>
-          </OverlayTrigger>
+          </div>
+        </Row>
 
-          <ReactSelectBootstrap
-            isLoading={!applications}
-            options={
-              applicationsError
-                ? null
-                : applications?.map((application) => {
-                    return { value: application, label: application.jobTitle };
-                  })
-            }
-            className="ms-2 mt-2"
-            onChange={onApplicationChange}
-            value={
-              selectedApplication?.applicationId
-                ? { value: selectedApplication, label: selectedApplication.jobTitle }
-                : null
-            }
-            isDisabled={applicationsError || loading}
-            placeholder={
-              applicationsError
-                ? 'Error loading applications try again'
-                : 'Select an application...'
-            }
-            isInvalid={applicationsError}
-          />
-        </Col>
-      </Row>
+        <Row className="mt-1">
+          <Col md={6}>
+            <AIPromptForm
+              onSubmit={handleSendPrompt}
+              loading={loading}
+              validatePrompt={validateUserPrompt}
+              promptError={promptError}
+            />
+          </Col>
 
-      <Row>
-        <div className="text-end">
-          <Badge bg={getQuotaBackgroundColour()}>
-            {quotaError ? <>Error loading your prompt quota</> : <>{quotaBadge()}</>}
-          </Badge>
-        </div>
-      </Row>
+          <Col
+            md={6}
+            className="border rounded p-3 overflow-auto bg-light"
+            style={{ maxHeight: '80vh' }}>
+            {!aiResponse && !loading && (
+              <p className="text-muted">
+                Paste a section of your resume and describe what you'd like to improve. Suggestions
+                will appear here.
+              </p>
+            )}
 
-      <Row className="mt-1">
-        <Col md={6}>
-          <AIPromptForm
-            onSubmit={handleSendPrompt}
-            loading={loading}
-            validatePrompt={validateUserPrompt}
-            promptError={promptError}
-          />
-        </Col>
+            {loading && (
+              <>
+                <p className="text-muted">Generating suggestions...</p>
+                <Spinner />
+              </>
+            )}
 
-        <Col
-          md={6}
-          className="border rounded p-3 overflow-auto bg-light"
-          style={{ maxHeight: '80vh' }}>
-          {!aiResponse && !loading && (
-            <p className="text-muted">
-              Paste a section of your resume and describe what you'd like to improve. Suggestions
-              will appear here.
-            </p>
-          )}
-
-          {loading && (
-            <>
-              <p className="text-muted">Generating suggestions...</p>
-              <Spinner />
-            </>
-          )}
-
-          {aiResponse && !loading && (
-            <div className="text-start">
-              <ReactMarkdown>{aiResponse}</ReactMarkdown>
-            </div>
-          )}
-        </Col>
-      </Row>
-    </Container>
+            {aiResponse && !loading && (
+              <div className="text-start">
+                <ReactMarkdown>{aiResponse}</ReactMarkdown>
+              </div>
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </PageTransition>
   );
 };
 

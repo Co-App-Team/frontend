@@ -9,7 +9,7 @@ import {
   faFilter,
   faPen,
 } from '@fortawesome/free-solid-svg-icons';
-import Searchbar from './Searchbar';
+import Searchbar from '../common/Searchbar';
 import FilterBadges from './FilterBadges';
 import FilterSelection from './FilterSelection';
 

@@ -7,7 +7,7 @@ import LogoImage from '../assets/coapp_logo.png';
 import ShowPasswordButton from '../components/common/ShowPasswordButton';
 import useApi from '../hooks/useApi.js';
 import { getErrorMessage } from '../utils/errorUtils.js';
-import PageTransition from '../components/auth/PageTransition.jsx';
+import PageTransition from '../components/common/PageTransition.jsx';
 
 const errorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Incorrect email or password',

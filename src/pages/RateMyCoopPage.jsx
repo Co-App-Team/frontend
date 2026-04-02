@@ -1,4 +1,4 @@
-import Searchbar from '../components/rateMyCoop/Searchbar';
+import Searchbar from '../components/common/Searchbar';
 import CompaniesDisplay from '../components/rateMyCoop/CompaniesDisplay';
 import { getCompanies } from '../api/rateMyCoopApi';
 import useApi from '../hooks/useApi';
@@ -8,6 +8,8 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
+import { useDebouncedCallback } from '../hooks/useDebounce';
+import PageTransition from '../components/common/PageTransition';
 
 const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
@@ -15,6 +17,7 @@ const RateMyCoopPage = () => {
   const [showAddCompanyModal, setShowAddCompanyModal] = useState(false);
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const { request: getCompaniesCallback, data, loading } = useApi(getCompanies);
 
@@ -52,7 +55,7 @@ const RateMyCoopPage = () => {
     }
   }
 
-  const updateSearch = (value) => {
+  const performSearch = async (value) => {
     if (!data?.companies) return;
 
     const companies = data.companies;
@@ -64,57 +67,69 @@ const RateMyCoopPage = () => {
       (c) => c.companyName.toLowerCase().includes(value.toLowerCase()) && !topFilter.includes(c),
     );
 
-    setOtherFilteredCompanies(otherFilters);
-    if (value === '') {
-      setOtherFilteredCompanies([]);
-    }
+    setOtherFilteredCompanies(value === '' ? [] : otherFilters);
     setTopFilteredCompanies(topFilter);
   };
 
+  const debouncedSearch = useDebouncedCallback((value) => {
+    performSearch(value);
+    setSearchLoading(false);
+  }, 200);
+
+  const updateSearch = async (value) => {
+    if (!data?.companies) return;
+
+    setSearchLoading(true);
+    debouncedSearch(value);
+  };
+
   return (
-    <Container className="mt-3">
-      <div>
-        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1 mb-3">
-          <Col>
-            <h2 className="m-0 p-0">Rate My Co-op</h2>
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <Button
-              className="m-1"
-              onClick={() => setShowAddCompanyModal(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPlus}
+    <PageTransition>
+      <Container className="mt-3">
+        <div>
+          <Row className="text-start align-bottom d-flex align-items-end my-1 py-1 mb-3">
+            <Col>
+              <h2 className="m-0 p-0">Rate My Co-op</h2>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Button
+                className="m-1"
+                onClick={() => setShowAddCompanyModal(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPlus}
+                />
+                Add Company
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Searchbar
+                handleSearch={updateSearch}
+                className="m-2 p-2"
               />
-              Add Company
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Searchbar
-              handleSearch={updateSearch}
-              className="m-2 p-2"
-            />
-          </Col>
-        </Row>
-        <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
-      </div>
+            </Col>
+          </Row>
+          <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
+        </div>
 
-      <CompaniesDisplay
-        companies={data ? data.companies : []}
-        topFilteredCompanies={topFilteredCompanies}
-        otherFilteredCompanies={otherFilteredCompanies}
-        loading={loading}
-        refreshCompanies={refreshCompanyList}
-      />
+        <CompaniesDisplay
+          companies={data ? data.companies : []}
+          topFilteredCompanies={topFilteredCompanies}
+          otherFilteredCompanies={otherFilteredCompanies}
+          loading={loading}
+          searchLoading={searchLoading}
+          refreshCompanies={refreshCompanyList}
+        />
 
-      <AddCompanyModal
-        showModal={showAddCompanyModal}
-        hideModal={handleCreateCompanyModalClose}
-        refreshCompanies={refreshCompanyList}
-      />
-    </Container>
+        <AddCompanyModal
+          showModal={showAddCompanyModal}
+          hideModal={handleCreateCompanyModalClose}
+          refreshCompanies={refreshCompanyList}
+        />
+      </Container>
+    </PageTransition>
   );
 };
 

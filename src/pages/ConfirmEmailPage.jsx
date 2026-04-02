@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useApi from '../hooks/useApi';
 import { confirmEmail, login, resendEmailCode } from '../api/authApi';
 import { getErrorMessage } from '../utils/errorUtils';
-import PageTransition from '../components/auth/PageTransition';
+import PageTransition from '../components/common/PageTransition';
 import { useAuthContext } from '../contexts/AuthContext';
 import ResendCodeButton from '../components/auth/ResendCodeButton';
 

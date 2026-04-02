@@ -6,7 +6,7 @@ import LogoImage from '../assets/coapp_logo.png';
 import useApi from '../hooks/useApi.js';
 import { getErrorMessage } from '../utils/errorUtils.js';
 import ResetPasswordForm from '../components/forgotPassword/ResetPasswordForm.jsx';
-import PageTransition from '../components/auth/PageTransition.jsx';
+import PageTransition from '../components/common/PageTransition.jsx';
 
 const updateEmailErrorMappings = {
   INVALID_CONFIRMATION_CODE: 'Incorrect confirmation code. Please check your email and try again.',
