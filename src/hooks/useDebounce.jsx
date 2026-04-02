@@ -34,7 +34,7 @@ Then GPT made this file
 */
 import { useRef } from 'react';
 
-export function useDebouncedCallback(callback, delay = 100) {
+export function useDebouncedCallback(callback, delay = 200) {
   const timeoutRef = useRef(null);
 
   return (...args) => {

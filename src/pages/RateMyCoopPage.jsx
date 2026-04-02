@@ -74,7 +74,7 @@ const RateMyCoopPage = () => {
   const debouncedSearch = useDebouncedCallback((value) => {
     performSearch(value);
     setSearchLoading(false);
-  }, 100);
+  }, 200);
 
   const updateSearch = async (value) => {
     if (!data?.companies) return;

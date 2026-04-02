@@ -135,7 +135,7 @@ const JobApplicationsPage = () => {
   const debouncedSearch = useDebouncedCallback((value) => {
     performSearchFilter(value);
     setSearchLoading(false);
-  }, 100);
+  }, 200);
 
   const updateSearch = async (value) => {
     if (!applications?.applications || !companies) return;
