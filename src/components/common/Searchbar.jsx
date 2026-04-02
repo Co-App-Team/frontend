@@ -9,6 +9,7 @@ const Searchbar = ({ handleSearch }) => {
     let newValue = newInput;
     if (!newInput) {
       newValue = '';
+      handleSearch(newValue);
     }
     handleSearch(newValue);
     setSearchValue(newValue);

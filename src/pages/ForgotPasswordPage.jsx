@@ -5,7 +5,7 @@ import LogoImage from '../assets/coapp_logo.png';
 import useApi from '../hooks/useApi.js';
 import { getErrorMessage } from '../utils/errorUtils.js';
 import SendForgotPasswordForm from '../components/forgotPassword/SendForgotPasswordForm.jsx';
-import PageTransition from '../components/auth/PageTransition.jsx';
+import PageTransition from '../components/common/PageTransition.jsx';
 
 const sendCodeErrorMappings = {
   REQUEST_HAS_NULL_OR_EMPTY_FIELD: 'Request failed, please refresh the page',

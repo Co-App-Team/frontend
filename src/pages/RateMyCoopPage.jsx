@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddCompanyModal from '../components/rateMyCoop/AddCompanyModal';
 import { useDebouncedCallback } from '../hooks/useDebounce';
+import PageTransition from '../components/common/PageTransition';
 
 const RateMyCoopPage = () => {
   const [topFilteredCompanies, setTopFilteredCompanies] = useState([]);
@@ -84,50 +85,52 @@ const RateMyCoopPage = () => {
   };
 
   return (
-    <Container className="mt-3">
-      <div>
-        <Row className="text-start align-bottom d-flex align-items-end my-1 py-1 mb-3">
-          <Col>
-            <h2 className="m-0 p-0">Rate My Co-op</h2>
-          </Col>
-          <Col className="d-flex justify-content-end">
-            <Button
-              className="m-1"
-              onClick={() => setShowAddCompanyModal(true)}>
-              <FontAwesomeIcon
-                className="me-1"
-                icon={faPlus}
+    <PageTransition>
+      <Container className="mt-3">
+        <div>
+          <Row className="text-start align-bottom d-flex align-items-end my-1 py-1 mb-3">
+            <Col>
+              <h2 className="m-0 p-0">Rate My Co-op</h2>
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Button
+                className="m-1"
+                onClick={() => setShowAddCompanyModal(true)}>
+                <FontAwesomeIcon
+                  className="me-1"
+                  icon={faPlus}
+                />
+                Add Company
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Searchbar
+                handleSearch={updateSearch}
+                className="m-2 p-2"
               />
-              Add Company
-            </Button>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Searchbar
-              handleSearch={updateSearch}
-              className="m-2 p-2"
-            />
-          </Col>
-        </Row>
-        <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
-      </div>
+            </Col>
+          </Row>
+          <Row>{error && showError && <span className="text-danger mt-3">{error}</span>}</Row>
+        </div>
 
-      <CompaniesDisplay
-        companies={data ? data.companies : []}
-        topFilteredCompanies={topFilteredCompanies}
-        otherFilteredCompanies={otherFilteredCompanies}
-        loading={loading}
-        searchLoading={searchLoading}
-        refreshCompanies={refreshCompanyList}
-      />
+        <CompaniesDisplay
+          companies={data ? data.companies : []}
+          topFilteredCompanies={topFilteredCompanies}
+          otherFilteredCompanies={otherFilteredCompanies}
+          loading={loading}
+          searchLoading={searchLoading}
+          refreshCompanies={refreshCompanyList}
+        />
 
-      <AddCompanyModal
-        showModal={showAddCompanyModal}
-        hideModal={handleCreateCompanyModalClose}
-        refreshCompanies={refreshCompanyList}
-      />
-    </Container>
+        <AddCompanyModal
+          showModal={showAddCompanyModal}
+          hideModal={handleCreateCompanyModalClose}
+          refreshCompanies={refreshCompanyList}
+        />
+      </Container>
+    </PageTransition>
   );
 };
 
