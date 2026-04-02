@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { InputGroup, Form, Button } from 'react-bootstrap';
+import { InputGroup, Form } from 'react-bootstrap';
 import { useState } from 'react';
 const Searchbar = ({ handleSearch }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -15,18 +15,16 @@ const Searchbar = ({ handleSearch }) => {
   };
 
   return (
-    <>
-      <InputGroup>
-        <InputGroup.Text>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </InputGroup.Text>
-        <Form.Control
-          placeholder="Search"
-          value={searchValue}
-          onChange={(e) => onSearchInput(e.target.value)}
-        />
-      </InputGroup>
-    </>
+    <InputGroup>
+      <InputGroup.Text>
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+      </InputGroup.Text>
+      <Form.Control
+        placeholder="Search"
+        value={searchValue}
+        onChange={(e) => onSearchInput(e.target.value)}
+      />
+    </InputGroup>
   );
 };
 
