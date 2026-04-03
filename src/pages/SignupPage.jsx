@@ -1,7 +1,7 @@
 // Component developed in part using Gemini: https://gemini.google.com/share/6cf46cb9feaa
 
 import { useState } from 'react';
-import { Button, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
+import { Button, Form, Row, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import LogoImage from '../assets/coapp_logo.png';
 import Col from 'react-bootstrap/Col';
@@ -112,6 +112,7 @@ const SignupPage = () => {
           className="p-4 border rounded d-flex flex-column align-items-center"
           style={{ maxWidth: '30rem' }}>
           <img
+            alt="Co-App"
             src={LogoImage}
             width={220}
           />

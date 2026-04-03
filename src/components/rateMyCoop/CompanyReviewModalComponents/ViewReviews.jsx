@@ -34,56 +34,52 @@ function ViewReviews({ company, showModal }) {
     <>
       <h4>Reviews</h4>
       {reviews ? (
-        <>
-          <div className="d-flex justify-content-end">
-            <InputGroup className="w-auto d-inline-flex mx-1">
-              <InputGroup.Text>Reviews per page:</InputGroup.Text>
+        <div className="d-flex justify-content-end">
+          <InputGroup className="w-auto d-inline-flex mx-1">
+            <InputGroup.Text>Reviews per page:</InputGroup.Text>
 
-              <Form.Select
-                value={reviewsPerPage}
-                onChange={(e) => {
-                  setReviewsPerPage(Number(e.target.value));
-                  getReviewsCallback(company.companyId, 0, e.target.value);
-                }}
-                disabled={getReviewsLoading}
-                className="w-auto">
-                {[1, 5, 10, 50].map((num) => (
-                  <option
-                    key={num}
-                    value={num}>
-                    {num}
-                  </option>
-                ))}
-              </Form.Select>
-            </InputGroup>
-            <Button
-              className="mx-1"
-              onClick={() => {
-                const currPage = reviews.reviewsPagination.currentPage;
-                getReviewsCallback(company.companyId, currPage - 1, reviewsPerPage);
+            <Form.Select
+              value={reviewsPerPage}
+              onChange={(e) => {
+                setReviewsPerPage(Number(e.target.value));
+                getReviewsCallback(company.companyId, 0, e.target.value);
               }}
-              disabled={!reviews.reviewsPagination.hasPrevious}>
-              <FontAwesomeIcon icon={faCaretLeft} />
-            </Button>
-            <Button
-              className="mx-1"
-              onClick={() => {
-                const currPage = reviews.reviewsPagination.currentPage;
-                getReviewsCallback(company.companyId, currPage + 1, reviewsPerPage);
-              }}
-              disabled={!reviews.reviewsPagination.hasNext}>
-              <FontAwesomeIcon icon={faCaretRight} />
-            </Button>
-          </div>
-        </>
+              disabled={getReviewsLoading}
+              className="w-auto">
+              {[1, 5, 10, 50].map((num) => (
+                <option
+                  key={num}
+                  value={num}>
+                  {num}
+                </option>
+              ))}
+            </Form.Select>
+          </InputGroup>
+          <Button
+            className="mx-1"
+            onClick={() => {
+              const currPage = reviews.reviewsPagination.currentPage;
+              getReviewsCallback(company.companyId, currPage - 1, reviewsPerPage);
+            }}
+            disabled={!reviews.reviewsPagination.hasPrevious}>
+            <FontAwesomeIcon icon={faCaretLeft} />
+          </Button>
+          <Button
+            className="mx-1"
+            onClick={() => {
+              const currPage = reviews.reviewsPagination.currentPage;
+              getReviewsCallback(company.companyId, currPage + 1, reviewsPerPage);
+            }}
+            disabled={!reviews.reviewsPagination.hasNext}>
+            <FontAwesomeIcon icon={faCaretRight} />
+          </Button>
+        </div>
       ) : (
-        <>
-          <div className="d-flex justify-content-end">
-            <Placeholder
-              className="mx-1"
-              xs={3}></Placeholder>
-          </div>
-        </>
+        <div className="d-flex justify-content-end">
+          <Placeholder
+            className="mx-1"
+            xs={3}></Placeholder>
+        </div>
       )}
       <div className={styles['reviews-container']}>
         {reviews && !getReviewsLoading ? (

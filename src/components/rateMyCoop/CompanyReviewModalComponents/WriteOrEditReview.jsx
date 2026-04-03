@@ -18,6 +18,14 @@ import styles from '../../styling/rateMyCoop/CompanyReviewModal.module.css';
 import useApi from '../../../hooks/useApi';
 import { getErrorMessage } from '../../../utils/errorUtils';
 
+function capitalizeFirstLetter(string) {
+  if (string.length === 0) {
+    return ''; // Empty string
+  }
+  const toLowerCaseString = string.toLowerCase();
+  return toLowerCaseString.charAt(0).toUpperCase() + toLowerCaseString.slice(1);
+}
+
 function WriteOrEditReviews({
   company,
   showModal,
@@ -37,14 +45,6 @@ function WriteOrEditReviews({
     rating: '',
     comment: '',
   });
-
-  function capitalizeFirstLetter(string) {
-    if (string.length === 0) {
-      return ''; // Empty string
-    }
-    const toLowerCaseString = string.toLowerCase();
-    return toLowerCaseString.charAt(0).toUpperCase() + toLowerCaseString.slice(1);
-  }
 
   const onJobTitleChange = (e) => {
     setFormData({ ...formData, jobTitle: e.target.value });
@@ -101,9 +101,9 @@ function WriteOrEditReviews({
   const validateTermYear = (term) => {
     return (
       term.trim() != '' &&
-      parseInt(term) &&
-      parseInt(term) >= termYearBounds.lowerBound &&
-      parseInt(term) <= termYearBounds.upperBound
+      Number.parseInt(term) &&
+      Number.parseInt(term) >= termYearBounds.lowerBound &&
+      Number.parseInt(term) <= termYearBounds.upperBound
     );
   };
 
