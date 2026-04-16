@@ -32,7 +32,7 @@ docker image build -t coapp-frontend .
 
 2. Run docker image
 ```bash
-docker run -d -p 5173:3000 coapp-frontend
+docker run -d -p 5173:3000 --network my-network coapp-frontend
 ```
 
 ## Bootstrap/React Bootstrap
