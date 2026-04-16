@@ -33,46 +33,44 @@ function JobApplicationWarning({ onShow, onHide, data, onSaved }) {
   };
 
   return (
-    <>
-      <Modal
-        show={onShow}
-        onHide={onHide}
-        centered>
-        <Modal.Header
-          closeButton
-          className="border-0"></Modal.Header>
+    <Modal
+      show={onShow}
+      onHide={onHide}
+      centered>
+      <Modal.Header
+        closeButton
+        className="border-0"></Modal.Header>
 
-        <Modal.Body className="text-center">
-          <FontAwesomeIcon
-            className="me-1 text-danger"
-            icon={faCircleXmark}
-            size="5x"
-          />
-          <Modal.Title className="p-2 fs-2">Are you sure?</Modal.Title>
-          <p className="text-muted">
-            Do you really want to delete this job application?
-            <br />
-            This process cannot be undone.
-          </p>
-          {error && <span className="text-danger mt-3">{error}</span>}
-        </Modal.Body>
+      <Modal.Body className="text-center">
+        <FontAwesomeIcon
+          className="me-1 text-danger"
+          icon={faCircleXmark}
+          size="5x"
+        />
+        <Modal.Title className="p-2 fs-2">Are you sure?</Modal.Title>
+        <p className="text-muted">
+          Do you really want to delete this job application?
+          <br />
+          This process cannot be undone.
+        </p>
+        {error && <span className="text-danger mt-3">{error}</span>}
+      </Modal.Body>
 
-        <Modal.Footer className="border-0">
-          <Button
-            variant="info"
-            onClick={onHide}
-            disabled={isDeleteLoading}>
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={handleSubmit}
-            disabled={isDeleteLoading}>
-            {isDeleteLoading && <Spinner size="sm" />} Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+      <Modal.Footer className="border-0">
+        <Button
+          variant="info"
+          onClick={onHide}
+          disabled={isDeleteLoading}>
+          Cancel
+        </Button>
+        <Button
+          variant="danger"
+          onClick={handleSubmit}
+          disabled={isDeleteLoading}>
+          {isDeleteLoading && <Spinner size="sm" />} Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 

@@ -47,19 +47,17 @@ const CompaniesDisplay = ({
             topFilteredCompanies.length != 0 &&
             otherFilteredCompanies.length !== companies.length &&
             otherFilteredCompanies.length == 0 && (
-              <>
-                <Container className="m-0 p-0">
-                  {topFilteredCompanies.map((company) => (
-                    <Row
-                      className="py-2 px-0"
-                      key={company}>
-                      <Col key={company}>
-                        <CompanyCard company={company} />
-                      </Col>
-                    </Row>
-                  ))}
-                </Container>
-              </>
+              <Container className="m-0 p-0">
+                {topFilteredCompanies.map((company) => (
+                  <Row
+                    className="py-2 px-0"
+                    key={company}>
+                    <Col key={company}>
+                      <CompanyCard company={company} />
+                    </Col>
+                  </Row>
+                ))}
+              </Container>
             )}
 
           {/* Case 3: Yes other filters, no top filters */}

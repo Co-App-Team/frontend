@@ -52,6 +52,7 @@ const ForgotPasswordPage = () => {
           className="p-4 border rounded d-flex flex-column align-items-center"
           style={{ maxWidth: '19rem' }}>
           <img
+            alt="Co-App"
             src={LogoImage}
             width={220}
           />

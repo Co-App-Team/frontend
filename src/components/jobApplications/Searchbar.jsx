@@ -15,18 +15,16 @@ const Searchbar = ({ handleSearch }) => {
   };
 
   return (
-    <>
-      <InputGroup>
-        <InputGroup.Text>
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-        </InputGroup.Text>
-        <Form.Control
-          placeholder="Search"
-          value={searchValue}
-          onChange={(e) => onSearchInput(e.target.value)}
-        />
-      </InputGroup>
-    </>
+    <InputGroup>
+      <InputGroup.Text>
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+      </InputGroup.Text>
+      <Form.Control
+        placeholder="Search"
+        value={searchValue}
+        onChange={(e) => onSearchInput(e.target.value)}
+      />
+    </InputGroup>
   );
 };
 

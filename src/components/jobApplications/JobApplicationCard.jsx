@@ -28,6 +28,16 @@ import EditApplicationModal from './JobApplicationModal';
 import DeleteApplicationModal from './JobApplicationWarning';
 import { FORMAT_STATUS } from '../../constants/jobApplications';
 
+function formatDate(date) {
+  const [year, month, day] = date.split('-');
+
+  return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
 const JobApplicationCard = ({
   jobApplication,
   onUpdated,
@@ -45,15 +55,6 @@ const JobApplicationCard = ({
 
   const { request: editJobApplicationCallback } = useApi(editApplication);
 
-  function formatDate(date) {
-    const [year, month, day] = date.split('-');
-
-    return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    });
-  }
   const deadlineDate = formatDate(jobApplication.applicationDeadline);
 
   function getCompany() {
@@ -128,15 +129,13 @@ const JobApplicationCard = ({
 
   if (isLoading) {
     return (
-      <>
-        <Card
-          className={styles['application-card']}
-          style={{ borderLeftColor: 'var(--bs-info)' }}>
-          <Card.Body className="text-center">
-            <Spinner animation="border" />
-          </Card.Body>
-        </Card>
-      </>
+      <Card
+        className={styles['application-card']}
+        style={{ borderLeftColor: 'var(--bs-info)' }}>
+        <Card.Body className="text-center">
+          <Spinner animation="border" />
+        </Card.Body>
+      </Card>
     );
   }
 
@@ -158,8 +157,7 @@ const JobApplicationCard = ({
                 style={{ width: '10vw', overflowX: 'auto', overflowY: 'auto' }}>
                 {!jobApplication.dateApplied ? (
                   <span className="text-muted fs-6">
-                    Due
-                    <span className="text-dark">{' ' + deadlineDate}</span>
+                    Due <span className="text-dark">{' ' + deadlineDate}</span>
                   </span>
                 ) : (
                   <span className="text-muted fs-6">
